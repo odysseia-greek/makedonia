@@ -1,0 +1,173 @@
+[
+  {
+    "greek":"λόγος",
+    "english":"word",
+    "dutch":"woord",
+    "linkedWord":"",
+    "partOfSpeech":"noun",
+    "article":"ὁ",
+    "gender":"masc",
+    "noun":{
+      "declension":"second",
+      "genitive":"-ου"
+    },
+    "definitions":[
+      {
+        "grade":3,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"word; speech"
+          },
+          {
+            "language":"nl",
+            "definition":"woord; gesprek; verhaal; bericht"
+          }
+        ]
+      },
+      {
+        "grade":2,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"speech; account; argument; narrative",
+            "notes":[
+              "λόγον διδόναι = to give an account"
+            ],
+            "example":"λόγον διδόναι"
+          },
+          {
+            "language":"en",
+            "definition":"reason; consideration; reckoning; computation"
+          }
+        ]
+      },
+      {
+        "grade":1,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"rational principle; reasoned account; (later) the divine Logos",
+            "notes":[
+              "philosophical/theological usage: Stoics; NT"
+            ]
+          }
+        ]
+      }
+    ],
+    "modernConnections":[
+      {
+        "term":"logic",
+        "note":"via Latin logica, from λόγος ‘reason’"
+      },
+      {
+        "term":"-logy",
+        "note":"suffix ‘study of’ (biology, theology)"
+      },
+      {
+        "term":"logo",
+        "note":"from ‘logotype’ (word/mark) ← λόγος ‘word’"
+      }
+    ]
+  },
+  {
+    "greek":"γίγνομαι",
+    "english":"become, be born",
+    "dutch":"worden, geboren worden",
+    "linkedWord":"",
+    "partOfSpeech":"verb",
+    "verb":{
+      "principalParts":[
+        "γίγνομαι",
+        "γενήσομαι",
+        "ἐγενόμην",
+        "γέγονα",
+        "γεγένημαι"
+      ]
+    },
+    "definitions":[
+      {
+        "grade":3,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"to become; to be born"
+          },
+          {
+            "language":"nl",
+            "definition":"worden; geboren worden"
+          }
+        ]
+      },
+      {
+        "grade":2,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"to come into being; to happen, occur"
+          }
+        ]
+      },
+      {
+        "grade":1,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"philosophical usage: coming-to-be, process of change"
+          }
+        ]
+      }
+    ],
+    "modernConnections":[
+      {
+        "term":"genesis",
+        "note":"from the same root, meaning 'origin, birth'"
+      },
+      {
+        "term":"generate",
+        "note":"from Latin generare ← γίγνομαι"
+      }
+    ]
+  },
+  {
+    "greek":"καί",
+    "english":"and",
+    "dutch":"en",
+    "linkedWord":"",
+    "partOfSpeech":"conjunction",
+    "definitions":[
+      {
+        "grade":3,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"and"
+          },
+          {
+            "language":"nl",
+            "definition":"en"
+          }
+        ]
+      },
+      {
+        "grade":2,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"also; even"
+          },
+          {
+            "language":"nl",
+            "definition":"ook; zelfs"
+          }
+        ]
+      }
+    ],
+    "modernConnections":[
+      {
+        "term":"kairos",
+        "note":"shares the root 'kai-' but different meaning ('right time')"
+      }
+    ]
+  }
+]

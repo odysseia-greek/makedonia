@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package antigonos.v1;
+option go_package = "github.com/odysseia-greek/makedonia/antigonos/gen/go/v1;antigonosv1";
+
+import "google/protobuf/empty.proto";
+import "koinos/v1/health.proto";
+import "koinos/v1/koinos.proto";
+import "koinos/v1/lemma.proto";
+import "koinos/v1/search.proto";
+
+service AntigonosService {
+  rpc Health(google.protobuf.Empty) returns (koinos.v1.HealthCheckResponse);
+  rpc Search(koinos.v1.SearchQuery) returns (SearchResponse);
+}
+
+message SearchResponse {
+  repeated koinos.v1.Lemma results = 1;
+  koinos.v1.PageInfo page_info     = 2;
+}

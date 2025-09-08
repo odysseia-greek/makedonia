@@ -1,0 +1,59 @@
+syntax = "proto3";
+option go_package = "github.com/odysseia-greek/makedonia/eukleides/proto";
+
+package makedonia_eukleides;
+
+
+service Eukleides {
+  rpc CreateNewEntry(stream CountCreationRequestSet) returns (CountStreamResponse);
+  rpc RetrieveTopFive (TopFiveRequest) returns (TopFiveResponse) {}
+  rpc RetrieveTopFiveService (TopFiveServiceRequest) returns (TopFive) {}
+  rpc RetrieveTopFiveForSession (TopFiveSessionRequest) returns (TopFiveResponse);
+  rpc Health (HealthRequest) returns (HealthResponse) {}
+}
+
+message CountCreationRequestSet {
+  repeated CountCreationRequest request = 1;
+}
+
+message CountCreationRequest {
+  string word = 1;
+  string service_name = 2;
+  string search_type = 3;
+  string session_id = 4;
+}
+
+message CountStreamResponse {
+  string ack = 1;
+}
+
+message TopFiveRequest {
+}
+
+message TopFiveServiceRequest {
+  string name = 1;
+}
+
+message TopFiveSessionRequest {
+  string session_id = 1;
+}
+
+message TopFiveResponse {
+  repeated TopFive top_five = 1;
+}
+
+message TopFive {
+  string service_name = 1;
+  string word = 2;
+  string last_used = 3;
+  int32 count = 4;
+  int64 timestamp = 5;
+}
+
+message HealthResponse {
+  bool health = 1;
+}
+
+message HealthRequest {
+
+}

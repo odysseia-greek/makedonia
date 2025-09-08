@@ -1,0 +1,9 @@
+# makedonia/buf.yaml
+version: v2
+modules:
+  - path: filippos/proto
+  - path: antigonos/proto
+lint:
+  use: [DEFAULT]
+breaking:
+  use: [FILE]

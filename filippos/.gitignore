@@ -1,0 +1,11 @@
+# build / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Go
+bin/
+*.out
+
+# Protobuf
+gen/openapiv2/
