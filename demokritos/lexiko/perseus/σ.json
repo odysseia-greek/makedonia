@@ -1,5 +1,4 @@
-{
-  "biblos": [
+[
     {
       "greek": "σαυτοῦ -ῆς",
       "english": "yourself [reflexive]"
@@ -43,10 +42,6 @@
     {
       "greek": "σός –ή –όν",
       "english": "your, yours"
-    },
-    {
-      "greek": "σοφία –ας, ἡ",
-      "english": "wisdom"
     },
     {
       "greek": "σοφός -ή -όν",
@@ -284,5 +279,4 @@
       "greek": "σωτηρία –ας, ἡ",
       "english": "safety"
     }
-  ]
-}
+]

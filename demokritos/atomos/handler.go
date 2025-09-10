@@ -60,47 +60,13 @@ func (d *DemokritosHandler) CreateIndexAtStartup() error {
 	return nil
 }
 
-func (d *DemokritosHandler) AddDirectoryToElastic(biblos models.Biblos, wg *sync.WaitGroup) {
+func (d *DemokritosHandler) AddDirectoryToElastic(lemmas []hetairoi.LemmaSource, wg *sync.WaitGroup) {
 	defer wg.Done()
 	var buf bytes.Buffer
 
 	var currBatch int
 
-	for _, word := range biblos.Biblos {
-		currBatch++
-
-		meta := []byte(fmt.Sprintf(`{ "index": {} }%s`, "\n"))
-		jsonifiedWord, _ := word.Marshal()
-		jsonifiedWord = append(jsonifiedWord, "\n"...)
-		buf.Grow(len(meta) + len(jsonifiedWord))
-		buf.Write(meta)
-		buf.Write(jsonifiedWord)
-
-		stripped := d.transformWord(word)
-		stripped = append(stripped, "\n"...)
-		buf.Grow(len(meta) + len(stripped))
-		buf.Write(meta)
-		buf.Write(stripped)
-
-		if currBatch == len(biblos.Biblos) {
-			res, err := d.Elastic.Document().Bulk(buf, d.Index)
-			if err != nil {
-				logging.Error(err.Error())
-				return
-			}
-
-			d.Created = d.Created + len(res.Items)
-		}
-	}
-}
-
-func (d *DemokritosHandler) AddDirectoryToElasticGeneral(biblos []hetairoi.LemmaSource, wg *sync.WaitGroup) {
-	defer wg.Done()
-	var buf bytes.Buffer
-
-	var currBatch int
-
-	for _, word := range biblos {
+	for _, word := range lemmas {
 		currBatch++
 
 		meta := []byte(fmt.Sprintf(`{ "index": {} }%s`, "\n"))
@@ -110,7 +76,7 @@ func (d *DemokritosHandler) AddDirectoryToElasticGeneral(biblos []hetairoi.Lemma
 		buf.Write(meta)
 		buf.Write(jsonifiedWord)
 
-		if currBatch == len(biblos) {
+		if currBatch == len(lemmas) {
 			res, err := d.Elastic.Document().Bulk(buf, d.Index)
 			if err != nil {
 				logging.Error(err.Error())

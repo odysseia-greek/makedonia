@@ -1,7 +1,7 @@
 PROTO_DIRS := antigonos eukleides hefaistion parmenion perdikkas
 
 .PHONY: all
-all: generate docs proto
+all: generate docs proto antigonos
 
 .PHONY: generate
 generate:
@@ -32,3 +32,11 @@ docs:
 proto:
 	buf generate --template filippos/buf.gen.yaml filippos
 	buf generate --template antigonos/buf.gen.yaml antigonos
+
+.PHONY: antigonos-dev
+antigonos-dev:
+	docker build -f antigonos/Dockerfile.dev -t ghcr.io/odysseia-greek/antigonos:dev .
+	docker push ghcr.io/odysseia-greek/antigonos:dev
+
+.PHONY: dev
+dev: antigonos-dev

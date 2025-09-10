@@ -27,6 +27,10 @@ message NounInfo {
   string genitive   = 2;                 // "-ου"
 }
 
+message VerbInfo {
+  repeated string principal_parts = 1;
+}
+
 message ModernConnection {
   string term = 1;                       // "logic"
   string note = 2;                       // "via Latin logica..."
@@ -46,13 +50,14 @@ message Lemma {
   string article        = 6;             // "ὁ"
   string gender         = 7;             // "masc"
   NounInfo noun         = 8;             // optional
+  VerbInfo verb         = 9;
 
   // Human-friendly glosses (your “english” / “dutch”)
-  repeated LocalizedGloss quick_glosses = 9;
+  repeated LocalizedGloss quick_glosses = 10;
 
   // Structured definitions by grade levels
-  repeated Definition definitions = 10;
+  repeated Definition definitions = 11;
 
   // Etymology / modern connections
-  repeated ModernConnection modern_connections = 11;
+  repeated ModernConnection modern_connections = 12;
 }

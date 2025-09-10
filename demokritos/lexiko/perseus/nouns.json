@@ -1,0 +1,167 @@
+[
+  {
+    "greek":"λόγος",
+    "english":"word",
+    "dutch":"woord",
+    "linkedWord":"",
+    "partOfSpeech":"noun",
+    "article":"ὁ",
+    "gender":"masc",
+    "noun":{
+      "declension":"second",
+      "genitive":"-ου"
+    },
+    "definitions":[
+      {
+        "grade":3,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"word; speech"
+          },
+          {
+            "language":"nl",
+            "definition":"woord; gesprek; verhaal; bericht"
+          }
+        ]
+      },
+      {
+        "grade":2,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"speech; account; argument; narrative",
+            "notes":[
+              "λόγον διδόναι = to give an account"
+            ],
+            "example":"λόγον διδόναι"
+          },
+          {
+            "language":"en",
+            "definition":"reason; consideration; reckoning; computation"
+          }
+        ]
+      },
+      {
+        "grade":1,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"rational principle; reasoned account; (later) the divine Logos",
+            "notes":[
+              "philosophical/theological usage: Stoics; NT"
+            ]
+          }
+        ]
+      }
+    ],
+    "modernConnections":[
+      {
+        "term":"logic",
+        "note":"via Latin logica, from λόγος ‘reason’"
+      },
+      {
+        "term":"-logy",
+        "note":"suffix ‘study of’ (biology, theology)"
+      },
+      {
+        "term":"logo",
+        "note":"from ‘logotype’ (word/mark) ← λόγος ‘word’"
+      }
+    ]
+  },
+  {
+    "greek": "Λακεδαιμόνιος",
+    "english": "Spartan",
+    "dutch": "Spartaan",
+    "linkedWord": "",
+    "partOfSpeech": "noun",
+    "article": "ὁ",
+    "gender": "masc",
+    "noun": { "declension": "second", "genitive": "-ου" },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "a Spartan (man)"},
+          { "language": "nl", "definition": "een Spartaan"}
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "citizen or native of Lacedaemon (Sparta)" }
+        ]
+      }
+    ],
+    "modernConnections": [
+      { "term": "Lacedaemon", "note": "alternate name for Sparta used in classical texts" }
+    ]
+  },
+  {
+    "greek": "Ἀθηναῖος",
+    "english": "Athenian",
+    "dutch": "Athener",
+    "linkedWord": "",
+    "partOfSpeech": "noun",
+    "article": "ὁ",
+    "gender": "masc",
+    "noun": { "declension": "second", "genitive": "-ου" },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "an Athenian (man)"},
+          { "language": "nl", "definition": "een Athener"}
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "citizen or native of Athens" }
+        ]
+      }
+    ],
+    "modernConnections": [
+      { "term": "Athens", "note": "capital of Greece; classical city-state" }
+    ]
+  },
+  {
+    "greek": "σοφία",
+    "english": "wisdom",
+    "dutch": "wijsheid",
+    "linkedWord": "",
+    "partOfSpeech": "noun",
+    "article": "ἡ",
+    "gender": "fem",
+    "noun": { "declension": "first", "genitive": "-ας" },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "wisdom" },
+          { "language": "nl", "definition": "wijsheid" }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "skill or cleverness in carpentry, music, or other crafts" },
+          { "language": "en", "definition": "skill related to everyday life: sound judgment, prudence" },
+          { "language": "en", "definition": "knowledge of a higher kind: learning, wisdom" }
+        ]
+      },
+      {
+        "grade": 1,
+        "meanings": [
+          { "language": "en", "definition": "philosophical wisdom; the ideal of knowledge rightly applied" }
+        ]
+      }
+    ],
+    "modernConnections": [
+      { "term": "philosophy", "note": "φίλος + σοφία ‘love of wisdom’" },
+      { "term": "sophist/sophistry", "note": "from σοφιστής; related but with later negative sense" },
+      { "term": "sophisticated", "note": "via Latin from Greek σοφός/σοφιστικός" }
+    ]
+  }
+]

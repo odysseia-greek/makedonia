@@ -21,6 +21,13 @@ func LemmaFromSource(s LemmaSource) *koinos.Lemma {
 		}
 	}
 
+	var verb *koinos.VerbInfo
+	if s.Verb != nil {
+		verb = &koinos.VerbInfo{
+			PrincipalParts: s.Verb.PrincipalParts,
+		}
+	}
+
 	defs := make([]*koinos.Definition, 0, len(s.Definitions))
 	for _, d := range s.Definitions {
 		ms := make([]*koinos.Meaning, 0, len(d.Meanings))
@@ -52,6 +59,7 @@ func LemmaFromSource(s LemmaSource) *koinos.Lemma {
 		Article:           s.Article,
 		Gender:            s.Gender,
 		Noun:              noun,
+		Verb:              verb,
 		QuickGlosses:      quick,
 		Definitions:       defs,
 		ModernConnections: mconns,

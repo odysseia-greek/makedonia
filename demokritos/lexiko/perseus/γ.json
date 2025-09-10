@@ -1,5 +1,4 @@
-{
-  "biblos": [
+[
     {
       "greek": "γαῖα –ας, ἡ",
       "english": "earth"
@@ -73,10 +72,6 @@
       "english": "letter"
     },
     {
-      "greek": "γράφω",
-      "english": "write"
-    },
-    {
       "greek": "γύμνος –η –ον",
       "english": "naked"
     },
@@ -84,5 +79,4 @@
       "greek": "γυνή, γυναικός, ἡ",
       "english": "woman"
     }
-  ]
-}
+]

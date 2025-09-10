@@ -15,7 +15,6 @@ import (
 	"github.com/google/uuid"
 	pbe "github.com/odysseia-greek/agora/eupalinos/proto"
 	"github.com/odysseia-greek/agora/plato/logging"
-	"github.com/odysseia-greek/agora/plato/models"
 	"github.com/odysseia-greek/agora/plato/transform"
 	pb "github.com/odysseia-greek/delphi/aristides/proto"
 	"github.com/odysseia-greek/makedonia/demokritos/atomos"
@@ -82,33 +81,23 @@ func main() {
 			for _, f := range files {
 				logging.Debug(fmt.Sprintf("found %s in %s", f.Name(), filePath))
 				plan, _ := lexiko.ReadFile(path.Join(filePath, f.Name()))
-				if f.Name() == "lemma.json" {
 
-					var lemma []hetairoi.LemmaSource
-					err := json.Unmarshal(plan, &lemma)
-					if err != nil {
-						log.Fatal(err)
-					}
-
-					for _, l := range lemma {
-						l.Normalized = transform.RemoveAccents(l.Greek)
-					}
-
-					documents += len(lemma)
-					go handler.AddDirectoryToElasticGeneral(lemma, &wg)
-
-				} else {
-					var biblos models.Biblos
-					err := json.Unmarshal(plan, &biblos)
-					if err != nil {
-						log.Fatal(err)
-					}
-
-					documents += len(biblos.Biblos)
-
-					wg.Add(1)
-					go handler.AddDirectoryToElastic(biblos, &wg)
+				var lemma []hetairoi.LemmaSource
+				err := json.Unmarshal(plan, &lemma)
+				if err != nil {
+					log.Fatal(err)
 				}
+
+				for i := range lemma {
+					strippedWord := transform.RemoveAccents(lemma[i].Greek)
+					lemma[i].Normalized = strippedWord
+				}
+
+				documents += len(lemma)
+
+				wg.Add(1)
+				go handler.AddDirectoryToElastic(lemma, &wg)
+
 			}
 		}
 	}

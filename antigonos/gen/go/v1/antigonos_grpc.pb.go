@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AntigonosServiceClient interface {
-	Health(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v1.HealthCheckResponse, error)
+	Health(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v1.HealthResponse, error)
 	Search(ctx context.Context, in *v1.SearchQuery, opts ...grpc.CallOption) (*SearchResponse, error)
 }
 
@@ -36,8 +36,8 @@ func NewAntigonosServiceClient(cc grpc.ClientConnInterface) AntigonosServiceClie
 	return &antigonosServiceClient{cc}
 }
 
-func (c *antigonosServiceClient) Health(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v1.HealthCheckResponse, error) {
-	out := new(v1.HealthCheckResponse)
+func (c *antigonosServiceClient) Health(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v1.HealthResponse, error) {
+	out := new(v1.HealthResponse)
 	err := c.cc.Invoke(ctx, "/antigonos.v1.AntigonosService/Health", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func (c *antigonosServiceClient) Search(ctx context.Context, in *v1.SearchQuery,
 // All implementations must embed UnimplementedAntigonosServiceServer
 // for forward compatibility
 type AntigonosServiceServer interface {
-	Health(context.Context, *emptypb.Empty) (*v1.HealthCheckResponse, error)
+	Health(context.Context, *emptypb.Empty) (*v1.HealthResponse, error)
 	Search(context.Context, *v1.SearchQuery) (*SearchResponse, error)
 	mustEmbedUnimplementedAntigonosServiceServer()
 }
@@ -67,7 +67,7 @@ type AntigonosServiceServer interface {
 type UnimplementedAntigonosServiceServer struct {
 }
 
-func (UnimplementedAntigonosServiceServer) Health(context.Context, *emptypb.Empty) (*v1.HealthCheckResponse, error) {
+func (UnimplementedAntigonosServiceServer) Health(context.Context, *emptypb.Empty) (*v1.HealthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Health not implemented")
 }
 func (UnimplementedAntigonosServiceServer) Search(context.Context, *v1.SearchQuery) (*SearchResponse, error) {

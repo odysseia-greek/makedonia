@@ -10,7 +10,7 @@ import "koinos/v1/lemma.proto";
 import "koinos/v1/search.proto";
 
 service AntigonosService {
-  rpc Health(google.protobuf.Empty) returns (koinos.v1.HealthCheckResponse);
+  rpc Health(google.protobuf.Empty) returns (koinos.v1.HealthResponse);
   rpc Search(koinos.v1.SearchQuery) returns (SearchResponse);
 }
 

@@ -12,6 +12,7 @@ import (
 	"github.com/odysseia-greek/makedonia/antigonos/monophthalmus"
 	"github.com/odysseia-greek/makedonia/filippos/hetairoi"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 const standardPort = ":50060"
@@ -31,11 +32,12 @@ func main() {
 |  |  ||  |  |  |  |   |  | |     ||     ||  |  ||     |\    |
 |__|__||__|__|  |__|  |____||___,_| \___/ |__|__| \___/  \___|
 `)
-	log.Println("\"Μὴ εἴπῃς Ἀντίγονε μοι, ἀλλὰ πρόσταττε ὡς βασιλεύς.\"")
-	log.Println("Do not call me Antigonos, command me as a king.")
 
-	log.Println("starting up.....")
-	log.Println("starting up and getting env variables")
+	logging.System("\"Μὴ εἴπῃς Ἀντίγονε μοι, ἀλλὰ πρόσταττε ὡς βασιλεύς.\"")
+	logging.System("Do not call me Antigonos, command me as a king.")
+
+	logging.System("starting up.....")
+	logging.System("starting up and getting env variables")
 
 	ctx := context.Background()
 	config, err := monophthalmus.CreateNewConfig(ctx)
@@ -52,6 +54,7 @@ func main() {
 	var server *grpc.Server
 
 	server = grpc.NewServer(grpc.UnaryInterceptor(hetairoi.Interceptor))
+	reflection.Register(server)
 
 	v1.RegisterAntigonosServiceServer(server, config)
 

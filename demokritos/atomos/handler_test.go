@@ -1,21 +1,22 @@
 package atomos
 
 import (
-	elastic "github.com/odysseia-greek/agora/aristoteles"
-	"github.com/odysseia-greek/agora/plato/models"
-	"github.com/stretchr/testify/assert"
 	"sync"
 	"testing"
+
+	elastic "github.com/odysseia-greek/agora/aristoteles"
+	"github.com/odysseia-greek/agora/plato/models"
+	"github.com/odysseia-greek/makedonia/filippos/hetairoi"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHandlerCreateDocuments(t *testing.T) {
 	index := "test"
-	body := models.Biblos{Biblos: []models.Meros{
+	body := []hetairoi.LemmaSource{
 		{
 			Greek:   "ἀγγέλλω",
 			English: "to bear a message",
 		},
-	},
 	}
 
 	t.Run("Created", func(t *testing.T) {

@@ -1,0 +1,171 @@
+[
+  {
+    "greek":"γίγνομαι",
+    "english":"become, be born",
+    "dutch":"worden, geboren worden",
+    "linkedWord":"",
+    "partOfSpeech":"verb",
+    "verb":{
+      "principalParts":[
+        "γίγνομαι",
+        "γενήσομαι",
+        "ἐγενόμην",
+        "γέγονα",
+        "γεγένημαι"
+      ]
+    },
+    "definitions":[
+      {
+        "grade":3,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"to become; to be born"
+          },
+          {
+            "language":"nl",
+            "definition":"worden; geboren worden"
+          }
+        ]
+      },
+      {
+        "grade":2,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"to come into being; to happen, occur"
+          }
+        ]
+      },
+      {
+        "grade":1,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"philosophical usage: coming-to-be, process of change"
+          }
+        ]
+      }
+    ],
+    "modernConnections":[
+      {
+        "term":"genesis",
+        "note":"from the same root, meaning 'origin, birth'"
+      },
+      {
+        "term":"generate",
+        "note":"from Latin generare ← γίγνομαι"
+      }
+    ]
+  },
+  {
+    "greek": "λέγω",
+    "english": "say; speak",
+    "dutch": "zeggen; spreken",
+    "linkedWord": "",
+    "partOfSpeech": "verb",
+    "verb": {
+      "present": "λέγω",
+      "aorist": "εἶπον",
+      "perfect": "εἴρηκα",
+      "aoristPassive": "ἐρρήθην",
+      "principalSet": "λέγω, ἐρῶ, εἶπον, εἴρηκα, εἴρημαι, ἐρρήθην"
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "to say; to speak; to tell" },
+          { "language": "nl", "definition": "zeggen; spreken; vertellen" }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "to relate or recount; to mean or signify" }
+        ]
+      },
+      {
+        "grade": 1,
+        "meanings": [
+          { "language": "en", "definition": "in rhetoric/philosophy: to give an account (logos)" }
+        ]
+      }
+    ],
+    "modernConnections": [
+      { "term": "lexicon", "note": "via λέξις ‘speech’ ← λέγω" },
+      { "term": "logic / -logy", "note": "through λόγος, a derivative of λέγω" }
+    ]
+  },
+  {
+    "greek": "ποιέω",
+    "english": "make; do",
+    "dutch": "maken; doen",
+    "linkedWord": "",
+    "partOfSpeech": "verb",
+    "verb": {
+      "present": "ποιέω",
+      "aorist": "ἐποίησα",
+      "perfect": "πεποίηκα",
+      "aoristPassive": "ἐποιήθην",
+      "principalSet": "ποιέω, ποιήσω, ἐποίησα, πεποίηκα, πεποίημαι, ἐποιήθην"
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "to make; to do" },
+          { "language": "nl", "definition": "maken; doen" }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "to produce, create; to cause to be" }
+        ]
+      },
+      {
+        "grade": 1,
+        "meanings": [
+          { "language": "en", "definition": "creative/mimetic making (poetics, arts)" }
+        ]
+      }
+    ],
+    "modernConnections": [
+      { "term": "poet / poem / poetry", "note": "from ποιητής / ποίημα ← ποιέω ‘to make’" }
+    ]
+  },
+  {
+    "greek": "γράφω",
+    "english": "write; draw",
+    "dutch": "schrijven; tekenen",
+    "linkedWord": "",
+    "partOfSpeech": "verb",
+    "verb": {
+      "present": "γράφω",
+      "aorist": "ἔγραψα",
+      "perfect": "γέγραφα",
+      "aoristPassive": "ἐγράφην",
+      "principalSet": "γράφω, γράψω, ἔγραψα, γέγραφα, γέγραμμαι, ἐγράφην"
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "to write; to draw" },
+          { "language": "nl", "definition": "schrijven; tekenen" }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "to inscribe, record; to compose (a text)" }
+        ]
+      }
+    ],
+    "modernConnections": [
+      { "term": "graph / graphic / -graphy", "note": "directly from γράφω ‘to write’" },
+      { "term": "autograph / photograph", "note": "compounds with -graph/-graphy" }
+    ]
+  }
+]

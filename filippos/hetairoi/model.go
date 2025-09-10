@@ -29,7 +29,7 @@ type Verb struct {
 type LemmaSource struct {
 	ID           string             `json:"id,omitempty"`         // if you store one
 	Greek        string             `json:"greek"`                // "λόγος"
-	Normalized   string             `json:"normalized,omitempty"` // "logos"
+	Normalized   string             `json:"normalized,omitempty"` // "λογος"
 	LinkedWord   string             `json:"linkedWord,omitempty"`
 	PartOfSpeech string             `json:"partOfSpeech"`
 	Article      string             `json:"article,omitempty"`

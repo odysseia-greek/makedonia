@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/agora/plato/transform"
 	v1 "github.com/odysseia-greek/makedonia/antigonos/gen/go/v1"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
@@ -34,17 +35,59 @@ func (f *FuzzyServiceImpl) Health(ctx context.Context, request *emptypb.Empty) (
 func (f *FuzzyServiceImpl) Search(ctx context.Context, request *koinos.SearchQuery) (*v1.SearchResponse, error) {
 	baseWord := extractBaseWord(request.Word)
 
-	query := map[string]interface{}{
-		"query": map[string]interface{}{
-			"fuzzy": map[string]interface{}{
-				request.Language.String(): map[string]interface{}{
-					"value":     baseWord,
-					"fuzziness": 2,
+	var query map[string]interface{}
+	if request.Language == koinos.Language_LANG_GREEK {
+		query = map[string]interface{}{
+			"query": map[string]interface{}{
+				"bool": map[string]interface{}{
+					"should": []map[string]interface{}{
+						{
+							"fuzzy": map[string]interface{}{
+								"greek": map[string]interface{}{
+									"value":     request.Word,
+									"fuzziness": 2,
+								},
+							},
+						},
+						{
+							"fuzzy": map[string]interface{}{
+								"normalized": map[string]interface{}{
+									"value":     baseWord,
+									"fuzziness": 2,
+								},
+							},
+						},
+					},
+					"minimum_should_match": 1,
 				},
 			},
-		},
-		"size": 5,
+			"size": 5,
+		}
+	} else {
+		var lang string
+		switch request.Language {
+		case koinos.Language_LANG_ENGLISH:
+			lang = "english"
+		case koinos.Language_LANG_DUTCH:
+			lang = "dutch"
+		default:
+			return nil, fmt.Errorf("unsupported language: %v", request.Language)
+		}
+
+		query = map[string]interface{}{
+			"query": map[string]interface{}{
+				"fuzzy": map[string]interface{}{
+					lang: map[string]interface{}{
+						"value":     request.Word,
+						"fuzziness": 2,
+					},
+				},
+			},
+			"size": 5,
+		}
 	}
+
+	logging.Debug(fmt.Sprintf("%v", query))
 
 	elasticResponse, err := f.Elastic.Query().Match(f.Index, query)
 	if err != nil {
@@ -59,33 +102,6 @@ func (f *FuzzyServiceImpl) Search(ctx context.Context, request *koinos.SearchQue
 
 	hits := elasticResponse.Hits.Hits
 
-	if len(hits) == 0 {
-		noResponseQuery := map[string]interface{}{
-			"query": map[string]interface{}{
-				"fuzzy": map[string]interface{}{
-					request.Language.String(): map[string]interface{}{
-						"value":     request.Word,
-						"fuzziness": 2,
-					},
-				},
-			},
-			"size": 5,
-		}
-
-		noResponseResponse, err := f.Elastic.Query().Match(f.Index, noResponseQuery)
-		if err != nil {
-			return nil, err
-		}
-
-		hitsTotal = int64(0)
-		if elasticResponse.Hits.Hits != nil {
-			hitsTotal = elasticResponse.Hits.Total.Value
-		}
-
-		go hetairoi.DatabaseSpan(query, hitsTotal, noResponseResponse.Took, ctx)
-		hits = noResponseResponse.Hits.Hits
-	}
-
 	results := make([]*koinos.Lemma, 0, len(hits))
 	for _, hit := range hits {
 		source, _ := json.Marshal(hit.Source)
@@ -96,6 +112,7 @@ func (f *FuzzyServiceImpl) Search(ctx context.Context, request *koinos.SearchQue
 				return nil, fmt.Errorf("decode _source: %w", err2)
 			}
 		}
+
 		results = append(results, hetairoi.LemmaFromSource(src))
 	}
 

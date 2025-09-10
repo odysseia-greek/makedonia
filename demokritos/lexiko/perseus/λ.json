@@ -1,5 +1,4 @@
-{
-  "biblos": [
+[
     {
       "greek": "λαγχάνω",
       "english": "obtain by a lottery"
@@ -27,10 +26,6 @@
     {
       "greek": "λανθάνω",
       "english": "do without being noticed"
-    },
-    {
-      "greek": "λέγω",
-      "english": "say, speak"
     },
     {
       "greek": "λείπω",
@@ -80,5 +75,4 @@
       "greek": "λύω",
       "english": "loosen, destroy"
     }
-  ]
-}
+]

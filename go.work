@@ -1,7 +1,6 @@
 go 1.24.0
 
 use (
-
 	./alexandros // GraphQL gateway (imports filippos)
 
 	./antigonos // gRPC service

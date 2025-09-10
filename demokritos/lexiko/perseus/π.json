@@ -1,5 +1,4 @@
-{
-  "biblos": [
+[
     {
       "greek": "πάθος –ους, τό",
       "english": "suffering"
@@ -279,10 +278,6 @@
     {
       "greek": "πνεῦμα -ατος, τό",
       "english": "wind, breath"
-    },
-    {
-      "greek": "ποιέω",
-      "english": "make"
     },
     {
       "greek": "ποιητής –οῦ, ὁ",
@@ -584,5 +579,4 @@
       "greek": "πάντα",
       "english": "always"
     }
-  ]
-}
+]
