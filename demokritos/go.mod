@@ -8,7 +8,7 @@ require (
 	github.com/odysseia-greek/agora/eupalinos v0.2.3
 	github.com/odysseia-greek/agora/plato v0.2.10
 	github.com/odysseia-greek/delphi/aristides v0.0.1
-	github.com/odysseia-greek/makedonia/filippos v0.0.1
+	github.com/odysseia-greek/makedonia/filippos v0.0.2-rc1
 	github.com/stretchr/testify v1.11.1
 	google.golang.org/grpc v1.75.0
 )

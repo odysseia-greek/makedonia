@@ -72,33 +72,80 @@ func main() {
 
 	for _, dir := range rootDir {
 		logging.Debug("working on the following directory: " + dir.Name())
-		if dir.IsDir() {
-			filePath := path.Join(root, dir.Name())
-			files, err := lexiko.ReadDir(filePath)
-			if err != nil {
+		if !dir.IsDir() {
+			continue
+		}
+
+		filePath := path.Join(root, dir.Name())
+		files, err := lexiko.ReadDir(filePath)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, f := range files {
+			logging.Debug(fmt.Sprintf("found %s in %s", f.Name(), filePath))
+			plan, _ := lexiko.ReadFile(path.Join(filePath, f.Name()))
+
+			var lemma []hetairoi.LemmaSource
+			if err := json.Unmarshal(plan, &lemma); err != nil {
 				log.Fatal(err)
 			}
-			for _, f := range files {
-				logging.Debug(fmt.Sprintf("found %s in %s", f.Name(), filePath))
-				plan, _ := lexiko.ReadFile(path.Join(filePath, f.Name()))
 
-				var lemma []hetairoi.LemmaSource
-				err := json.Unmarshal(plan, &lemma)
-				if err != nil {
-					log.Fatal(err)
+			for i := range lemma {
+				// 1) Normalized (no accents)
+				stripped := transform.RemoveAccents(lemma[i].Greek)
+				lemma[i].Normalized = strings.TrimSpace(stripped)
+
+				if f.Name() != "verbs.json" && f.Name() != "nouns.json" && f.Name() != "misc.json" {
+					// 2) Parse meta from the original greek field
+					p := atomos.SimpleParse(lemma[i].Greek)
+
+					// 3) Fill only if empty / safe
+					if p.Lemma != "" {
+						lemma[i].Greek = p.Lemma
+						stripped = transform.RemoveAccents(p.Lemma)
+						lemma[i].Normalized = strings.TrimSpace(stripped)
+					}
+					if lemma[i].PartOfSpeech == "" && p.PartOfSpeech != "" {
+						lemma[i].PartOfSpeech = p.PartOfSpeech
+					}
+					if lemma[i].Article == "" && p.Article != "" {
+						lemma[i].Article = p.Article
+					}
+					if lemma[i].Gender == "" && p.Gender != "" {
+						lemma[i].Gender = p.Gender
+					}
+
+					// 4) Noun info
+					if lemma[i].PartOfSpeech == "noun" {
+						// ensure noun struct exists
+						if lemma[i].Noun == nil {
+							lemma[i].Noun = &hetairoi.Noun{}
+						}
+						if lemma[i].Noun.Declension == "" && p.Declension != "" {
+							lemma[i].Noun.Declension = p.Declension
+						}
+						if lemma[i].Noun.Genitive == "" && p.Genitive != "" {
+							lemma[i].Noun.Genitive = p.Genitive
+						}
+					}
+
+					// 5) Verb detection (no principal parts here; just mark POS)
+					if lemma[i].PartOfSpeech == "" && p.PartOfSpeech == "verb" {
+						lemma[i].PartOfSpeech = "verb"
+					}
 				}
-
-				for i := range lemma {
-					strippedWord := transform.RemoveAccents(lemma[i].Greek)
-					lemma[i].Normalized = strippedWord
-				}
-
-				documents += len(lemma)
-
-				wg.Add(1)
-				go handler.AddDirectoryToElastic(lemma, &wg)
 
 			}
+
+			// increment ONCE per file (not per entry)
+			documents += len(lemma)
+
+			// enqueue ONE ingestion per file (not per entry)
+			wg.Add(1)
+			go func(items []hetairoi.LemmaSource) {
+				handler.AddDirectoryToElastic(items, &wg) // or pass &wg if your handler expects it to call Done()
+			}(lemma)
 		}
 	}
 

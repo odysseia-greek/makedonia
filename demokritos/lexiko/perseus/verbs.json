@@ -65,11 +65,9 @@
     "linkedWord": "",
     "partOfSpeech": "verb",
     "verb": {
-      "present": "λέγω",
-      "aorist": "εἶπον",
-      "perfect": "εἴρηκα",
-      "aoristPassive": "ἐρρήθην",
-      "principalSet": "λέγω, ἐρῶ, εἶπον, εἴρηκα, εἴρημαι, ἐρρήθην"
+      "principalParts": [
+        "λέγω", "ἐρῶ", "εἶπον", "εἴρηκα", "εἴρημαι", "ἐρρήθην"
+      ]
     },
     "definitions": [
       {
@@ -104,11 +102,9 @@
     "linkedWord": "",
     "partOfSpeech": "verb",
     "verb": {
-      "present": "ποιέω",
-      "aorist": "ἐποίησα",
-      "perfect": "πεποίηκα",
-      "aoristPassive": "ἐποιήθην",
-      "principalSet": "ποιέω, ποιήσω, ἐποίησα, πεποίηκα, πεποίημαι, ἐποιήθην"
+      "principalParts": [
+        "ποιέω", "ποιήσω", "ἐποίησα", "πεποίηκα", "πεποίημαι", "ἐποιήθην"
+      ]
     },
     "definitions": [
       {
@@ -142,11 +138,9 @@
     "linkedWord": "",
     "partOfSpeech": "verb",
     "verb": {
-      "present": "γράφω",
-      "aorist": "ἔγραψα",
-      "perfect": "γέγραφα",
-      "aoristPassive": "ἐγράφην",
-      "principalSet": "γράφω, γράψω, ἔγραψα, γέγραφα, γέγραμμαι, ἐγράφην"
+      "principalParts": [
+        "γράφω", "γράψω", "ἔγραψα", "γέγραφα", "γέγραμμαι", "ἐγράφην"
+      ]
     },
     "definitions": [
       {
