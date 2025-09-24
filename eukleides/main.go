@@ -11,6 +11,7 @@ import (
 	"github.com/odysseia-greek/makedonia/eukleides/geometrias"
 	pb "github.com/odysseia-greek/makedonia/eukleides/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 const standardPort = ":50060"
@@ -32,11 +33,11 @@ func main() {
 |_____| \__,_||__|\_||_____||_____||____||_____||_____| \___|
 `)
 
-	log.Println("\"στοιχεῖα τῆς γεωμετρίας\"")
-	log.Println("The Elements of Geometry")
+	logging.System("\"στοιχεῖα τῆς γεωμετρίας\"")
+	logging.System("The Elements of Geometry")
 
-	log.Println("starting up.....")
-	log.Println("starting up and getting env variables")
+	logging.System("starting up.....")
+	logging.System("starting up and getting env variables")
 
 	ctx := context.Background()
 	config, err := geometrias.CreateNewConfig(ctx)
@@ -53,6 +54,7 @@ func main() {
 	var server *grpc.Server
 
 	server = grpc.NewServer(grpc.UnaryInterceptor(geometrias.Interceptor))
+	reflection.Register(server)
 
 	pb.RegisterEukleidesServer(server, config)
 

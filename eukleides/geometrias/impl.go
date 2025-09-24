@@ -3,18 +3,20 @@ package geometrias
 import (
 	"context"
 	"fmt"
-	"github.com/odysseia-greek/agora/archytas"
-	"github.com/odysseia-greek/agora/aristoteles"
+	"time"
+
 	pbar "github.com/odysseia-greek/attike/aristophanes/proto"
 	pb "github.com/odysseia-greek/makedonia/eukleides/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"time"
 )
 
 type CounterService interface {
 	WaitForHealthyState() bool
 	CreateNewEntry(ctx context.Context) (pb.Eukleides_CreateNewEntryClient, error)
+	RetrieveTopFive(ctx context.Context, in *pb.TopFiveRequest) (*pb.TopFiveResponse, error)
+	RetrieveTopFiveService(ctx context.Context, in *pb.TopFiveServiceRequest) (*pb.TopFive, error)
+	RetrieveTopFiveForSession(ctx context.Context, in *pb.TopFiveSessionRequest) (*pb.TopFiveResponse, error)
 }
 
 const (
@@ -22,10 +24,8 @@ const (
 )
 
 type CounterServiceImpl struct {
-	Elastic  aristoteles.Client
-	Index    string
 	Version  string
-	Archytas archytas.Client
+	store    *Store
 	Streamer pbar.TraceService_ChorusClient
 	pb.UnimplementedEukleidesServer
 }
@@ -55,7 +55,7 @@ func (m *CounterClient) WaitForHealthyState() bool {
 
 	for time.Now().Before(endTime) {
 		response, err := m.Health(context.Background(), &pb.HealthRequest{})
-		if err == nil && response.Health {
+		if err == nil && response.Healthy {
 			return true
 		}
 
@@ -71,4 +71,16 @@ func (m *CounterClient) Health(ctx context.Context, request *pb.HealthRequest) (
 
 func (m *CounterClient) CreateNewEntry(ctx context.Context) (pb.Eukleides_CreateNewEntryClient, error) {
 	return m.counter.CreateNewEntry(ctx)
+}
+
+func (m *CounterClient) RetrieveTopFive(ctx context.Context, in *pb.TopFiveRequest) (*pb.TopFiveResponse, error) {
+	return m.counter.RetrieveTopFive(ctx, in)
+}
+
+func (m *CounterClient) RetrieveTopFiveService(ctx context.Context, in *pb.TopFiveServiceRequest) (*pb.TopFive, error) {
+	return m.counter.RetrieveTopFiveService(ctx, in)
+}
+
+func (m *CounterClient) RetrieveTopFiveForSession(ctx context.Context, in *pb.TopFiveSessionRequest) (*pb.TopFiveResponse, error) {
+	return m.counter.RetrieveTopFiveForSession(ctx, in)
 }

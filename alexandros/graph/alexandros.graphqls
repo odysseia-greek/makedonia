@@ -1,0 +1,26 @@
+type AggregatedHealthResponse {
+    healthy: Boolean
+    time: String
+    version: String
+    services: [ServiceHealth]
+}
+
+type ServiceHealth {
+    name: String
+    healthy: Boolean
+    version: String
+    databaseInfo: DatabaseInfo
+}
+
+type DatabaseInfo {
+    healthy: Boolean
+    clusterName: String
+    serverName: String
+    serverVersion: String
+}
+
+
+
+type Query {
+    health: AggregatedHealthResponse
+}
