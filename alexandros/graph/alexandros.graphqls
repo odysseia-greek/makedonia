@@ -1,26 +1,136 @@
+# -------------------------
+# Health (Gateway + Service)
+# -------------------------
+
 type AggregatedHealthResponse {
-    healthy: Boolean
+    healthy: Boolean!
     time: String
     version: String
-    services: [ServiceHealth]
+    services: [ServiceHealth!]!
 }
 
 type ServiceHealth {
-    name: String
-    healthy: Boolean
+    name: String!
+    healthy: Boolean!
     version: String
     databaseInfo: DatabaseInfo
 }
 
 type DatabaseInfo {
-    healthy: Boolean
+    healthy: Boolean!
     clusterName: String
     serverName: String
     serverVersion: String
 }
 
+# Mirrors koinos.v1.HealthResponse (AntigonosService/Health)
+type HealthResponse {
+    healthy: Boolean!
+    time: String
+    version: String
+}
 
+# -------------------------
+# Search (AntigonosService)
+# -------------------------
+
+# Mirrors koinos.v1.Language
+enum Language {
+    LANGUAGE_UNSPECIFIED
+    LANG_GREEK
+    LANG_ENGLISH
+    LANG_DUTCH
+}
+
+# Mirrors koinos.v1.SearchQuery
+input SearchQueryInput {
+    word: String!
+    language: Language = LANG_GREEK
+    # Optional client-side paging hints (GraphQL-side; your resolver can map to koinos.v1.PageInfo params)
+    page: Int = 1
+    size: Int = 10
+}
+
+# Mirrors koinos.v1.PageInfo
+type PageInfo {
+    page: Int!
+    size: Int!
+    total: Int!
+}
+
+# Mirrors koinos.v1.LocalizedGloss
+type LocalizedGloss {
+    language: String!
+    gloss: String!
+}
+
+# Mirrors koinos.v1.Meaning
+type Meaning {
+    language: String!
+    definition: String!
+    notes: [String!]!
+    example: String
+}
+
+# Mirrors koinos.v1.Definition
+type Definition {
+    grade: Int!
+    meanings: [Meaning!]!
+}
+
+# Mirrors koinos.v1.NounInfo
+type NounInfo {
+    declension: String
+    genitive: String
+}
+
+# Mirrors koinos.v1.VerbInfo
+type VerbInfo {
+    principalParts: [String!]!
+}
+
+# Mirrors koinos.v1.ModernConnection
+type ModernConnection {
+    term: String!
+    note: String
+}
+
+# Mirrors koinos.v1.Lemma
+type Lemma {
+    id: String
+    headword: String!
+    normalized: String
+    linkedWord: String
+    partOfSpeech: String
+    article: String
+    gender: String
+    noun: NounInfo
+    verb: VerbInfo
+    quickGlosses: [LocalizedGloss!]!
+    definitions: [Definition!]!
+    modernConnections: [ModernConnection!]!
+}
+
+# Optional: Provided in proto, not yet attached to Lemma
+type Reference {
+    work: String!
+    locus: String!
+}
+
+# Mirrors antigonos.v1.SearchResponse
+type SearchResponse {
+    results: [Lemma!]!
+    pageInfo: PageInfo!
+}
+
+# -------------------------
+# Root Query
+# -------------------------
 
 type Query {
-    health: AggregatedHealthResponse
+    # Your existing gateway aggregate
+    health: AggregatedHealthResponse!
+
+    # Passthrough to AntigonosService/Search (koinos.v1.SearchQuery → antigonos.v1.SearchResponse)
+    fuzzy(input: SearchQueryInput!): SearchResponse!
 }

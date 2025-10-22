@@ -2,6 +2,10 @@ package routing
 
 import (
 	"encoding/json"
+	"net/http"
+	"os"
+	"time"
+
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
@@ -10,9 +14,6 @@ import (
 	"github.com/odysseia-greek/makedonia/alexandros/gateway"
 	"github.com/odysseia-greek/makedonia/alexandros/graph"
 	"github.com/odysseia-greek/makedonia/alexandros/middleware"
-	"net/http"
-	"os"
-	"time"
 )
 
 // InitRoutes initializes the mux router with middleware and GraphQL handler

@@ -5,12 +5,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/odysseia-greek/agora/plato/config"
-	"github.com/odysseia-greek/attike/aristophanes/comedy"
-	pb "github.com/odysseia-greek/attike/aristophanes/proto"
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/odysseia-greek/agora/plato/config"
+	"github.com/odysseia-greek/attike/aristophanes/comedy"
+	pb "github.com/odysseia-greek/attike/aristophanes/proto"
 
 	"github.com/odysseia-greek/agora/plato/logging"
 )
