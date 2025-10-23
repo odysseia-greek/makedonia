@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/odysseia-greek/agora/aristoteles/models"
 	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/agora/plato/transform"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
@@ -35,7 +36,6 @@ func (e *ExactServiceImpl) Health(ctx context.Context, request *emptypb.Empty) (
 func (e *ExactServiceImpl) Search(ctx context.Context, request *koinos.SearchQuery) (*v1.SearchResponse, error) {
 	baseWord, strippedWord := extractBaseWord(request.Word)
 
-	var query map[string]interface{}
 	var language string
 	switch request.Language {
 	case koinos.Language_LANG_GREEK:
@@ -47,48 +47,22 @@ func (e *ExactServiceImpl) Search(ctx context.Context, request *koinos.SearchQue
 	default:
 		return nil, fmt.Errorf("unsupported language: %v", request.Language)
 	}
-	query = map[string]interface{}{
-		"query": map[string]interface{}{
-			"bool": map[string]interface{}{
-				"should": []interface{}{
-					map[string]interface{}{
-						"prefix": map[string]interface{}{
-							fmt.Sprintf("%s.keyword", language): fmt.Sprintf("%s,", baseWord),
-						},
-					},
-					map[string]interface{}{
-						"prefix": map[string]interface{}{
-							fmt.Sprintf("%s.keyword", language): fmt.Sprintf("%s ", baseWord),
-						},
-					},
-					map[string]interface{}{
-						"term": map[string]interface{}{
-							fmt.Sprintf("%s.keyword", language): baseWord,
-						},
-					},
-				},
-			},
-		},
-		"size": 5,
-	}
 
-	logging.Debug(fmt.Sprintf("%v", query))
-
-	elasticResponse, err := e.Elastic.Query().Match(e.Index, query)
+	elasticResponse, hitsTotal, err := e.queryElastic(ctx, baseWord, language)
 	if err != nil {
-		return nil, fmt.Errorf("error querying elastic: %w", err)
+		return nil, err
 	}
 
-	hitsTotal := int64(0)
-	if elasticResponse.Hits.Hits != nil {
-		hitsTotal = elasticResponse.Hits.Total.Value
+	if len(elasticResponse.Hits.Hits) == 0 {
+		logging.Debug("no hits found trying with a word without diacretics")
+		elasticResponse, hitsTotal, err = e.queryElastic(ctx, strippedWord, language)
+		if err != nil {
+			return nil, err
+		}
 	}
-	go hetairoi.DatabaseSpan(query, hitsTotal, elasticResponse.Took, ctx)
 
-	hits := elasticResponse.Hits.Hits
-
-	results := make([]*koinos.Lemma, 0, len(hits))
-	for _, hit := range hits {
+	results := make([]*koinos.Lemma, 0, len(elasticResponse.Hits.Hits))
+	for _, hit := range elasticResponse.Hits.Hits {
 		source, _ := json.Marshal(hit.Source)
 		var src hetairoi.LemmaSource
 		if err := json.Unmarshal(source, &src); err != nil {
@@ -106,6 +80,48 @@ func (e *ExactServiceImpl) Search(ctx context.Context, request *koinos.SearchQue
 		PageInfo: &koinos.PageInfo{Page: 1, Size: int32(len(results)), Total: int32(hitsTotal)},
 	}
 	return resp, nil
+}
+
+func (e *ExactServiceImpl) queryElastic(ctx context.Context, word, language string) (*models.Response, int64, error) {
+	query := map[string]interface{}{
+		"query": map[string]interface{}{
+			"bool": map[string]interface{}{
+				"should": []interface{}{
+					map[string]interface{}{
+						"prefix": map[string]interface{}{
+							fmt.Sprintf("%s.keyword", language): fmt.Sprintf("%s,", word),
+						},
+					},
+					map[string]interface{}{
+						"prefix": map[string]interface{}{
+							fmt.Sprintf("%s.keyword", language): fmt.Sprintf("%s ", word),
+						},
+					},
+					map[string]interface{}{
+						"term": map[string]interface{}{
+							fmt.Sprintf("%s.keyword", language): word,
+						},
+					},
+				},
+			},
+		},
+		"size": 5,
+	}
+
+	logging.Debug(fmt.Sprintf("%v", query))
+
+	elasticResponse, err := e.Elastic.Query().Match(e.Index, query)
+	if err != nil {
+		return nil, 0, fmt.Errorf("error querying elastic: %w", err)
+	}
+
+	hitsTotal := int64(0)
+	if elasticResponse.Hits.Hits != nil {
+		hitsTotal = elasticResponse.Hits.Total.Value
+	}
+	go hetairoi.DatabaseSpan(query, hitsTotal, elasticResponse.Took, ctx)
+
+	return elasticResponse, hitsTotal, nil
 }
 
 func extractBaseWord(queryWord string) (string, string) {

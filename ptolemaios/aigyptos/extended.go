@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/odysseia-greek/agora/plato/logging"
@@ -12,6 +11,7 @@ import (
 	"github.com/odysseia-greek/agora/plato/service"
 	pb "github.com/odysseia-greek/attike/aristophanes/proto"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
+	"github.com/odysseia-greek/makedonia/filippos/hetairoi"
 	v1 "github.com/odysseia-greek/makedonia/ptolemaios/gen/go/v1"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -33,8 +33,7 @@ func (e *ExtendedServiceImpl) Health(ctx context.Context, request *emptypb.Empty
 		Version:        e.Version,
 	}, nil
 }
-func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSearch) (*v1.AnalyzeTextResponse, error) {
-
+func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSearch) (*v1.ExtendedSearchResponse, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	var requestId string
 	if ok {
@@ -44,38 +43,27 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 		}
 	}
 
-	splitID := strings.Split(requestId, "+")
+	analyseResult := &v1.ExtendedSearchResponse{}
 
-	traceCall := false
-	var traceID, spanID string
-
-	if len(splitID) >= 3 {
-		traceCall = splitID[2] == "1"
-	}
-
-	if len(splitID) >= 1 {
-		traceID = splitID[0]
-	}
-	if len(splitID) >= 2 {
-		spanID = splitID[1]
-	}
-
-	if traceCall {
-		herodotosSpan := &pb.ParabasisRequest{
-			TraceId:      traceID,
-			ParentSpanId: spanID,
-			SpanId:       spanID,
-			RequestType: &pb.ParabasisRequest_Span{Span: &pb.SpanRequest{
-				Action: "analyseText",
-				Status: fmt.Sprintf("querying Herodotos for word: %s", request.Word),
-			}},
-		}
-
-		err := e.Streamer.Send(herodotosSpan)
+	cacheItem, _ := e.Archytas.Read(request.Word)
+	if cacheItem != nil {
+		err := json.Unmarshal(cacheItem, &analyseResult)
 		if err != nil {
-			logging.Error(fmt.Sprintf("error returned from tracer: %s", err.Error()))
+			return nil, err
 		}
+
+		go hetairoi.CacheSpan(string(cacheItem), request.Word, ctx)
+		return analyseResult, nil
 	}
+
+	herodotosSpan := &pb.ParabasisRequest{
+		RequestType: &pb.ParabasisRequest_Span{Span: &pb.SpanRequest{
+			Action: "analyseText",
+			Status: fmt.Sprintf("querying Herodotos for word: %s", request.Word),
+		}},
+	}
+
+	hetairoi.ServiceToServiceSpan(herodotosSpan, ctx)
 
 	startTime := time.Now()
 	r := models.AnalyzeTextRequest{Rootword: request.Word}
@@ -86,7 +74,6 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 
 	foundInText, err := e.Client.Herodotos().Analyze(jsonBody, requestId)
 	endTime := time.Since(startTime)
-	var analyseResult *v1.AnalyzeTextResponse
 
 	if foundInText != nil {
 		var source models.AnalyzeTextResponse
@@ -96,25 +83,16 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 			logging.Error(fmt.Sprintf("error while decoding: %s", err.Error()))
 		}
 
-		if traceCall {
-			herodotosSpan := &pb.ParabasisRequest{
-				TraceId:      traceID,
-				ParentSpanId: spanID,
-				SpanId:       spanID,
-				RequestType: &pb.ParabasisRequest_Span{Span: &pb.SpanRequest{
-					Action: "analyseText",
-					Took:   fmt.Sprintf("%v", endTime),
-					Status: fmt.Sprintf("querying Herodotos returned: %d", foundInText.StatusCode),
-				}},
-			}
-
-			err := e.Streamer.Send(herodotosSpan)
-			if err != nil {
-				logging.Error(fmt.Sprintf("error returned from tracer: %s", err.Error()))
-			}
+		herodotosSpan = &pb.ParabasisRequest{
+			RequestType: &pb.ParabasisRequest_Span{Span: &pb.SpanRequest{
+				Action: "analyseText",
+				Took:   fmt.Sprintf("%v", endTime),
+				Status: fmt.Sprintf("querying Herodotos returned: %d", foundInText.StatusCode),
+			}},
 		}
+		hetairoi.ServiceToServiceSpan(herodotosSpan, ctx)
 
-		analyseResult = &v1.AnalyzeTextResponse{
+		analyseResult.FoundInText = &v1.AnalyzeTextResponse{
 			Rootword:     source.Rootword,
 			PartOfSpeech: source.PartOfSpeech,
 			Conjugations: []*v1.Conjugations{},
@@ -133,7 +111,7 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 					Section:      text.Text.Section,
 				},
 			}
-			analyseResult.Texts = append(analyseResult.Texts, parsedText)
+			analyseResult.FoundInText.Texts = append(analyseResult.FoundInText.Texts, parsedText)
 		}
 
 		for _, conjugation := range source.Conjugations {
@@ -142,8 +120,16 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 				Rule: conjugation.Rule,
 			}
 
-			analyseResult.Conjugations = append(analyseResult.Conjugations, parsedConjugation)
+			analyseResult.FoundInText.Conjugations = append(analyseResult.FoundInText.Conjugations, parsedConjugation)
 		}
+	}
+
+	analyseResultJson, _ := json.Marshal(analyseResult)
+
+	standardDuration := time.Minute * 10
+	err = e.Archytas.SetWithTTL(request.Word, string(analyseResultJson), standardDuration)
+	if err != nil {
+		logging.Error(err.Error())
 	}
 
 	return analyseResult, nil
