@@ -1,4 +1,4 @@
-PROTO_DIRS := antigonos eukleides hefaistion parmenion perdikkas
+PROTO_DIRS := antigonos eukleides hefaistion parmenion perdikkas ptolemaios filippos
 
 .PHONY: all
 all: generate docs proto antigonos
@@ -7,10 +7,7 @@ all: generate docs proto antigonos
 generate:
 	@for dir in $(PROTO_DIRS); do \
 		echo "Generating Protobuf files in $$dir..."; \
-		(cd $$dir && \
-		 protoc --go_out=. --go_opt=paths=source_relative \
-		        --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-		        proto/$$dir.proto); \
+		buf generate --template $$dir/buf.gen.yaml $$dir; \
 	done
 
 .PHONY: docs

@@ -28,6 +28,17 @@ type Definition struct {
 	Meanings []*Meaning `json:"meanings"`
 }
 
+type EukleidesTopFive struct {
+	ServiceName string  `json:"serviceName"`
+	Word        string  `json:"word"`
+	LastUsed    *string `json:"lastUsed,omitempty"`
+	Count       int32   `json:"count"`
+}
+
+type EukleidesTopFiveResponse struct {
+	TopFive []*EukleidesTopFive `json:"topFive"`
+}
+
 type HealthResponse struct {
 	Healthy bool    `json:"healthy"`
 	Time    *string `json:"time,omitempty"`

@@ -21,6 +21,9 @@ Fuzzy (approximate) search service
 ### Parmenion
 Phrase (extended) search service
 
+### Ptolemaios
+Extended results retrieval service
+
 ### Dareios
 System testing service for end-to-end and integration tests
 
@@ -69,6 +72,12 @@ Parmenion – Phrase Match Search
 “ἐγὼ μὲν ἂν δεξαίμην, εἰ Ἀλέξανδρός εἰμι.”
 “If I were Alexander, I would accept it.”
 – Plutarch, Alexander 29
+
+Ptolemaios – Extended Results Retrieval
+
+“Τὰ ἐπιπλέον ζητεῖν ἔξεστι τοῖς φιλομαθέσιν.”
+“Those who love learning may seek the extended.”
+– Inspired by the spirit of Hellenistic scholarship
 
 Dareios – System Test Service
 

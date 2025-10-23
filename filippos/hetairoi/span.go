@@ -89,3 +89,20 @@ func CacheSpan(response string, sessionId string, ctx context.Context) {
 		logging.Error(fmt.Sprintf("error returned from tracer: %s", err.Error()))
 	}
 }
+
+func ServiceToServiceSpan(span *pb.ParabasisRequest, ctx context.Context) {
+	traceID, spanID, traceCall := extractRequestIds(ctx)
+
+	if !traceCall {
+		return
+	}
+
+	span.TraceId = traceID
+	span.ParentSpanId = spanID
+
+	err := streamer.Send(span)
+	if err != nil {
+		logging.Error(fmt.Sprintf("error returned from tracer: %s", err.Error()))
+	}
+
+}

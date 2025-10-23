@@ -1,6 +1,6 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
-github.com/99designs/gqlgen v0.17.73 h1:A3Ki+rHWqKbAOlg5fxiZBnz6OjW3nwupDHEG15gEsrg=
-github.com/99designs/gqlgen v0.17.73/go.mod h1:2RyGWjy2k7W9jxrs8MOQthXGkD3L3oGr0jXW3Pu8lGg=
+github.com/99designs/gqlgen v0.17.81 h1:kCkN/xVyRb5rEQpuwOHRTYq83i0IuTQg9vdIiwEerTs=
+github.com/99designs/gqlgen v0.17.81/go.mod h1:vgNcZlLwemsUhYim4dC1pvFP5FX0pr2Y+uYUoHFb1ig=
 github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 h1:UQHMgLO+TxOElx5B5HZ4hJQsoJ/PvUvKRhJHDQXO8P8=
 github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1/go.mod h1:xomTg63KZ2rFqZQzSB4Vz2SUXa1BpHTVz9L5PTmPC4E=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
@@ -254,6 +254,8 @@ github.com/odysseia-greek/delphi/aristides v0.0.1 h1:cr1bWw3po+WLNIfrg/CK2ey2uVk
 github.com/odysseia-greek/delphi/aristides v0.0.1/go.mod h1:sIQ3MwkvyWoTCtrS1cU84vcjAWoera2qHYeVrF3jeLk=
 github.com/odysseia-greek/makedonia/antigonos v0.0.1-rho1 h1:SKqe/pq7XTBIAyuuTheUW3u3KZk0vF4KUjnMc7catxc=
 github.com/odysseia-greek/makedonia/antigonos v0.0.1-rho1/go.mod h1:nfr4+YoBfflu/WFwAVEj1KBNihHPbWW+uZO1ydzxBi0=
+github.com/odysseia-greek/makedonia/eukleides v0.0.1 h1:mWghs/MFPmcKCSVEqnaXZFVCd/+SWzdqgfmZscI1JbE=
+github.com/odysseia-greek/makedonia/eukleides v0.0.1/go.mod h1:OLHwwLUgWcwPyJcEQEy0PADSIx+HwMCborPgg4c+vYo=
 github.com/odysseia-greek/makedonia/filippos v0.0.2 h1:q9iq+xkecxiZZZBtXIrf8Z1zV+ao9m32YEJa+3g4V6E=
 github.com/odysseia-greek/makedonia/filippos v0.0.2/go.mod h1:fjQyXVL8rjkw0WrOWgQcNVv326i9lomUH36MVh6ke5M=
 github.com/onsi/ginkgo/v2 v2.13.0 h1:0jY9lJquiL8fcf3M4LAXN5aMlS/b2BV86HFFPCPMgE4=
@@ -397,8 +399,8 @@ golang.org/x/tools v0.0.0-20190524140312-2c0ae7006135/go.mod h1:RgjU9mgBXZiqYHBn
 golang.org/x/tools v0.0.0-20191119224855-298f0cb1881e/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
 golang.org/x/tools v0.0.0-20200619180055-7c47624df98f/go.mod h1:EkVYQZoAsY45+roYkvgYkIh4xh/qjgUK9TdY2XT94GE=
 golang.org/x/tools v0.0.0-20210106214847-113979e3529a/go.mod h1:emZCQorbCU4vsT4fOWvOPXz4eW1wZW4PmDk9uLelYpA=
-golang.org/x/tools v0.36.0 h1:kWS0uv/zsvHEle1LbV5LE8QujrxB3wfQyxHfhOk0Qkg=
-golang.org/x/tools v0.36.0/go.mod h1:WBDiHKJK8YgLHlcQPYQzNCkUxUypCaa5ZegCVutKm+s=
+golang.org/x/tools v0.37.0 h1:DVSRzp7FwePZW356yEAChSdNcQo6Nsp+fex1SUW09lE=
+golang.org/x/tools v0.37.0/go.mod h1:MBN5QPQtLMHVdvsbtarmTNukZDdgwdwlO5qGacAzF0w=
 golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=

@@ -3,6 +3,8 @@ version: v2
 modules:
   - path: filippos/proto
   - path: antigonos/proto
+  - path: hefaistion/proto
+  - path: ptolemaios/proto
 lint:
   use: [DEFAULT]
 breaking:

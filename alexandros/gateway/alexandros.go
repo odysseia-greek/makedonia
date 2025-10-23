@@ -12,16 +12,18 @@ import (
 	pbar "github.com/odysseia-greek/attike/aristophanes/proto"
 	"github.com/odysseia-greek/makedonia/antigonos/monophthalmus"
 	"github.com/odysseia-greek/makedonia/eukleides/geometrias"
+	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
 type AlexandrosHandler struct {
-	Streamer    pbar.TraceService_ChorusClient
-	Eukleides   geometrias.CounterClient
-	Randomizer  randomizer.Random
-	FuzzyClient *GenericGrpcClient[*monophthalmus.FuzzyClient]
+	Streamer        pbar.TraceService_ChorusClient
+	CounterStreamer pbe.Eukleides_CreateNewEntryClient
+	Counter         *geometrias.CounterClient
+	Randomizer      randomizer.Random
+	FuzzyClient     *GenericGrpcClient[*monophthalmus.FuzzyClient]
 }
 type GenericGrpcClient[T any] struct {
 	client  T

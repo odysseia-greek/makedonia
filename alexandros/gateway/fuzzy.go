@@ -4,12 +4,22 @@ import (
 	"github.com/odysseia-greek/makedonia/alexandros/graph/model"
 	antigonosv1 "github.com/odysseia-greek/makedonia/antigonos/gen/go/v1"
 	"github.com/odysseia-greek/makedonia/antigonos/monophthalmus"
+	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 )
 
 func (a *AlexandrosHandler) Fuzzy(request *koinos.SearchQuery, requestID, sessionId string) (*model.SearchResponse, error) {
 	fuzzyClientCtx, cancel := a.createRequestHeader(requestID, sessionId)
 	defer cancel()
+
+	eukleidesUpdate := pbe.CountCreationRequest{
+		Word:        request.Word,
+		ServiceName: "fuzzy",
+		SearchType:  "fuzzy",
+		SessionId:   sessionId,
+	}
+
+	go a.pushToEukleides(&eukleidesUpdate)
 
 	var grpcResponse *antigonosv1.SearchResponse
 
@@ -21,12 +31,13 @@ func (a *AlexandrosHandler) Fuzzy(request *koinos.SearchQuery, requestID, sessio
 	if err != nil {
 		return nil, err
 	}
+	// ... unchanged above ...
 
 	var lemmas []*model.Lemma
 
 	for _, result := range grpcResponse.Results {
-		glosses := make([]*model.LocalizedGloss, len(result.QuickGlosses))
-
+		// QuickGlosses
+		glosses := make([]*model.LocalizedGloss, 0, len(result.QuickGlosses))
 		for _, gloss := range result.QuickGlosses {
 			glosses = append(glosses, &model.LocalizedGloss{
 				Language: gloss.Language,
@@ -34,30 +45,37 @@ func (a *AlexandrosHandler) Fuzzy(request *koinos.SearchQuery, requestID, sessio
 			})
 		}
 
-		definitions := make([]*model.Definition, len(result.Definitions))
-
+		// Definitions
+		definitions := make([]*model.Definition, 0, len(result.Definitions))
 		for _, definition := range result.Definitions {
 			def := &model.Definition{
 				Grade:    definition.Grade,
-				Meanings: nil,
+				Meanings: make([]*model.Meaning, 0, len(definition.Meanings)),
 			}
 			for _, meaning := range definition.Meanings {
+				// Ensure notes is a non-nil slice for [String!]!
+				notes := meaning.Notes
+				if notes == nil {
+					notes = []string{}
+				}
+				// Example is optional (String), nil is fine.
 				def.Meanings = append(def.Meanings, &model.Meaning{
 					Language:   meaning.Language,
 					Definition: meaning.Definition,
-					Notes:      meaning.Notes,
+					Notes:      notes,
 					Example:    &meaning.Example,
 				})
 			}
-
 			definitions = append(definitions, def)
 		}
 
-		modernConnections := make([]*model.ModernConnection, len(result.ModernConnections))
+		// ModernConnections
+		modernConnections := make([]*model.ModernConnection, 0, len(result.ModernConnections))
 		for _, mc := range result.ModernConnections {
+			note := mc.Note // optional
 			modernConnections = append(modernConnections, &model.ModernConnection{
 				Term: mc.Term,
-				Note: &mc.Note,
+				Note: &note,
 			})
 		}
 
@@ -71,8 +89,8 @@ func (a *AlexandrosHandler) Fuzzy(request *koinos.SearchQuery, requestID, sessio
 			Gender:            &result.Gender,
 			Noun:              nil,
 			Verb:              nil,
-			QuickGlosses:      glosses,
-			Definitions:       definitions,
+			QuickGlosses:      glosses,     // non-nil, possibly empty
+			Definitions:       definitions, // non-nil, possibly empty
 			ModernConnections: modernConnections,
 		}
 
@@ -81,22 +99,28 @@ func (a *AlexandrosHandler) Fuzzy(request *koinos.SearchQuery, requestID, sessio
 				Declension: &result.Noun.Declension,
 				Genitive:   &result.Noun.Genitive,
 			}
-		} else if result.Verb != nil {
+		}
+		if result.Verb != nil {
+			// Ensure principal parts is non-nil for [String!]! in your SDL
+			parts := result.Verb.PrincipalParts
+			if parts == nil {
+				parts = []string{}
+			}
 			lemma.Verb = &model.VerbInfo{
-				PrincipalParts: result.Verb.PrincipalParts,
+				PrincipalParts: parts,
 			}
 		}
 
 		lemmas = append(lemmas, lemma)
 	}
+
 	resp := &model.SearchResponse{
-		Results: lemmas,
+		Results: lemmas, // if you ever build this from scratch, prefer [] over nil
 		PageInfo: &model.PageInfo{
 			Page:  grpcResponse.PageInfo.Page,
 			Size:  grpcResponse.PageInfo.Size,
 			Total: grpcResponse.PageInfo.Total,
 		},
 	}
-
 	return resp, nil
 }

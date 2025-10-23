@@ -124,12 +124,34 @@ type SearchResponse {
 }
 
 # -------------------------
+# Usage (EukleidesService)
+# -------------------------
+
+# Mirrors makedonia_eukleides.TopFive
+type EukleidesTopFive {
+    serviceName: String!  # proto: service_name
+    word: String!         # proto: word
+    lastUsed: String      # proto: last_used (ISO8601 or arbitrary string)
+    count: Int!           # proto: int64
+}
+
+# Mirrors makedonia_eukleides.TopFiveResponse
+type EukleidesTopFiveResponse {
+    topFive: [EukleidesTopFive!]!
+}
+
+# -------------------------
 # Root Query
 # -------------------------
 
 type Query {
     # Your existing gateway aggregate
     health: AggregatedHealthResponse!
+
+    # Passthrough to EukleidesService/RetrieveTopFive (global)
+    counterTopFive: EukleidesTopFiveResponse!
+    counterService(name: String!): [EukleidesTopFive!]!
+    CounterSession(sessionId: String!): [EukleidesTopFive!]!
 
     # Passthrough to AntigonosService/Search (koinos.v1.SearchQuery → antigonos.v1.SearchResponse)
     fuzzy(input: SearchQueryInput!): SearchResponse!
