@@ -18,18 +18,10 @@ import (
 )
 
 func (e *ExtendedServiceImpl) Health(ctx context.Context, request *emptypb.Empty) (*koinos.HealthResponse, error) {
-	elasticHealth := e.Elastic.Health().Info()
-	dbHealth := &koinos.DatabaseHealth{
-		Healthy:       elasticHealth.Healthy,
-		ClusterName:   elasticHealth.ClusterName,
-		ServerName:    elasticHealth.ServerName,
-		ServerVersion: elasticHealth.ServerVersion,
-	}
-
 	return &koinos.HealthResponse{
 		Healthy:        true,
 		Time:           time.Now().String(),
-		DatabaseHealth: dbHealth,
+		DatabaseHealth: nil,
 		Version:        e.Version,
 	}, nil
 }

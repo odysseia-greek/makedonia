@@ -2,28 +2,28 @@ package gateway
 
 import (
 	"github.com/odysseia-greek/makedonia/alexandros/graph/model"
-	antigonosv1 "github.com/odysseia-greek/makedonia/antigonos/gen/go/v1"
-	"github.com/odysseia-greek/makedonia/antigonos/monophthalmus"
 	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
+	hefaistionv1 "github.com/odysseia-greek/makedonia/hefaistion/gen/go/v1"
+	"github.com/odysseia-greek/makedonia/hefaistion/philia"
 )
 
-func (a *AlexandrosHandler) Fuzzy(request *koinos.SearchQuery, requestID, sessionId string) (*model.SearchResponse, error) {
+func (a *AlexandrosHandler) Exact(request *koinos.SearchQuery, requestID, sessionId string) (*model.SearchResponse, error) {
 	fuzzyClientCtx, cancel := a.createRequestHeader(requestID, sessionId)
 	defer cancel()
 
 	eukleidesUpdate := pbe.CountCreationRequest{
 		Word:        request.Word,
-		ServiceName: "fuzzy",
-		SearchType:  "fuzzy",
+		ServiceName: "exact",
+		SearchType:  "exact",
 		SessionId:   sessionId,
 	}
 
 	go a.pushToEukleides(&eukleidesUpdate)
 
-	var grpcResponse *antigonosv1.SearchResponse
+	var grpcResponse *hefaistionv1.SearchResponse
 
-	err := a.FuzzyClient.CallWithReconnect(func(client *monophthalmus.FuzzyClient) error {
+	err := a.ExactClient.CallWithReconnect(func(client *philia.ExactClient) error {
 		var innerErr error
 		grpcResponse, innerErr = client.Search(fuzzyClientCtx, request)
 		return innerErr

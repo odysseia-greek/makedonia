@@ -16,6 +16,25 @@ type AggregatedHealthResponse struct {
 	Services []*ServiceHealth `json:"services"`
 }
 
+type AnalyzeResult struct {
+	Author        *string `json:"author,omitempty"`
+	Book          *string `json:"book,omitempty"`
+	Reference     *string `json:"reference,omitempty"`
+	ReferenceLink *string `json:"referenceLink,omitempty"`
+	Text          *Rhema  `json:"text,omitempty"`
+}
+
+type AnalyzeTextResponse struct {
+	Conjugations []*ConjugationResponse `json:"conjugations,omitempty"`
+	Texts        []*AnalyzeResult       `json:"texts,omitempty"`
+	Rootword     *string                `json:"rootword,omitempty"`
+}
+
+type ConjugationResponse struct {
+	Rule *string `json:"rule,omitempty"`
+	Word *string `json:"word,omitempty"`
+}
+
 type DatabaseInfo struct {
 	Healthy       bool    `json:"healthy"`
 	ClusterName   *string `json:"clusterName,omitempty"`
@@ -39,10 +58,33 @@ type EukleidesTopFiveResponse struct {
 	TopFive []*EukleidesTopFive `json:"topFive"`
 }
 
+type ExpandableSearchQueryInput struct {
+	Word     string    `json:"word"`
+	Language *Language `json:"language,omitempty"`
+	Expand   bool      `json:"expand"`
+	Page     *int32    `json:"page,omitempty"`
+	Size     *int32    `json:"size,omitempty"`
+}
+
+type ExtendedResponse struct {
+	Results      []*Lemma             `json:"results"`
+	PageInfo     *PageInfo            `json:"pageInfo"`
+	SimilarWords []*Hit               `json:"similarWords,omitempty"`
+	FoundInText  *AnalyzeTextResponse `json:"foundInText,omitempty"`
+}
+
 type HealthResponse struct {
 	Healthy bool    `json:"healthy"`
 	Time    *string `json:"time,omitempty"`
 	Version *string `json:"version,omitempty"`
+}
+
+type Hit struct {
+	Dutch      *string `json:"dutch,omitempty"`
+	English    *string `json:"english,omitempty"`
+	Greek      *string `json:"greek,omitempty"`
+	LinkedWord *string `json:"linkedWord,omitempty"`
+	Original   *string `json:"original,omitempty"`
 }
 
 type Lemma struct {
@@ -94,6 +136,12 @@ type Query struct {
 type Reference struct {
 	Work  string `json:"work"`
 	Locus string `json:"locus"`
+}
+
+type Rhema struct {
+	Greek        *string   `json:"greek,omitempty"`
+	Section      *string   `json:"section,omitempty"`
+	Translations []*string `json:"translations,omitempty"`
 }
 
 type SearchQueryInput struct {

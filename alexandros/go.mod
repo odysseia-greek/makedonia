@@ -9,10 +9,12 @@ require (
 	github.com/odysseia-greek/attike/aristophanes v0.6.3
 	github.com/odysseia-greek/makedonia/antigonos v0.0.1-rho1
 	github.com/odysseia-greek/makedonia/eukleides v0.0.1
-	github.com/odysseia-greek/makedonia/filippos v0.0.2
+	github.com/odysseia-greek/makedonia/filippos v0.0.3-rho1
+	github.com/odysseia-greek/makedonia/hefaistion v0.0.1-rho2
+	github.com/odysseia-greek/makedonia/ptolemaios v0.0.1-rho1
 	github.com/vektah/gqlparser/v2 v2.5.30
-	google.golang.org/grpc v1.75.1
-	google.golang.org/protobuf v1.36.9
+	google.golang.org/grpc v1.76.0
+	google.golang.org/protobuf v1.36.10
 )
 
 require (
@@ -30,7 +32,7 @@ require (
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/evanphx/json-patch v5.6.0+incompatible // indirect
 	github.com/go-errors/errors v1.4.2 // indirect
-	github.com/go-jose/go-jose/v4 v4.1.1 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.2 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
@@ -107,7 +109,7 @@ require (
 	golang.org/x/term v0.35.0 // indirect
 	golang.org/x/text v0.29.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250707201910-8d1bb00bc6a7 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250804133106-a7a43d27e69b // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

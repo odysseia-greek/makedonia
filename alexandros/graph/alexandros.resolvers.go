@@ -11,6 +11,7 @@ import (
 	"github.com/odysseia-greek/agora/plato/config"
 	"github.com/odysseia-greek/makedonia/alexandros/graph/model"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
+	v1 "github.com/odysseia-greek/makedonia/ptolemaios/gen/go/v1"
 )
 
 // Health is the resolver for the health field.
@@ -57,6 +58,71 @@ func (r *queryResolver) Fuzzy(ctx context.Context, input model.SearchQueryInput)
 		Language: language,
 	}
 	return r.Handler.Fuzzy(request, requestID, sessionId)
+}
+
+// Exact is the resolver for the exact field.
+func (r *queryResolver) Exact(ctx context.Context, input model.ExpandableSearchQueryInput) (*model.ExtendedResponse, error) {
+	requestID, _ := ctx.Value(config.HeaderKey).(string)
+	sessionId, _ := ctx.Value(config.SessionIdKey).(string)
+
+	var language koinos.Language
+	switch *input.Language {
+	case model.LanguageLangGreek:
+		language = koinos.Language_LANG_GREEK
+	case model.LanguageLangEnglish:
+		language = koinos.Language_LANG_ENGLISH
+	case model.LanguageLangDutch:
+		language = koinos.Language_LANG_DUTCH
+	default:
+		language = koinos.Language_LANG_GREEK
+	}
+
+	request := &koinos.SearchQuery{
+		Word:     input.Word,
+		Language: language,
+	}
+	exactResponse, err := r.Handler.Exact(request, requestID, sessionId)
+	if err != nil {
+		return nil, err
+	}
+
+	var meros []*model.Hit
+	var textResponse *model.AnalyzeTextResponse
+	if input.Expand {
+		fuzzyResponses, _ := r.Handler.Fuzzy(request, requestID, sessionId)
+
+		for _, fuzzy := range fuzzyResponses.Results {
+			// Skip the exact match
+			if fuzzy.Headword == input.Word {
+				continue
+			}
+
+			hit := model.Hit{
+				English:    nil,
+				Greek:      &fuzzy.Headword,
+				LinkedWord: fuzzy.LinkedWord,
+				Original:   fuzzy.Normalized,
+			}
+
+			for _, gloss := range fuzzy.QuickGlosses {
+				if gloss.Language == "en" {
+					hit.English = &gloss.Gloss
+				}
+			}
+			meros = append(meros, &hit)
+		}
+
+		textResponse, _ = r.Handler.Extended(&v1.ExtendedSearch{Word: request.Word}, requestID, sessionId)
+	}
+
+	response := &model.ExtendedResponse{
+		Results:      exactResponse.Results,
+		PageInfo:     exactResponse.PageInfo,
+		SimilarWords: meros,
+		FoundInText:  textResponse,
+	}
+
+	return response, nil
 }
 
 // Query returns QueryResolver implementation.

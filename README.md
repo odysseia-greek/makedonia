@@ -22,7 +22,7 @@ Fuzzy (approximate) search service
 Phrase (extended) search service
 
 ### Ptolemaios
-Extended results retrieval service
+Extended results retrieval service; a library for texts (currently searches in Herodotos; may later perform its own search)
 
 ### Dareios
 System testing service for end-to-end and integration tests
@@ -75,8 +75,8 @@ Parmenion – Phrase Match Search
 
 Ptolemaios – Extended Results Retrieval
 
-“Τὰ ἐπιπλέον ζητεῖν ἔξεστι τοῖς φιλομαθέσιν.”
-“Those who love learning may seek the extended.”
+“Πτολεμαῖος δ᾿ ὁ Σωτὴρ ὄναρ εἶδε τὸν ἐν Σινώπῃ τοῦ Πλούτωνος κολοσσόν.”
+“Ptolemy Soter saw in a dream the colossal statue of Pluto in Sinope.”
 – Inspired by the spirit of Hellenistic scholarship
 
 Dareios – System Test Service

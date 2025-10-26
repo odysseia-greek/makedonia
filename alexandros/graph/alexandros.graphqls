@@ -141,6 +141,26 @@ type EukleidesTopFiveResponse {
 }
 
 # -------------------------
+# Search (HefaistionService)
+# -------------------------
+
+input ExpandableSearchQueryInput {
+    word: String!
+    language: Language = LANG_GREEK
+    expand: Boolean!
+    # Optional client-side paging hints (GraphQL-side; your resolver can map to koinos.v1.PageInfo params)
+    page: Int = 1
+    size: Int = 10
+}
+
+type ExtendedResponse {
+    results: [Lemma!]!
+    pageInfo: PageInfo!
+    similarWords: [Hit]
+    foundInText: AnalyzeTextResponse
+}
+
+# -------------------------
 # Root Query
 # -------------------------
 
@@ -155,4 +175,6 @@ type Query {
 
     # Passthrough to AntigonosService/Search (koinos.v1.SearchQuery → antigonos.v1.SearchResponse)
     fuzzy(input: SearchQueryInput!): SearchResponse!
+    # Passthrough to Hefaistion/Search (koinos.v1.SearchQuery → hefaistion.v1.SearchResponse)
+    exact(input: ExpandableSearchQueryInput!): ExtendedResponse!
 }

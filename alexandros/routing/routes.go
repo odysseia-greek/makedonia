@@ -10,7 +10,9 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/gorilla/mux"
+	plato "github.com/odysseia-greek/agora/plato/middleware"
 	"github.com/odysseia-greek/agora/plato/models"
+	"github.com/odysseia-greek/attike/aristophanes/comedy"
 	"github.com/odysseia-greek/makedonia/alexandros/gateway"
 	"github.com/odysseia-greek/makedonia/alexandros/graph"
 	"github.com/odysseia-greek/makedonia/alexandros/middleware"
@@ -43,6 +45,9 @@ func InitRoutes(handlerConfig *gateway.AlexandrosHandler) *mux.Router {
 	serveMux.HandleFunc("/alexandros/v1/ping", func(w http.ResponseWriter, r *http.Request) {
 		writeHealthResponse(w)
 	})
+
+	//legacy endpoint
+	serveMux.HandleFunc("/alexandros/v1/search", plato.Adapt(handlerConfig.SearchWord, plato.ValidateRestMethod("GET"), plato.Adapter(comedy.TraceWithLogAndSpan(handlerConfig.Streamer))))
 
 	return serveMux
 }

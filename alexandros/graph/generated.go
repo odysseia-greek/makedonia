@@ -53,6 +53,25 @@ type ComplexityRoot struct {
 		Version  func(childComplexity int) int
 	}
 
+	AnalyzeResult struct {
+		Author        func(childComplexity int) int
+		Book          func(childComplexity int) int
+		Reference     func(childComplexity int) int
+		ReferenceLink func(childComplexity int) int
+		Text          func(childComplexity int) int
+	}
+
+	AnalyzeTextResponse struct {
+		Conjugations func(childComplexity int) int
+		Rootword     func(childComplexity int) int
+		Texts        func(childComplexity int) int
+	}
+
+	ConjugationResponse struct {
+		Rule func(childComplexity int) int
+		Word func(childComplexity int) int
+	}
+
 	DatabaseInfo struct {
 		ClusterName   func(childComplexity int) int
 		Healthy       func(childComplexity int) int
@@ -76,10 +95,25 @@ type ComplexityRoot struct {
 		TopFive func(childComplexity int) int
 	}
 
+	ExtendedResponse struct {
+		FoundInText  func(childComplexity int) int
+		PageInfo     func(childComplexity int) int
+		Results      func(childComplexity int) int
+		SimilarWords func(childComplexity int) int
+	}
+
 	HealthResponse struct {
 		Healthy func(childComplexity int) int
 		Time    func(childComplexity int) int
 		Version func(childComplexity int) int
+	}
+
+	Hit struct {
+		Dutch      func(childComplexity int) int
+		English    func(childComplexity int) int
+		Greek      func(childComplexity int) int
+		LinkedWord func(childComplexity int) int
+		Original   func(childComplexity int) int
 	}
 
 	Lemma struct {
@@ -129,6 +163,7 @@ type ComplexityRoot struct {
 		CounterService func(childComplexity int, name string) int
 		CounterSession func(childComplexity int, sessionID string) int
 		CounterTopFive func(childComplexity int) int
+		Exact          func(childComplexity int, input model.ExpandableSearchQueryInput) int
 		Fuzzy          func(childComplexity int, input model.SearchQueryInput) int
 		Health         func(childComplexity int) int
 	}
@@ -136,6 +171,12 @@ type ComplexityRoot struct {
 	Reference struct {
 		Locus func(childComplexity int) int
 		Work  func(childComplexity int) int
+	}
+
+	Rhema struct {
+		Greek        func(childComplexity int) int
+		Section      func(childComplexity int) int
+		Translations func(childComplexity int) int
 	}
 
 	SearchResponse struct {
@@ -161,6 +202,7 @@ type QueryResolver interface {
 	CounterService(ctx context.Context, name string) ([]*model.EukleidesTopFive, error)
 	CounterSession(ctx context.Context, sessionID string) ([]*model.EukleidesTopFive, error)
 	Fuzzy(ctx context.Context, input model.SearchQueryInput) (*model.SearchResponse, error)
+	Exact(ctx context.Context, input model.ExpandableSearchQueryInput) (*model.ExtendedResponse, error)
 }
 
 type executableSchema struct {
@@ -206,6 +248,69 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.AggregatedHealthResponse.Version(childComplexity), true
+
+	case "AnalyzeResult.author":
+		if e.complexity.AnalyzeResult.Author == nil {
+			break
+		}
+
+		return e.complexity.AnalyzeResult.Author(childComplexity), true
+	case "AnalyzeResult.book":
+		if e.complexity.AnalyzeResult.Book == nil {
+			break
+		}
+
+		return e.complexity.AnalyzeResult.Book(childComplexity), true
+	case "AnalyzeResult.reference":
+		if e.complexity.AnalyzeResult.Reference == nil {
+			break
+		}
+
+		return e.complexity.AnalyzeResult.Reference(childComplexity), true
+	case "AnalyzeResult.referenceLink":
+		if e.complexity.AnalyzeResult.ReferenceLink == nil {
+			break
+		}
+
+		return e.complexity.AnalyzeResult.ReferenceLink(childComplexity), true
+	case "AnalyzeResult.text":
+		if e.complexity.AnalyzeResult.Text == nil {
+			break
+		}
+
+		return e.complexity.AnalyzeResult.Text(childComplexity), true
+
+	case "AnalyzeTextResponse.conjugations":
+		if e.complexity.AnalyzeTextResponse.Conjugations == nil {
+			break
+		}
+
+		return e.complexity.AnalyzeTextResponse.Conjugations(childComplexity), true
+	case "AnalyzeTextResponse.rootword":
+		if e.complexity.AnalyzeTextResponse.Rootword == nil {
+			break
+		}
+
+		return e.complexity.AnalyzeTextResponse.Rootword(childComplexity), true
+	case "AnalyzeTextResponse.texts":
+		if e.complexity.AnalyzeTextResponse.Texts == nil {
+			break
+		}
+
+		return e.complexity.AnalyzeTextResponse.Texts(childComplexity), true
+
+	case "ConjugationResponse.rule":
+		if e.complexity.ConjugationResponse.Rule == nil {
+			break
+		}
+
+		return e.complexity.ConjugationResponse.Rule(childComplexity), true
+	case "ConjugationResponse.word":
+		if e.complexity.ConjugationResponse.Word == nil {
+			break
+		}
+
+		return e.complexity.ConjugationResponse.Word(childComplexity), true
 
 	case "DatabaseInfo.clusterName":
 		if e.complexity.DatabaseInfo.ClusterName == nil {
@@ -277,6 +382,31 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.EukleidesTopFiveResponse.TopFive(childComplexity), true
 
+	case "ExtendedResponse.foundInText":
+		if e.complexity.ExtendedResponse.FoundInText == nil {
+			break
+		}
+
+		return e.complexity.ExtendedResponse.FoundInText(childComplexity), true
+	case "ExtendedResponse.pageInfo":
+		if e.complexity.ExtendedResponse.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.ExtendedResponse.PageInfo(childComplexity), true
+	case "ExtendedResponse.results":
+		if e.complexity.ExtendedResponse.Results == nil {
+			break
+		}
+
+		return e.complexity.ExtendedResponse.Results(childComplexity), true
+	case "ExtendedResponse.similarWords":
+		if e.complexity.ExtendedResponse.SimilarWords == nil {
+			break
+		}
+
+		return e.complexity.ExtendedResponse.SimilarWords(childComplexity), true
+
 	case "HealthResponse.healthy":
 		if e.complexity.HealthResponse.Healthy == nil {
 			break
@@ -295,6 +425,37 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.HealthResponse.Version(childComplexity), true
+
+	case "Hit.dutch":
+		if e.complexity.Hit.Dutch == nil {
+			break
+		}
+
+		return e.complexity.Hit.Dutch(childComplexity), true
+	case "Hit.english":
+		if e.complexity.Hit.English == nil {
+			break
+		}
+
+		return e.complexity.Hit.English(childComplexity), true
+	case "Hit.greek":
+		if e.complexity.Hit.Greek == nil {
+			break
+		}
+
+		return e.complexity.Hit.Greek(childComplexity), true
+	case "Hit.linkedWord":
+		if e.complexity.Hit.LinkedWord == nil {
+			break
+		}
+
+		return e.complexity.Hit.LinkedWord(childComplexity), true
+	case "Hit.original":
+		if e.complexity.Hit.Original == nil {
+			break
+		}
+
+		return e.complexity.Hit.Original(childComplexity), true
 
 	case "Lemma.article":
 		if e.complexity.Lemma.Article == nil {
@@ -480,6 +641,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Query.CounterTopFive(childComplexity), true
+	case "Query.exact":
+		if e.complexity.Query.Exact == nil {
+			break
+		}
+
+		args, err := ec.field_Query_exact_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Exact(childComplexity, args["input"].(model.ExpandableSearchQueryInput)), true
 	case "Query.fuzzy":
 		if e.complexity.Query.Fuzzy == nil {
 			break
@@ -510,6 +682,25 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Reference.Work(childComplexity), true
+
+	case "Rhema.greek":
+		if e.complexity.Rhema.Greek == nil {
+			break
+		}
+
+		return e.complexity.Rhema.Greek(childComplexity), true
+	case "Rhema.section":
+		if e.complexity.Rhema.Section == nil {
+			break
+		}
+
+		return e.complexity.Rhema.Section(childComplexity), true
+	case "Rhema.translations":
+		if e.complexity.Rhema.Translations == nil {
+			break
+		}
+
+		return e.complexity.Rhema.Translations(childComplexity), true
 
 	case "SearchResponse.pageInfo":
 		if e.complexity.SearchResponse.PageInfo == nil {
@@ -564,6 +755,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	opCtx := graphql.GetOperationContext(ctx)
 	ec := executionContext{opCtx, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputExpandableSearchQueryInput,
 		ec.unmarshalInputSearchQueryInput,
 	)
 	first := true
@@ -646,7 +838,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(ec.Schema(), ec.Schema().Types[name]), nil
 }
 
-//go:embed "alexandros.graphqls"
+//go:embed "alexandros.graphqls" "shared.graphqls"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -659,6 +851,7 @@ func sourceData(filename string) string {
 
 var sources = []*ast.Source{
 	{Name: "alexandros.graphqls", Input: sourceData("alexandros.graphqls"), BuiltIn: false},
+	{Name: "shared.graphqls", Input: sourceData("shared.graphqls"), BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
@@ -696,6 +889,17 @@ func (ec *executionContext) field_Query_counterService_args(ctx context.Context,
 		return nil, err
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_exact_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNExpandableSearchQueryInput2githubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐExpandableSearchQueryInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -883,6 +1087,322 @@ func (ec *executionContext) fieldContext_AggregatedHealthResponse_services(_ con
 				return ec.fieldContext_ServiceHealth_databaseInfo(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ServiceHealth", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AnalyzeResult_author(ctx context.Context, field graphql.CollectedField, obj *model.AnalyzeResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_AnalyzeResult_author,
+		func(ctx context.Context) (any, error) {
+			return obj.Author, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_AnalyzeResult_author(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AnalyzeResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AnalyzeResult_book(ctx context.Context, field graphql.CollectedField, obj *model.AnalyzeResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_AnalyzeResult_book,
+		func(ctx context.Context) (any, error) {
+			return obj.Book, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_AnalyzeResult_book(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AnalyzeResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AnalyzeResult_reference(ctx context.Context, field graphql.CollectedField, obj *model.AnalyzeResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_AnalyzeResult_reference,
+		func(ctx context.Context) (any, error) {
+			return obj.Reference, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_AnalyzeResult_reference(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AnalyzeResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AnalyzeResult_referenceLink(ctx context.Context, field graphql.CollectedField, obj *model.AnalyzeResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_AnalyzeResult_referenceLink,
+		func(ctx context.Context) (any, error) {
+			return obj.ReferenceLink, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_AnalyzeResult_referenceLink(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AnalyzeResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AnalyzeResult_text(ctx context.Context, field graphql.CollectedField, obj *model.AnalyzeResult) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_AnalyzeResult_text,
+		func(ctx context.Context) (any, error) {
+			return obj.Text, nil
+		},
+		nil,
+		ec.marshalORhema2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐRhema,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_AnalyzeResult_text(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AnalyzeResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "greek":
+				return ec.fieldContext_Rhema_greek(ctx, field)
+			case "section":
+				return ec.fieldContext_Rhema_section(ctx, field)
+			case "translations":
+				return ec.fieldContext_Rhema_translations(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Rhema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AnalyzeTextResponse_conjugations(ctx context.Context, field graphql.CollectedField, obj *model.AnalyzeTextResponse) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_AnalyzeTextResponse_conjugations,
+		func(ctx context.Context) (any, error) {
+			return obj.Conjugations, nil
+		},
+		nil,
+		ec.marshalOConjugationResponse2ᚕᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐConjugationResponse,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_AnalyzeTextResponse_conjugations(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AnalyzeTextResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "rule":
+				return ec.fieldContext_ConjugationResponse_rule(ctx, field)
+			case "word":
+				return ec.fieldContext_ConjugationResponse_word(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ConjugationResponse", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AnalyzeTextResponse_texts(ctx context.Context, field graphql.CollectedField, obj *model.AnalyzeTextResponse) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_AnalyzeTextResponse_texts,
+		func(ctx context.Context) (any, error) {
+			return obj.Texts, nil
+		},
+		nil,
+		ec.marshalOAnalyzeResult2ᚕᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐAnalyzeResult,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_AnalyzeTextResponse_texts(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AnalyzeTextResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "author":
+				return ec.fieldContext_AnalyzeResult_author(ctx, field)
+			case "book":
+				return ec.fieldContext_AnalyzeResult_book(ctx, field)
+			case "reference":
+				return ec.fieldContext_AnalyzeResult_reference(ctx, field)
+			case "referenceLink":
+				return ec.fieldContext_AnalyzeResult_referenceLink(ctx, field)
+			case "text":
+				return ec.fieldContext_AnalyzeResult_text(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type AnalyzeResult", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AnalyzeTextResponse_rootword(ctx context.Context, field graphql.CollectedField, obj *model.AnalyzeTextResponse) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_AnalyzeTextResponse_rootword,
+		func(ctx context.Context) (any, error) {
+			return obj.Rootword, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_AnalyzeTextResponse_rootword(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AnalyzeTextResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ConjugationResponse_rule(ctx context.Context, field graphql.CollectedField, obj *model.ConjugationResponse) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ConjugationResponse_rule,
+		func(ctx context.Context) (any, error) {
+			return obj.Rule, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ConjugationResponse_rule(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ConjugationResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ConjugationResponse_word(ctx context.Context, field graphql.CollectedField, obj *model.ConjugationResponse) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ConjugationResponse_word,
+		func(ctx context.Context) (any, error) {
+			return obj.Word, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ConjugationResponse_word(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ConjugationResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1227,6 +1747,176 @@ func (ec *executionContext) fieldContext_EukleidesTopFiveResponse_topFive(_ cont
 	return fc, nil
 }
 
+func (ec *executionContext) _ExtendedResponse_results(ctx context.Context, field graphql.CollectedField, obj *model.ExtendedResponse) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ExtendedResponse_results,
+		func(ctx context.Context) (any, error) {
+			return obj.Results, nil
+		},
+		nil,
+		ec.marshalNLemma2ᚕᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐLemmaᚄ,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_ExtendedResponse_results(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ExtendedResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Lemma_id(ctx, field)
+			case "headword":
+				return ec.fieldContext_Lemma_headword(ctx, field)
+			case "normalized":
+				return ec.fieldContext_Lemma_normalized(ctx, field)
+			case "linkedWord":
+				return ec.fieldContext_Lemma_linkedWord(ctx, field)
+			case "partOfSpeech":
+				return ec.fieldContext_Lemma_partOfSpeech(ctx, field)
+			case "article":
+				return ec.fieldContext_Lemma_article(ctx, field)
+			case "gender":
+				return ec.fieldContext_Lemma_gender(ctx, field)
+			case "noun":
+				return ec.fieldContext_Lemma_noun(ctx, field)
+			case "verb":
+				return ec.fieldContext_Lemma_verb(ctx, field)
+			case "quickGlosses":
+				return ec.fieldContext_Lemma_quickGlosses(ctx, field)
+			case "definitions":
+				return ec.fieldContext_Lemma_definitions(ctx, field)
+			case "modernConnections":
+				return ec.fieldContext_Lemma_modernConnections(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Lemma", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ExtendedResponse_pageInfo(ctx context.Context, field graphql.CollectedField, obj *model.ExtendedResponse) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ExtendedResponse_pageInfo,
+		func(ctx context.Context) (any, error) {
+			return obj.PageInfo, nil
+		},
+		nil,
+		ec.marshalNPageInfo2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐPageInfo,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_ExtendedResponse_pageInfo(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ExtendedResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "page":
+				return ec.fieldContext_PageInfo_page(ctx, field)
+			case "size":
+				return ec.fieldContext_PageInfo_size(ctx, field)
+			case "total":
+				return ec.fieldContext_PageInfo_total(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PageInfo", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ExtendedResponse_similarWords(ctx context.Context, field graphql.CollectedField, obj *model.ExtendedResponse) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ExtendedResponse_similarWords,
+		func(ctx context.Context) (any, error) {
+			return obj.SimilarWords, nil
+		},
+		nil,
+		ec.marshalOHit2ᚕᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐHit,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ExtendedResponse_similarWords(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ExtendedResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "dutch":
+				return ec.fieldContext_Hit_dutch(ctx, field)
+			case "english":
+				return ec.fieldContext_Hit_english(ctx, field)
+			case "greek":
+				return ec.fieldContext_Hit_greek(ctx, field)
+			case "linkedWord":
+				return ec.fieldContext_Hit_linkedWord(ctx, field)
+			case "original":
+				return ec.fieldContext_Hit_original(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Hit", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ExtendedResponse_foundInText(ctx context.Context, field graphql.CollectedField, obj *model.ExtendedResponse) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_ExtendedResponse_foundInText,
+		func(ctx context.Context) (any, error) {
+			return obj.FoundInText, nil
+		},
+		nil,
+		ec.marshalOAnalyzeTextResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐAnalyzeTextResponse,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_ExtendedResponse_foundInText(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ExtendedResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "conjugations":
+				return ec.fieldContext_AnalyzeTextResponse_conjugations(ctx, field)
+			case "texts":
+				return ec.fieldContext_AnalyzeTextResponse_texts(ctx, field)
+			case "rootword":
+				return ec.fieldContext_AnalyzeTextResponse_rootword(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type AnalyzeTextResponse", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _HealthResponse_healthy(ctx context.Context, field graphql.CollectedField, obj *model.HealthResponse) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -1304,6 +1994,151 @@ func (ec *executionContext) _HealthResponse_version(ctx context.Context, field g
 func (ec *executionContext) fieldContext_HealthResponse_version(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "HealthResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Hit_dutch(ctx context.Context, field graphql.CollectedField, obj *model.Hit) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Hit_dutch,
+		func(ctx context.Context) (any, error) {
+			return obj.Dutch, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Hit_dutch(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Hit",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Hit_english(ctx context.Context, field graphql.CollectedField, obj *model.Hit) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Hit_english,
+		func(ctx context.Context) (any, error) {
+			return obj.English, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Hit_english(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Hit",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Hit_greek(ctx context.Context, field graphql.CollectedField, obj *model.Hit) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Hit_greek,
+		func(ctx context.Context) (any, error) {
+			return obj.Greek, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Hit_greek(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Hit",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Hit_linkedWord(ctx context.Context, field graphql.CollectedField, obj *model.Hit) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Hit_linkedWord,
+		func(ctx context.Context) (any, error) {
+			return obj.LinkedWord, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Hit_linkedWord(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Hit",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Hit_original(ctx context.Context, field graphql.CollectedField, obj *model.Hit) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Hit_original,
+		func(ctx context.Context) (any, error) {
+			return obj.Original, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Hit_original(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Hit",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -2288,6 +3123,57 @@ func (ec *executionContext) fieldContext_Query_fuzzy(ctx context.Context, field 
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_exact(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_exact,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.resolvers.Query().Exact(ctx, fc.Args["input"].(model.ExpandableSearchQueryInput))
+		},
+		nil,
+		ec.marshalNExtendedResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐExtendedResponse,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_exact(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "results":
+				return ec.fieldContext_ExtendedResponse_results(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_ExtendedResponse_pageInfo(ctx, field)
+			case "similarWords":
+				return ec.fieldContext_ExtendedResponse_similarWords(ctx, field)
+			case "foundInText":
+				return ec.fieldContext_ExtendedResponse_foundInText(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ExtendedResponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_exact_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -2444,6 +3330,93 @@ func (ec *executionContext) _Reference_locus(ctx context.Context, field graphql.
 func (ec *executionContext) fieldContext_Reference_locus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Reference",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Rhema_greek(ctx context.Context, field graphql.CollectedField, obj *model.Rhema) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Rhema_greek,
+		func(ctx context.Context) (any, error) {
+			return obj.Greek, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Rhema_greek(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Rhema",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Rhema_section(ctx context.Context, field graphql.CollectedField, obj *model.Rhema) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Rhema_section,
+		func(ctx context.Context) (any, error) {
+			return obj.Section, nil
+		},
+		nil,
+		ec.marshalOString2ᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Rhema_section(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Rhema",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Rhema_translations(ctx context.Context, field graphql.CollectedField, obj *model.Rhema) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Rhema_translations,
+		func(ctx context.Context) (any, error) {
+			return obj.Translations, nil
+		},
+		nil,
+		ec.marshalOString2ᚕᚖstring,
+		true,
+		false,
+	)
+}
+
+func (ec *executionContext) fieldContext_Rhema_translations(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Rhema",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -4147,6 +5120,71 @@ func (ec *executionContext) fieldContext___Type_isOneOf(_ context.Context, field
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputExpandableSearchQueryInput(ctx context.Context, obj any) (model.ExpandableSearchQueryInput, error) {
+	var it model.ExpandableSearchQueryInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["language"]; !present {
+		asMap["language"] = "LANG_GREEK"
+	}
+	if _, present := asMap["page"]; !present {
+		asMap["page"] = 1
+	}
+	if _, present := asMap["size"]; !present {
+		asMap["size"] = 10
+	}
+
+	fieldsInOrder := [...]string{"word", "language", "expand", "page", "size"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "word":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("word"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Word = data
+		case "language":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
+			data, err := ec.unmarshalOLanguage2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐLanguage(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Language = data
+		case "expand":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("expand"))
+			data, err := ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Expand = data
+		case "page":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+			data, err := ec.unmarshalOInt2ᚖint32(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Page = data
+		case "size":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
+			data, err := ec.unmarshalOInt2ᚖint32(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Size = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputSearchQueryInput(ctx context.Context, obj any) (model.SearchQueryInput, error) {
 	var it model.SearchQueryInput
 	asMap := map[string]any{}
@@ -4238,6 +5276,128 @@ func (ec *executionContext) _AggregatedHealthResponse(ctx context.Context, sel a
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var analyzeResultImplementors = []string{"AnalyzeResult"}
+
+func (ec *executionContext) _AnalyzeResult(ctx context.Context, sel ast.SelectionSet, obj *model.AnalyzeResult) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, analyzeResultImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AnalyzeResult")
+		case "author":
+			out.Values[i] = ec._AnalyzeResult_author(ctx, field, obj)
+		case "book":
+			out.Values[i] = ec._AnalyzeResult_book(ctx, field, obj)
+		case "reference":
+			out.Values[i] = ec._AnalyzeResult_reference(ctx, field, obj)
+		case "referenceLink":
+			out.Values[i] = ec._AnalyzeResult_referenceLink(ctx, field, obj)
+		case "text":
+			out.Values[i] = ec._AnalyzeResult_text(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var analyzeTextResponseImplementors = []string{"AnalyzeTextResponse"}
+
+func (ec *executionContext) _AnalyzeTextResponse(ctx context.Context, sel ast.SelectionSet, obj *model.AnalyzeTextResponse) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, analyzeTextResponseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AnalyzeTextResponse")
+		case "conjugations":
+			out.Values[i] = ec._AnalyzeTextResponse_conjugations(ctx, field, obj)
+		case "texts":
+			out.Values[i] = ec._AnalyzeTextResponse_texts(ctx, field, obj)
+		case "rootword":
+			out.Values[i] = ec._AnalyzeTextResponse_rootword(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var conjugationResponseImplementors = []string{"ConjugationResponse"}
+
+func (ec *executionContext) _ConjugationResponse(ctx context.Context, sel ast.SelectionSet, obj *model.ConjugationResponse) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, conjugationResponseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ConjugationResponse")
+		case "rule":
+			out.Values[i] = ec._ConjugationResponse_rule(ctx, field, obj)
+		case "word":
+			out.Values[i] = ec._ConjugationResponse_word(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4440,6 +5600,54 @@ func (ec *executionContext) _EukleidesTopFiveResponse(ctx context.Context, sel a
 	return out
 }
 
+var extendedResponseImplementors = []string{"ExtendedResponse"}
+
+func (ec *executionContext) _ExtendedResponse(ctx context.Context, sel ast.SelectionSet, obj *model.ExtendedResponse) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, extendedResponseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ExtendedResponse")
+		case "results":
+			out.Values[i] = ec._ExtendedResponse_results(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "pageInfo":
+			out.Values[i] = ec._ExtendedResponse_pageInfo(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "similarWords":
+			out.Values[i] = ec._ExtendedResponse_similarWords(ctx, field, obj)
+		case "foundInText":
+			out.Values[i] = ec._ExtendedResponse_foundInText(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var healthResponseImplementors = []string{"HealthResponse"}
 
 func (ec *executionContext) _HealthResponse(ctx context.Context, sel ast.SelectionSet, obj *model.HealthResponse) graphql.Marshaler {
@@ -4460,6 +5668,50 @@ func (ec *executionContext) _HealthResponse(ctx context.Context, sel ast.Selecti
 			out.Values[i] = ec._HealthResponse_time(ctx, field, obj)
 		case "version":
 			out.Values[i] = ec._HealthResponse_version(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var hitImplementors = []string{"Hit"}
+
+func (ec *executionContext) _Hit(ctx context.Context, sel ast.SelectionSet, obj *model.Hit) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, hitImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Hit")
+		case "dutch":
+			out.Values[i] = ec._Hit_dutch(ctx, field, obj)
+		case "english":
+			out.Values[i] = ec._Hit_english(ctx, field, obj)
+		case "greek":
+			out.Values[i] = ec._Hit_greek(ctx, field, obj)
+		case "linkedWord":
+			out.Values[i] = ec._Hit_linkedWord(ctx, field, obj)
+		case "original":
+			out.Values[i] = ec._Hit_original(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4905,6 +6157,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "exact":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_exact(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "__type":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___type(ctx, field)
@@ -4957,6 +6231,46 @@ func (ec *executionContext) _Reference(ctx context.Context, sel ast.SelectionSet
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var rhemaImplementors = []string{"Rhema"}
+
+func (ec *executionContext) _Rhema(ctx context.Context, sel ast.SelectionSet, obj *model.Rhema) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, rhemaImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Rhema")
+		case "greek":
+			out.Values[i] = ec._Rhema_greek(ctx, field, obj)
+		case "section":
+			out.Values[i] = ec._Rhema_section(ctx, field, obj)
+		case "translations":
+			out.Values[i] = ec._Rhema_translations(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5598,6 +6912,25 @@ func (ec *executionContext) marshalNEukleidesTopFiveResponse2ᚖgithubᚗcomᚋo
 	return ec._EukleidesTopFiveResponse(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNExpandableSearchQueryInput2githubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐExpandableSearchQueryInput(ctx context.Context, v any) (model.ExpandableSearchQueryInput, error) {
+	res, err := ec.unmarshalInputExpandableSearchQueryInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNExtendedResponse2githubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐExtendedResponse(ctx context.Context, sel ast.SelectionSet, v model.ExtendedResponse) graphql.Marshaler {
+	return ec._ExtendedResponse(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNExtendedResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐExtendedResponse(ctx context.Context, sel ast.SelectionSet, v *model.ExtendedResponse) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ExtendedResponse(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNInt2int32(ctx context.Context, v any) (int32, error) {
 	res, err := graphql.UnmarshalInt32(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6212,6 +7545,61 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
+func (ec *executionContext) marshalOAnalyzeResult2ᚕᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐAnalyzeResult(ctx context.Context, sel ast.SelectionSet, v []*model.AnalyzeResult) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOAnalyzeResult2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐAnalyzeResult(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOAnalyzeResult2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐAnalyzeResult(ctx context.Context, sel ast.SelectionSet, v *model.AnalyzeResult) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AnalyzeResult(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOAnalyzeTextResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐAnalyzeTextResponse(ctx context.Context, sel ast.SelectionSet, v *model.AnalyzeTextResponse) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AnalyzeTextResponse(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v any) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6242,11 +7630,107 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
+func (ec *executionContext) marshalOConjugationResponse2ᚕᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐConjugationResponse(ctx context.Context, sel ast.SelectionSet, v []*model.ConjugationResponse) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOConjugationResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐConjugationResponse(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOConjugationResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐConjugationResponse(ctx context.Context, sel ast.SelectionSet, v *model.ConjugationResponse) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._ConjugationResponse(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalODatabaseInfo2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐDatabaseInfo(ctx context.Context, sel ast.SelectionSet, v *model.DatabaseInfo) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._DatabaseInfo(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOHit2ᚕᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐHit(ctx context.Context, sel ast.SelectionSet, v []*model.Hit) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOHit2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐHit(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOHit2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐHit(ctx context.Context, sel ast.SelectionSet, v *model.Hit) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Hit(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint32(ctx context.Context, v any) (*int32, error) {
@@ -6288,6 +7772,43 @@ func (ec *executionContext) marshalONounInfo2ᚖgithubᚗcomᚋodysseiaᚑgreek�
 		return graphql.Null
 	}
 	return ec._NounInfo(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalORhema2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐRhema(ctx context.Context, sel ast.SelectionSet, v *model.Rhema) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Rhema(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOString2ᚕᚖstring(ctx context.Context, v any) ([]*string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []any
+	vSlice = graphql.CoerceList(v)
+	var err error
+	res := make([]*string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalOString2ᚖstring(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOString2ᚕᚖstring(ctx context.Context, sel ast.SelectionSet, v []*string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalOString2ᚖstring(ctx, sel, v[i])
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v any) (*string, error) {

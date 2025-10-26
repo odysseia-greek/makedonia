@@ -15,4 +15,5 @@ enum Language {
 message SearchQuery {
   string word = 1;        // e.g., "Ἀθηναῖος"
   Language language = 2;  // e.g., LANG_GREEK
+  int32 numberOfResults = 3; // e.g., 3
 }

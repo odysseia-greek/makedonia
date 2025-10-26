@@ -48,14 +48,14 @@ func (e *ExactServiceImpl) Search(ctx context.Context, request *koinos.SearchQue
 		return nil, fmt.Errorf("unsupported language: %v", request.Language)
 	}
 
-	elasticResponse, hitsTotal, err := e.queryElastic(ctx, baseWord, language)
+	elasticResponse, hitsTotal, err := e.queryElastic(ctx, baseWord, language, false)
 	if err != nil {
 		return nil, err
 	}
 
 	if len(elasticResponse.Hits.Hits) == 0 {
 		logging.Debug("no hits found trying with a word without diacretics")
-		elasticResponse, hitsTotal, err = e.queryElastic(ctx, strippedWord, language)
+		elasticResponse, hitsTotal, err = e.queryElastic(ctx, strippedWord, language, true)
 		if err != nil {
 			return nil, err
 		}
@@ -82,30 +82,37 @@ func (e *ExactServiceImpl) Search(ctx context.Context, request *koinos.SearchQue
 	return resp, nil
 }
 
-func (e *ExactServiceImpl) queryElastic(ctx context.Context, word, language string) (*models.Response, int64, error) {
-	query := map[string]interface{}{
-		"query": map[string]interface{}{
-			"bool": map[string]interface{}{
-				"should": []interface{}{
-					map[string]interface{}{
-						"prefix": map[string]interface{}{
-							fmt.Sprintf("%s.keyword", language): fmt.Sprintf("%s,", word),
+func (e *ExactServiceImpl) queryElastic(ctx context.Context, word, language string, normalized bool) (*models.Response, int64, error) {
+	var query map[string]interface{}
+
+	if normalized {
+		query = map[string]interface{}{
+			"query": map[string]interface{}{
+				"match": map[string]interface{}{
+					"normalized": word,
+				},
+			},
+		}
+	} else {
+		query = map[string]interface{}{
+			"query": map[string]interface{}{
+				"bool": map[string]interface{}{
+					"should": []interface{}{
+						map[string]interface{}{
+							"prefix": map[string]interface{}{
+								fmt.Sprintf("%s.keyword", language): fmt.Sprintf("%s,", word),
+							},
 						},
-					},
-					map[string]interface{}{
-						"prefix": map[string]interface{}{
-							fmt.Sprintf("%s.keyword", language): fmt.Sprintf("%s ", word),
-						},
-					},
-					map[string]interface{}{
-						"term": map[string]interface{}{
-							fmt.Sprintf("%s.keyword", language): word,
+						map[string]interface{}{
+							"term": map[string]interface{}{
+								fmt.Sprintf("%s.keyword", language): word,
+							},
 						},
 					},
 				},
 			},
-		},
-		"size": 5,
+			"size": 5,
+		}
 	}
 
 	logging.Debug(fmt.Sprintf("%v", query))

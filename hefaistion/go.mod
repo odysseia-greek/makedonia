@@ -9,8 +9,7 @@ require (
 	github.com/odysseia-greek/agora/plato v0.2.10
 	github.com/odysseia-greek/attike/aristophanes v0.6.3
 	github.com/odysseia-greek/delphi/aristides v0.0.1
-	github.com/odysseia-greek/makedonia/antigonos v0.0.1-rho1
-	github.com/odysseia-greek/makedonia/filippos v0.0.2-rc1
+	github.com/odysseia-greek/makedonia/filippos v0.0.3-rho1
 	google.golang.org/grpc v1.75.0
 	google.golang.org/protobuf v1.36.8
 )

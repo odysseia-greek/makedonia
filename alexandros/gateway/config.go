@@ -13,6 +13,8 @@ import (
 	"github.com/odysseia-greek/makedonia/antigonos/monophthalmus"
 	"github.com/odysseia-greek/makedonia/eukleides/geometrias"
 	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
+	"github.com/odysseia-greek/makedonia/hefaistion/philia"
+	"github.com/odysseia-greek/makedonia/ptolemaios/aigyptos"
 )
 
 func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
@@ -59,8 +61,9 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 		logging.Error("tracing service not ready - starting up without traces")
 	}
 
+	counterClientAddress := config.StringFromEnv("EUKLEIDES_SERVICE", "eukleides:50060")
 	for i := 1; i <= maxRetries; i++ {
-		eukleides, err = geometrias.NewEukleidesClient("eukleides:50060")
+		eukleides, err = geometrias.NewEukleidesClient(counterClientAddress)
 		if err == nil {
 			break
 		}
@@ -107,7 +110,41 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 
 	fuzzyClientHealthy := fuzzyClient.client.WaitForHealthyState()
 	if !fuzzyClientHealthy {
-		logging.Debug("fuzzu client not ready - restarting seems the only option")
+		logging.Debug("fuzzy client not ready - restarting seems the only option")
+		os.Exit(1)
+	}
+
+	exactClientAddress := config.StringFromEnv("HEFAISTION_SERVICE", "hefaistion:50060")
+	exactClient, err := NewGenericGrpcClient[*philia.ExactClient](
+		exactClientAddress,
+		philia.NewHefaistionClient,
+	)
+
+	if err != nil {
+		logging.Error(err.Error())
+		return nil, err
+	}
+
+	exactClientHealthy := exactClient.client.WaitForHealthyState()
+	if !exactClientHealthy {
+		logging.Debug("exact client not ready - restarting seems the only option")
+		os.Exit(1)
+	}
+
+	extendedClientAddress := config.StringFromEnv("PTOLEMAIOS_SERVICE", "ptolemaios:50060")
+	extendedClient, err := NewGenericGrpcClient[*aigyptos.ExtendedClient](
+		extendedClientAddress,
+		aigyptos.NewPtolemaiosClient,
+	)
+
+	if err != nil {
+		logging.Error(err.Error())
+		return nil, err
+	}
+
+	extendedClienttHealthy := extendedClient.client.WaitForHealthyState()
+	if !extendedClienttHealthy {
+		logging.Debug("extended client not ready - restarting seems the only option")
 		os.Exit(1)
 	}
 
@@ -115,6 +152,8 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 		Streamer:        streamer,
 		Randomizer:      randomizer,
 		FuzzyClient:     fuzzyClient,
+		ExactClient:     exactClient,
+		ExtendedClient:  extendedClient,
 		CounterStreamer: eukleidesStreamer,
 		Counter:         eukleides,
 	}, nil
