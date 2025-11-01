@@ -13,7 +13,6 @@ import (
 )
 
 const standardPort = ":8080"
-const legacyPort = ":5000"
 
 func main() {
 	port := os.Getenv("PORT")
@@ -42,15 +41,6 @@ func main() {
 	}
 
 	graphqlServer := routing.InitRoutes(handler)
-
-	// Start legacy server on port 5000 in a goroutine
-	go func() {
-		logging.System(fmt.Sprintf("Legacy endpoint running on port %s", legacyPort))
-		legacyErr := http.ListenAndServe(legacyPort, graphqlServer)
-		if legacyErr != nil {
-			log.Fatal("Legacy server failed to start: ", legacyErr)
-		}
-	}()
 
 	logging.System(fmt.Sprintf("Server running on port %s", port))
 	err = http.ListenAndServe(port, graphqlServer)

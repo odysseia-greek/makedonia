@@ -46,9 +46,6 @@ func InitRoutes(handlerConfig *gateway.AlexandrosHandler) *mux.Router {
 		writeHealthResponse(w)
 	})
 
-	//legacy endpoint
-	serveMux.HandleFunc("/alexandros/v1/search", plato.Adapt(handlerConfig.SearchWord, plato.ValidateRestMethod("GET"), plato.Adapter(comedy.TraceWithLogAndSpan(handlerConfig.Streamer))))
-
 	return serveMux
 }
 
