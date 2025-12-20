@@ -256,8 +256,8 @@ github.com/odysseia-greek/makedonia/antigonos v0.0.1-rho1 h1:SKqe/pq7XTBIAyuuThe
 github.com/odysseia-greek/makedonia/antigonos v0.0.1-rho1/go.mod h1:nfr4+YoBfflu/WFwAVEj1KBNihHPbWW+uZO1ydzxBi0=
 github.com/odysseia-greek/makedonia/eukleides v0.0.1 h1:mWghs/MFPmcKCSVEqnaXZFVCd/+SWzdqgfmZscI1JbE=
 github.com/odysseia-greek/makedonia/eukleides v0.0.1/go.mod h1:OLHwwLUgWcwPyJcEQEy0PADSIx+HwMCborPgg4c+vYo=
-github.com/odysseia-greek/makedonia/filippos v0.0.3-rho1 h1:5FXJhcwl1a64HKJSX0ioox0fCqnv8ayqqDAlAoFNHWc=
-github.com/odysseia-greek/makedonia/filippos v0.0.3-rho1/go.mod h1:fjQyXVL8rjkw0WrOWgQcNVv326i9lomUH36MVh6ke5M=
+github.com/odysseia-greek/makedonia/filippos v0.0.3-rho2 h1:RV/RmrbaL8ZeRJ890imYpkNTr3dPZVedOx+nxrzCHwg=
+github.com/odysseia-greek/makedonia/filippos v0.0.3-rho2/go.mod h1:nXrabzcp20Zfi3mOmQRxvlEvYXgHv/mJo4JYsOF/yAs=
 github.com/odysseia-greek/makedonia/hefaistion v0.0.1-rho2 h1:qzKiaGF2w5GFSg/kWK1qJGZtl6ryK2cs42o7uObhUiA=
 github.com/odysseia-greek/makedonia/hefaistion v0.0.1-rho2/go.mod h1:6VSqVz7ClurbRu3pz+zThQBaCmtjk1oAwPOsNCv0ADY=
 github.com/odysseia-greek/makedonia/ptolemaios v0.0.1-rho1 h1:B4kFyE/zhXgUgkfOv8AsZJ7NC90Lo9xCfbOXVmFtb0E=

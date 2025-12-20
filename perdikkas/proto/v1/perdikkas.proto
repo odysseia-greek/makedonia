@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package perdikkas.v1;
+option go_package = "github.com/odysseia-greek/makedonia/perdikkas/gen/go/v1;perdikkas1";
+
+import "google/protobuf/empty.proto";
+import "koinos/v1/health.proto";
+import "koinos/v1/koinos.proto";
+import "koinos/v1/lemma.proto";
+import "koinos/v1/search.proto";
+
+service PerdikkasService {
+  rpc Health(google.protobuf.Empty) returns (koinos.v1.HealthResponse);
+  rpc Search(koinos.v1.SearchQuery) returns (SearchResponse);
+}
+
+message SearchResponse {
+  repeated koinos.v1.Lemma results = 1;
+  koinos.v1.PageInfo page_info     = 2;
+}

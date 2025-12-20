@@ -48,14 +48,18 @@ func (e *ExactServiceImpl) Search(ctx context.Context, request *koinos.SearchQue
 		return nil, fmt.Errorf("unsupported language: %v", request.Language)
 	}
 
-	elasticResponse, hitsTotal, err := e.queryElastic(ctx, baseWord, language, false)
+	if request.NumberOfResults == 0 {
+		request.NumberOfResults = 5
+	}
+
+	elasticResponse, hitsTotal, err := e.queryElastic(ctx, baseWord, language, false, request.NumberOfResults)
 	if err != nil {
 		return nil, err
 	}
 
 	if len(elasticResponse.Hits.Hits) == 0 {
 		logging.Debug("no hits found trying with a word without diacretics")
-		elasticResponse, hitsTotal, err = e.queryElastic(ctx, strippedWord, language, true)
+		elasticResponse, hitsTotal, err = e.queryElastic(ctx, strippedWord, language, true, request.NumberOfResults)
 		if err != nil {
 			return nil, err
 		}
@@ -82,7 +86,7 @@ func (e *ExactServiceImpl) Search(ctx context.Context, request *koinos.SearchQue
 	return resp, nil
 }
 
-func (e *ExactServiceImpl) queryElastic(ctx context.Context, word, language string, normalized bool) (*models.Response, int64, error) {
+func (e *ExactServiceImpl) queryElastic(ctx context.Context, word, language string, normalized bool, results int32) (*models.Response, int64, error) {
 	var query map[string]interface{}
 
 	if normalized {
@@ -111,7 +115,7 @@ func (e *ExactServiceImpl) queryElastic(ctx context.Context, word, language stri
 					},
 				},
 			},
-			"size": 5,
+			"size": results,
 		}
 	}
 

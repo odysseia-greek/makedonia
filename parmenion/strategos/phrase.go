@@ -1,4 +1,4 @@
-package monophthalmus
+package strategos
 
 import (
 	"context"
@@ -9,14 +9,14 @@ import (
 
 	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/agora/plato/transform"
-	v1 "github.com/odysseia-greek/makedonia/antigonos/gen/go/v1"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 	"github.com/odysseia-greek/makedonia/filippos/hetairoi"
+	v1 "github.com/odysseia-greek/makedonia/parmenion/gen/go/v1"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (f *FuzzyServiceImpl) Health(ctx context.Context, request *emptypb.Empty) (*koinos.HealthResponse, error) {
-	elasticHealth := f.Elastic.Health().Info()
+func (p *PhraseServiceImpl) Health(ctx context.Context, request *emptypb.Empty) (*koinos.HealthResponse, error) {
+	elasticHealth := p.Elastic.Health().Info()
 	dbHealth := &koinos.DatabaseHealth{
 		Healthy:       elasticHealth.Healthy,
 		ClusterName:   elasticHealth.ClusterName,
@@ -28,11 +28,11 @@ func (f *FuzzyServiceImpl) Health(ctx context.Context, request *emptypb.Empty) (
 		Healthy:        true,
 		Time:           time.Now().String(),
 		DatabaseHealth: dbHealth,
-		Version:        f.Version,
+		Version:        p.Version,
 	}, nil
 }
 
-func (f *FuzzyServiceImpl) Search(ctx context.Context, request *koinos.SearchQuery) (*v1.SearchResponse, error) {
+func (p *PhraseServiceImpl) Search(ctx context.Context, request *koinos.SearchQuery) (*v1.SearchResponse, error) {
 	baseWord := extractBaseWord(request.Word)
 
 	if request.NumberOfResults == 0 {
@@ -40,60 +40,30 @@ func (f *FuzzyServiceImpl) Search(ctx context.Context, request *koinos.SearchQue
 	}
 
 	var query map[string]interface{}
-	if request.Language == koinos.Language_LANG_GREEK {
-		query = map[string]interface{}{
-			"query": map[string]interface{}{
-				"bool": map[string]interface{}{
-					"should": []map[string]interface{}{
-						{
-							"fuzzy": map[string]interface{}{
-								"greek": map[string]interface{}{
-									"value":     request.Word,
-									"fuzziness": 2,
-								},
-							},
-						},
-						{
-							"fuzzy": map[string]interface{}{
-								"normalized": map[string]interface{}{
-									"value":     baseWord,
-									"fuzziness": 2,
-								},
-							},
-						},
-					},
-					"minimum_should_match": 1,
-				},
-			},
-			"size": request.NumberOfResults,
-		}
-	} else {
-		var lang string
-		switch request.Language {
-		case koinos.Language_LANG_ENGLISH:
-			lang = "english"
-		case koinos.Language_LANG_DUTCH:
-			lang = "dutch"
-		default:
-			return nil, fmt.Errorf("unsupported language: %v", request.Language)
-		}
+	var lang string
+	switch request.Language {
+	case koinos.Language_LANG_GREEK:
+		lang = "greek"
+	case koinos.Language_LANG_ENGLISH:
+		lang = "english"
+	case koinos.Language_LANG_DUTCH:
+		lang = "dutch"
+	default:
+		return nil, fmt.Errorf("unsupported language: %v", request.Language)
+	}
 
-		query = map[string]interface{}{
-			"query": map[string]interface{}{
-				"fuzzy": map[string]interface{}{
-					lang: map[string]interface{}{
-						"value":     request.Word,
-						"fuzziness": 2,
-					},
-				},
+	query = map[string]interface{}{
+		"query": map[string]interface{}{
+			"match_phrase": map[string]string{
+				lang: baseWord,
 			},
-			"size": request.NumberOfResults,
-		}
+		},
+		"size": request.NumberOfResults,
 	}
 
 	logging.Debug(fmt.Sprintf("%v", query))
 
-	elasticResponse, err := f.Elastic.Query().Match(f.Index, query)
+	elasticResponse, err := p.Elastic.Query().Match(p.Index, query)
 	if err != nil {
 		return nil, fmt.Errorf("error querying elastic: %w", err)
 	}

@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"os"
+
+	"github.com/odysseia-greek/agora/plato/logging"
 )
 
 const standardPort = ":50060"
@@ -12,9 +14,9 @@ func main() {
 	if port == "" {
 		port = standardPort
 	}
-	log.Println("\"οἱ βασιλέως λόγοι πρὸς τοὺς Ἕλληνας οὐκ ἀληθεῖς εἰσίν.\"")
-	log.Println("The king's words to the Greeks are not to be trusted.")
+	logging.System("\"οἱ βασιλέως λόγοι πρὸς τοὺς Ἕλληνας οὐκ ἀληθεῖς εἰσίν.\"")
+	logging.System("The king's words to the Greeks are not to be trusted.")
 
-	log.Println("starting up.....")
-	log.Println("starting up and getting env variables")
+	logging.System("starting up.....")
+	logging.System("starting up and getting env variables")
 }

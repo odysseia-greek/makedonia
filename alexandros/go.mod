@@ -9,7 +9,7 @@ require (
 	github.com/odysseia-greek/attike/aristophanes v0.6.3
 	github.com/odysseia-greek/makedonia/antigonos v0.0.1-rho1
 	github.com/odysseia-greek/makedonia/eukleides v0.0.1
-	github.com/odysseia-greek/makedonia/filippos v0.0.3-rho1
+	github.com/odysseia-greek/makedonia/filippos v0.0.3-rho2
 	github.com/odysseia-greek/makedonia/hefaistion v0.0.1-rho2
 	github.com/odysseia-greek/makedonia/ptolemaios v0.0.1-rho1
 	github.com/vektah/gqlparser/v2 v2.5.30

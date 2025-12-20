@@ -161,5 +161,57 @@
       { "term": "graph / graphic / -graphy", "note": "directly from γράφω ‘to write’" },
       { "term": "autograph / photograph", "note": "compounds with -graph/-graphy" }
     ]
+  },
+  {
+    "greek": "δεῖ",
+    "english": "it is necessary; one must",
+    "dutch": "het is nodig dat; men moet",
+    "linkedWord": "δέω",
+    "partOfSpeech": "verb",
+    "verb": {
+      "principalParts": [
+        "δεῖ",
+        "δεήσει",
+        "ἐδέησε"
+      ]
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "it is necessary; one must; it behoves (with accusative and infinitive)",
+            "example": "δεῖ με ἰέναι — I must go"
+          },
+          {
+            "language": "nl",
+            "definition": "het is nodig; men moet; het behoort (met accusatief en infinitief)",
+            "example": "δεῖ με ἰέναι — ik moet gaan"
+          }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "there is need of, there is wanting (with genitive)",
+            "example": "δεῖ χρημάτων — there is need of money"
+          },
+          {
+            "language": "en",
+            "definition": "it is fitting or proper",
+            "example": "δεῖ τοὺς ἄρχοντας δικαίους εἶναι — rulers must be just"
+          }
+        ]
+      }
+    ],
+    "modernConnections": [
+      {
+        "term": "deontic / deontology",
+        "note": "from δέον, the participle of δεῖ, meaning ‘that which is necessary or fitting’"
+      }
+    ]
   }
 ]

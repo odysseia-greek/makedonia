@@ -54,8 +54,9 @@ func (r *queryResolver) Fuzzy(ctx context.Context, input model.SearchQueryInput)
 	}
 
 	request := &koinos.SearchQuery{
-		Word:     input.Word,
-		Language: language,
+		Word:            input.Word,
+		Language:        language,
+		NumberOfResults: *input.Size,
 	}
 	return r.Handler.Fuzzy(request, requestID, sessionId)
 }
@@ -78,8 +79,9 @@ func (r *queryResolver) Exact(ctx context.Context, input model.ExpandableSearchQ
 	}
 
 	request := &koinos.SearchQuery{
-		Word:     input.Word,
-		Language: language,
+		Word:            input.Word,
+		Language:        language,
+		NumberOfResults: *input.Size,
 	}
 	exactResponse, err := r.Handler.Exact(request, requestID, sessionId)
 	if err != nil {
