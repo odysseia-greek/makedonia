@@ -4,28 +4,28 @@ import (
 	"github.com/odysseia-greek/makedonia/alexandros/graph/model"
 	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
-	parmenionv1 "github.com/odysseia-greek/makedonia/parmenion/gen/go/v1"
-	"github.com/odysseia-greek/makedonia/parmenion/strategos"
+	"github.com/odysseia-greek/makedonia/perdikkas/epimeleia"
+	perdikkasv1 "github.com/odysseia-greek/makedonia/perdikkas/gen/go/v1"
 )
 
 func (a *AlexandrosHandler) Partial(request *koinos.SearchQuery, requestID, sessionId string) (*model.SearchResponse, error) {
-	phraseClientCtx, cancel := a.createRequestHeader(requestID, sessionId)
+	partialClientCtx, cancel := a.createRequestHeader(requestID, sessionId)
 	defer cancel()
 
 	eukleidesUpdate := pbe.CountCreationRequest{
 		Word:        request.Word,
-		ServiceName: "phrase",
-		SearchType:  "phrase",
+		ServiceName: "partial",
+		SearchType:  "partial",
 		SessionId:   sessionId,
 	}
 
 	go a.pushToEukleides(&eukleidesUpdate)
 
-	var grpcResponse *parmenionv1.SearchResponse
+	var grpcResponse *perdikkasv1.SearchResponse
 
-	err := a.PhraseClient.CallWithReconnect(func(client *strategos.PhraseClient) error {
+	err := a.PartialClient.CallWithReconnect(func(client *epimeleia.PartialClient) error {
 		var innerErr error
-		grpcResponse, innerErr = client.Search(phraseClientCtx, request)
+		grpcResponse, innerErr = client.Search(partialClientCtx, request)
 		return innerErr
 	})
 	if err != nil {

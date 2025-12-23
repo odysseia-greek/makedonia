@@ -7,7 +7,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/odysseia-greek/agora/plato/config"
 	"github.com/odysseia-greek/makedonia/alexandros/graph/model"
@@ -139,7 +138,17 @@ func (r *queryResolver) Phrase(ctx context.Context, input model.SearchQueryInput
 
 // Partial is the resolver for the partial field.
 func (r *queryResolver) Partial(ctx context.Context, input model.SearchQueryInput) (*model.SearchResponse, error) {
-	panic(fmt.Errorf("not implemented: Partial - partial"))
+	requestID, _ := ctx.Value(config.HeaderKey).(string)
+	sessionId, _ := ctx.Value(config.SessionIdKey).(string)
+
+	language := parseLanguage(input.Language)
+
+	request := &koinos.SearchQuery{
+		Word:            input.Word,
+		Language:        language,
+		NumberOfResults: *input.Size,
+	}
+	return r.Handler.Partial(request, requestID, sessionId)
 }
 
 // Query returns QueryResolver implementation.

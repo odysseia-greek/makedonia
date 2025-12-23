@@ -8,7 +8,6 @@ import (
 	"github.com/odysseia-greek/agora/archytas"
 	"github.com/odysseia-greek/agora/aristoteles"
 	"github.com/odysseia-greek/agora/plato/randomizer"
-	"github.com/odysseia-greek/agora/plato/service"
 	pbar "github.com/odysseia-greek/attike/aristophanes/proto"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 	v1 "github.com/odysseia-greek/makedonia/perdikkas/gen/go/v1"
@@ -31,7 +30,6 @@ type PartialServiceImpl struct {
 	Index      string
 	Version    string
 	Randomizer randomizer.Random
-	Client     service.OdysseiaClient
 	Streamer   pbar.TraceService_ChorusClient
 	Archytas   archytas.Client
 	v1.UnimplementedPerdikkasServiceServer

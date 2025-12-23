@@ -3,17 +3,17 @@ package monophthalmus
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/odysseia-greek/agora/archytas"
 	"github.com/odysseia-greek/agora/aristoteles"
 	"github.com/odysseia-greek/agora/plato/randomizer"
-	"github.com/odysseia-greek/agora/plato/service"
 	pbar "github.com/odysseia-greek/attike/aristophanes/proto"
 	v1 "github.com/odysseia-greek/makedonia/antigonos/gen/go/v1"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"time"
 )
 
 type FuzzyService interface {
@@ -30,7 +30,6 @@ type FuzzyServiceImpl struct {
 	Index      string
 	Version    string
 	Randomizer randomizer.Random
-	Client     service.OdysseiaClient
 	Streamer   pbar.TraceService_ChorusClient
 	Archytas   archytas.Client
 	v1.UnimplementedAntigonosServiceServer

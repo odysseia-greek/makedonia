@@ -44,6 +44,8 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 			return nil, err
 		}
 
+		logging.Debug(fmt.Sprintf("found in cache: %s number of results: %d", request.Word, len(analyseResult.FoundInText.Texts)))
+
 		go hetairoi.CacheSpan(string(cacheItem), request.Word, ctx)
 		return analyseResult, nil
 	}
@@ -123,6 +125,8 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 	if err != nil {
 		logging.Error(err.Error())
 	}
+
+	logging.Debug(fmt.Sprintf("found in herodotos: %s number of results: %d", request.Word, len(analyseResult.FoundInText.Texts)))
 
 	return analyseResult, nil
 }

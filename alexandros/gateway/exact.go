@@ -9,7 +9,7 @@ import (
 )
 
 func (a *AlexandrosHandler) Exact(request *koinos.SearchQuery, requestID, sessionId string) (*model.SearchResponse, error) {
-	fuzzyClientCtx, cancel := a.createRequestHeader(requestID, sessionId)
+	exactClientCtx, cancel := a.createRequestHeader(requestID, sessionId)
 	defer cancel()
 
 	eukleidesUpdate := pbe.CountCreationRequest{
@@ -25,7 +25,7 @@ func (a *AlexandrosHandler) Exact(request *koinos.SearchQuery, requestID, sessio
 
 	err := a.ExactClient.CallWithReconnect(func(client *philia.ExactClient) error {
 		var innerErr error
-		grpcResponse, innerErr = client.Search(fuzzyClientCtx, request)
+		grpcResponse, innerErr = client.Search(exactClientCtx, request)
 		return innerErr
 	})
 	if err != nil {

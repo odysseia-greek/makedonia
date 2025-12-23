@@ -33,11 +33,11 @@ func main() {
 |__| |_____||__|\_||_____||____||__|\_||__|\_||__|__| \___|
 `)
 
-	log.Println("\"Μὴ καταφρόνει τῆς ἐρήμου, βασιλεῦ· οὐ παντὶ ἀνθρώπῳ ὁμοίως ὁ κίνδυνος.\"")
-	log.Println("Do not underestimate the desert, O king; danger does not treat all men equally.")
+	logging.System("\"Μὴ καταφρόνει τῆς ἐρήμου, βασιλεῦ· οὐ παντὶ ἀνθρώπῳ ὁμοίως ὁ κίνδυνος.\"")
+	logging.System("Do not underestimate the desert, O king; danger does not treat all men equally.")
 
-	log.Println("starting up.....")
-	log.Println("starting up and getting env variables")
+	logging.System("starting up.....")
+	logging.System("starting up and getting env variables")
 
 	ctx := context.Background()
 	config, err := epimeleia.CreateNewConfig(ctx)

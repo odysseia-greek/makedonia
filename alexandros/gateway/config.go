@@ -14,6 +14,7 @@ import (
 	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
 	"github.com/odysseia-greek/makedonia/hefaistion/philia"
 	"github.com/odysseia-greek/makedonia/parmenion/strategos"
+	"github.com/odysseia-greek/makedonia/perdikkas/epimeleia"
 	"github.com/odysseia-greek/makedonia/ptolemaios/aigyptos"
 )
 
@@ -23,14 +24,14 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	var tracer *aristophanes.ClientTracer
 	var streamer pb.TraceService_ChorusClient
 	var eukleides *geometrias.CounterClient
 	var eukleidesStreamer pbe.Eukleides_CreateNewEntryClient
 
-	maxRetries := 3
-	retryDelay := 10 * time.Second
+	maxRetries := 10
+	retryDelay := 3 * time.Second
 
 	for i := 1; i <= maxRetries; i++ {
 		tracer, err = aristophanes.NewClientTracer(aristophanes.DefaultAddress)
@@ -139,6 +140,20 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 		exactClientHealthy = exactClient.client.WaitForHealthyState()
 	}
 
+	partialClientAddress := config.StringFromEnv("PERDIKKAS_SERVICE", "perdikkas:50060")
+	partialClient, err := NewGenericGrpcClient[*epimeleia.PartialClient](
+		partialClientAddress,
+		epimeleia.NewPerdikkasClient,
+	)
+	if err != nil {
+		logging.Error(err.Error())
+	}
+
+	partialClientHealthy := false
+	if partialClient != nil {
+		partialClientHealthy = partialClient.client.WaitForHealthyState()
+	}
+
 	extendedClientAddress := config.StringFromEnv("PTOLEMAIOS_SERVICE", "ptolemaios:50060")
 	extendedClient, err := NewGenericGrpcClient[*aigyptos.ExtendedClient](
 		extendedClientAddress,
@@ -162,6 +177,7 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 - Antigonos Service:   %v (Address: %s)
 - Parmenion Service:   %v (Address: %s)
 - Hefaistion Service:  %v (Address: %s)
+- Perdikkas Service:   %v (Address: %s)
 - Ptolemaios Service:  %v (Address: %s)
 `,
 		elapsed,
@@ -170,6 +186,7 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 		fuzzyClientHealthy, fuzzyClientAddress,
 		phraseClientHealthy, phraseClientAddress,
 		exactClientHealthy, exactClientAddress,
+		partialClientHealthy, partialClientAddress,
 		extendedClientHealthy, extendedClientAddress,
 	))
 
@@ -180,6 +197,7 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 		ExactClient:     exactClient,
 		PhraseClient:    phraseClient,
 		ExtendedClient:  extendedClient,
+		PartialClient:   partialClient,
 		CounterStreamer: eukleidesStreamer,
 		Counter:         eukleides,
 	}, nil

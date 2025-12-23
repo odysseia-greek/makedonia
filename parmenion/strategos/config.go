@@ -126,11 +126,6 @@ func CreateNewConfig(ctx context.Context) (*PhraseServiceImpl, error) {
 		return nil, err
 	}
 
-	client, err := config.CreateOdysseiaClient()
-	if err != nil {
-		return nil, err
-	}
-
 	cache, err := archytas.CreateBadgerClient()
 	if err != nil {
 		return nil, err
@@ -142,7 +137,6 @@ func CreateNewConfig(ctx context.Context) (*PhraseServiceImpl, error) {
 		Index:      index,
 		Elastic:    elastic,
 		Randomizer: randomizer,
-		Client:     client,
 		Archytas:   cache,
 		Version:    version,
 	}, nil

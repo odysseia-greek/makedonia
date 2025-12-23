@@ -9,6 +9,7 @@ import (
 	"github.com/odysseia-greek/makedonia/antigonos/monophthalmus"
 	"github.com/odysseia-greek/makedonia/hefaistion/philia"
 	"github.com/odysseia-greek/makedonia/parmenion/strategos"
+	"github.com/odysseia-greek/makedonia/perdikkas/epimeleia"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
@@ -71,6 +72,27 @@ func (a *AlexandrosHandler) Health(requestID, sessionId string) (*model.Aggregat
 			client: func(ctx context.Context) (bool, *model.DatabaseInfo, *string) {
 				var resp *koinos.HealthResponse
 				err := a.PhraseClient.CallWithReconnect(func(c *strategos.PhraseClient) error {
+					var innerErr error
+					resp, innerErr = c.Health(ctx, &emptypb.Empty{})
+					return innerErr
+				})
+				if err != nil || resp == nil {
+					return false, nil, nil
+				}
+				databaseHealth := &model.DatabaseInfo{
+					Healthy:       resp.DatabaseHealth.Healthy,
+					ClusterName:   &resp.DatabaseHealth.ClusterName,
+					ServerName:    &resp.DatabaseHealth.ServerName,
+					ServerVersion: &resp.DatabaseHealth.ServerVersion,
+				}
+				return resp.GetHealthy(), databaseHealth, ptr(resp.GetVersion())
+			},
+		},
+		{
+			name: "partial",
+			client: func(ctx context.Context) (bool, *model.DatabaseInfo, *string) {
+				var resp *koinos.HealthResponse
+				err := a.PartialClient.CallWithReconnect(func(c *epimeleia.PartialClient) error {
 					var innerErr error
 					resp, innerErr = c.Health(ctx, &emptypb.Empty{})
 					return innerErr

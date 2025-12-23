@@ -15,6 +15,7 @@ import (
 	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
 	"github.com/odysseia-greek/makedonia/hefaistion/philia"
 	"github.com/odysseia-greek/makedonia/parmenion/strategos"
+	"github.com/odysseia-greek/makedonia/perdikkas/epimeleia"
 	"github.com/odysseia-greek/makedonia/ptolemaios/aigyptos"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -30,6 +31,7 @@ type AlexandrosHandler struct {
 	ExactClient     *GenericGrpcClient[*philia.ExactClient]
 	ExtendedClient  *GenericGrpcClient[*aigyptos.ExtendedClient]
 	PhraseClient    *GenericGrpcClient[*strategos.PhraseClient]
+	PartialClient   *GenericGrpcClient[*epimeleia.PartialClient]
 }
 type GenericGrpcClient[T any] struct {
 	client  T
