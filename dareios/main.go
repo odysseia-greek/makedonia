@@ -1,19 +1,20 @@
 package main
 
 import (
-	"log"
-	"os"
-
 	"github.com/odysseia-greek/agora/plato/logging"
 )
 
-const standardPort = ":50060"
-
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = standardPort
-	}
+	//https://patorjk.com/software/taag/#p=display&f=Crawford2&t=DAREIOS&x=none&v=4&h=4&w=80&we=false
+	logging.System(`
+ ___     ____  ____     ___  ____  ___   _____
+|   \   /    ||    \   /  _]|    |/   \ / ___/
+|    \ |  o  ||  D  ) /  [_  |  ||     (   \_ 
+|  D  ||     ||    / |    _] |  ||  O  |\__  |
+|     ||  _  ||    \ |   [_  |  ||     |/  \ |
+|     ||  |  ||  .  \|     | |  ||     |\    |
+|_____||__|__||__|\_||_____||____|\___/  \___|
+`)
 	logging.System("\"οἱ βασιλέως λόγοι πρὸς τοὺς Ἕλληνας οὐκ ἀληθεῖς εἰσίν.\"")
 	logging.System("The king's words to the Greeks are not to be trusted.")
 

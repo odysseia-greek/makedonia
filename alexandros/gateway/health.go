@@ -8,6 +8,7 @@ import (
 	"github.com/odysseia-greek/makedonia/alexandros/graph/model"
 	"github.com/odysseia-greek/makedonia/antigonos/monophthalmus"
 	"github.com/odysseia-greek/makedonia/hefaistion/philia"
+	"github.com/odysseia-greek/makedonia/parmenion/strategos"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
@@ -49,6 +50,27 @@ func (a *AlexandrosHandler) Health(requestID, sessionId string) (*model.Aggregat
 			client: func(ctx context.Context) (bool, *model.DatabaseInfo, *string) {
 				var resp *koinos.HealthResponse
 				err := a.ExactClient.CallWithReconnect(func(c *philia.ExactClient) error {
+					var innerErr error
+					resp, innerErr = c.Health(ctx, &emptypb.Empty{})
+					return innerErr
+				})
+				if err != nil || resp == nil {
+					return false, nil, nil
+				}
+				databaseHealth := &model.DatabaseInfo{
+					Healthy:       resp.DatabaseHealth.Healthy,
+					ClusterName:   &resp.DatabaseHealth.ClusterName,
+					ServerName:    &resp.DatabaseHealth.ServerName,
+					ServerVersion: &resp.DatabaseHealth.ServerVersion,
+				}
+				return resp.GetHealthy(), databaseHealth, ptr(resp.GetVersion())
+			},
+		},
+		{
+			name: "phrase",
+			client: func(ctx context.Context) (bool, *model.DatabaseInfo, *string) {
+				var resp *koinos.HealthResponse
+				err := a.PhraseClient.CallWithReconnect(func(c *strategos.PhraseClient) error {
 					var innerErr error
 					resp, innerErr = c.Health(ctx, &emptypb.Empty{})
 					return innerErr

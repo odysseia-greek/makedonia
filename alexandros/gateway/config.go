@@ -3,7 +3,6 @@ package gateway
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/odysseia-greek/agora/plato/config"
@@ -14,15 +13,17 @@ import (
 	"github.com/odysseia-greek/makedonia/eukleides/geometrias"
 	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
 	"github.com/odysseia-greek/makedonia/hefaistion/philia"
+	"github.com/odysseia-greek/makedonia/parmenion/strategos"
 	"github.com/odysseia-greek/makedonia/ptolemaios/aigyptos"
 )
 
 func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
+	start := time.Now()
 	randomizer, err := config.CreateNewRandomizer()
 	if err != nil {
 		return nil, err
 	}
-
+	
 	var tracer *aristophanes.ClientTracer
 	var streamer pb.TraceService_ChorusClient
 	var eukleides *geometrias.CounterClient
@@ -56,9 +57,9 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 		}
 	}
 
-	healthy := tracer.WaitForHealthyState()
-	if !healthy {
-		logging.Error("tracing service not ready - starting up without traces")
+	healthyTracer := false
+	if tracer != nil {
+		healthyTracer = tracer.WaitForHealthyState()
 	}
 
 	counterClientAddress := config.StringFromEnv("EUKLEIDES_SERVICE", "eukleides:50060")
@@ -75,12 +76,10 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 		}
 	}
 
-	if err != nil {
-		logging.Error("giving up after 3 retries to connect to counter")
-		os.Exit(1)
-	}
-
 	for i := 1; i <= maxRetries; i++ {
+		if eukleides == nil {
+			break
+		}
 		eukleidesStreamer, err = eukleides.CreateNewEntry(ctx)
 		if err == nil {
 			break
@@ -92,9 +91,9 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 		}
 	}
 
-	healthy = eukleides.WaitForHealthyState()
-	if !healthy {
-		logging.Error("eukleides service not ready - starting up without counter")
+	healthyEukleides := false
+	if eukleides != nil {
+		healthyEukleides = eukleides.WaitForHealthyState()
 	}
 
 	fuzzyClientAddress := config.StringFromEnv("ANTIGONOS_SERVICE", "antigonos:50060")
@@ -105,13 +104,25 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 
 	if err != nil {
 		logging.Error(err.Error())
-		return nil, err
 	}
 
-	fuzzyClientHealthy := fuzzyClient.client.WaitForHealthyState()
-	if !fuzzyClientHealthy {
-		logging.Debug("fuzzy client not ready - restarting seems the only option")
-		os.Exit(1)
+	fuzzyClientHealthy := false
+	if fuzzyClient != nil {
+		fuzzyClientHealthy = fuzzyClient.client.WaitForHealthyState()
+	}
+
+	phraseClientAddress := config.StringFromEnv("PARMENION_SERVICE", "parmenion:50060")
+	phraseClient, err := NewGenericGrpcClient[*strategos.PhraseClient](
+		phraseClientAddress,
+		strategos.NewParmenionClient,
+	)
+	if err != nil {
+		logging.Error(err.Error())
+	}
+
+	phraseClientHealthy := false
+	if phraseClient != nil {
+		phraseClientHealthy = phraseClient.client.WaitForHealthyState()
 	}
 
 	exactClientAddress := config.StringFromEnv("HEFAISTION_SERVICE", "hefaistion:50060")
@@ -119,16 +130,13 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 		exactClientAddress,
 		philia.NewHefaistionClient,
 	)
-
 	if err != nil {
 		logging.Error(err.Error())
-		return nil, err
 	}
 
-	exactClientHealthy := exactClient.client.WaitForHealthyState()
-	if !exactClientHealthy {
-		logging.Debug("exact client not ready - restarting seems the only option")
-		os.Exit(1)
+	exactClientHealthy := false
+	if exactClient != nil {
+		exactClientHealthy = exactClient.client.WaitForHealthyState()
 	}
 
 	extendedClientAddress := config.StringFromEnv("PTOLEMAIOS_SERVICE", "ptolemaios:50060")
@@ -136,23 +144,41 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 		extendedClientAddress,
 		aigyptos.NewPtolemaiosClient,
 	)
-
 	if err != nil {
 		logging.Error(err.Error())
-		return nil, err
 	}
 
-	extendedClienttHealthy := extendedClient.client.WaitForHealthyState()
-	if !extendedClienttHealthy {
-		logging.Debug("extended client not ready - restarting seems the only option")
-		os.Exit(1)
+	extendedClientHealthy := false
+	if extendedClient != nil {
+		extendedClientHealthy = extendedClient.client.WaitForHealthyState()
 	}
+
+	elapsed := time.Since(start)
+
+	logging.System(fmt.Sprintf(`Alexandros Configuration Overview:
+- Initialization Time: %s
+- Tracer Service:      %v (Address: %s)
+- Eukleides Service:   %v (Address: %s)
+- Antigonos Service:   %v (Address: %s)
+- Parmenion Service:   %v (Address: %s)
+- Hefaistion Service:  %v (Address: %s)
+- Ptolemaios Service:  %v (Address: %s)
+`,
+		elapsed,
+		healthyTracer, aristophanes.DefaultAddress,
+		healthyEukleides, counterClientAddress,
+		fuzzyClientHealthy, fuzzyClientAddress,
+		phraseClientHealthy, phraseClientAddress,
+		exactClientHealthy, exactClientAddress,
+		extendedClientHealthy, extendedClientAddress,
+	))
 
 	return &AlexandrosHandler{
 		Streamer:        streamer,
 		Randomizer:      randomizer,
 		FuzzyClient:     fuzzyClient,
 		ExactClient:     exactClient,
+		PhraseClient:    phraseClient,
 		ExtendedClient:  extendedClient,
 		CounterStreamer: eukleidesStreamer,
 		Counter:         eukleides,

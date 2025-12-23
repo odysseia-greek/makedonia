@@ -1,4 +1,4 @@
-package monophthalmus
+package epimeleia
 
 import (
 	"context"
@@ -21,7 +21,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func CreateNewConfig(ctx context.Context) (*FuzzyServiceImpl, error) {
+func CreateNewConfig(ctx context.Context) (*PartialServiceImpl, error) {
 	tls := config.BoolFromEnv(config.EnvTlSKey)
 
 	streamer := hetairoi.SetStreamer(ctx)
@@ -138,7 +138,7 @@ func CreateNewConfig(ctx context.Context) (*FuzzyServiceImpl, error) {
 
 	version := os.Getenv(config.EnvVersion)
 
-	return &FuzzyServiceImpl{
+	return &PartialServiceImpl{
 		Index:      index,
 		Elastic:    elastic,
 		Randomizer: randomizer,

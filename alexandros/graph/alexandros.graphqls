@@ -170,11 +170,18 @@ type Query {
 
     # Passthrough to EukleidesService/RetrieveTopFive (global)
     counterTopFive: EukleidesTopFiveResponse!
-    counterService(name: String!): [EukleidesTopFive!]!
-    CounterSession(sessionId: String!): [EukleidesTopFive!]!
+    counterService(name: String!): EukleidesTopFive!
+    counterSession(sessionId: String!): EukleidesTopFiveResponse!
+
+    # Passthrough to Ptolemaios/Search (koinos.v1.SearchQuery → ptolemaios.v1.SearchResponse)
+    text(input: ExpandableSearchQueryInput!): ExtendedResponse!
 
     # Passthrough to AntigonosService/Search (koinos.v1.SearchQuery → antigonos.v1.SearchResponse)
     fuzzy(input: SearchQueryInput!): SearchResponse!
     # Passthrough to Hefaistion/Search (koinos.v1.SearchQuery → hefaistion.v1.SearchResponse)
     exact(input: ExpandableSearchQueryInput!): ExtendedResponse!
+    # Passthrough to Parmenion/Service/Search (koinos.v1.SearchQuery → parmenion.v1.SearchResponse)
+    phrase(input: SearchQueryInput!): SearchResponse!
+    # Passthrough to Perdikkas/Service/Search (koinos.v1.SearchQuery → perkdikkas.v1.SearchResponse)
+    partial(input: SearchQueryInput!): SearchResponse!
 }

@@ -166,6 +166,9 @@ type ComplexityRoot struct {
 		Exact          func(childComplexity int, input model.ExpandableSearchQueryInput) int
 		Fuzzy          func(childComplexity int, input model.SearchQueryInput) int
 		Health         func(childComplexity int) int
+		Partial        func(childComplexity int, input model.SearchQueryInput) int
+		Phrase         func(childComplexity int, input model.SearchQueryInput) int
+		Text           func(childComplexity int, input model.ExpandableSearchQueryInput) int
 	}
 
 	Reference struct {
@@ -199,10 +202,13 @@ type ComplexityRoot struct {
 type QueryResolver interface {
 	Health(ctx context.Context) (*model.AggregatedHealthResponse, error)
 	CounterTopFive(ctx context.Context) (*model.EukleidesTopFiveResponse, error)
-	CounterService(ctx context.Context, name string) ([]*model.EukleidesTopFive, error)
-	CounterSession(ctx context.Context, sessionID string) ([]*model.EukleidesTopFive, error)
+	CounterService(ctx context.Context, name string) (*model.EukleidesTopFive, error)
+	CounterSession(ctx context.Context, sessionID string) (*model.EukleidesTopFiveResponse, error)
+	Text(ctx context.Context, input model.ExpandableSearchQueryInput) (*model.ExtendedResponse, error)
 	Fuzzy(ctx context.Context, input model.SearchQueryInput) (*model.SearchResponse, error)
 	Exact(ctx context.Context, input model.ExpandableSearchQueryInput) (*model.ExtendedResponse, error)
+	Phrase(ctx context.Context, input model.SearchQueryInput) (*model.SearchResponse, error)
+	Partial(ctx context.Context, input model.SearchQueryInput) (*model.SearchResponse, error)
 }
 
 type executableSchema struct {
@@ -624,12 +630,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Query.CounterService(childComplexity, args["name"].(string)), true
-	case "Query.CounterSession":
+	case "Query.counterSession":
 		if e.complexity.Query.CounterSession == nil {
 			break
 		}
 
-		args, err := ec.field_Query_CounterSession_args(ctx, rawArgs)
+		args, err := ec.field_Query_counterSession_args(ctx, rawArgs)
 		if err != nil {
 			return 0, false
 		}
@@ -669,6 +675,39 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Query.Health(childComplexity), true
+	case "Query.partial":
+		if e.complexity.Query.Partial == nil {
+			break
+		}
+
+		args, err := ec.field_Query_partial_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Partial(childComplexity, args["input"].(model.SearchQueryInput)), true
+	case "Query.phrase":
+		if e.complexity.Query.Phrase == nil {
+			break
+		}
+
+		args, err := ec.field_Query_phrase_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Phrase(childComplexity, args["input"].(model.SearchQueryInput)), true
+	case "Query.text":
+		if e.complexity.Query.Text == nil {
+			break
+		}
+
+		args, err := ec.field_Query_text_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Text(childComplexity, args["input"].(model.ExpandableSearchQueryInput)), true
 
 	case "Reference.locus":
 		if e.complexity.Reference.Locus == nil {
@@ -859,17 +898,6 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Query_CounterSession_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
-	var err error
-	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "sessionId", ec.unmarshalNString2string)
-	if err != nil {
-		return nil, err
-	}
-	args["sessionId"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -892,6 +920,17 @@ func (ec *executionContext) field_Query_counterService_args(ctx context.Context,
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_counterSession_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "sessionId", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["sessionId"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_exact_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -907,6 +946,39 @@ func (ec *executionContext) field_Query_fuzzy_args(ctx context.Context, rawArgs 
 	var err error
 	args := map[string]any{}
 	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNSearchQueryInput2githubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐSearchQueryInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_partial_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNSearchQueryInput2githubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐSearchQueryInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_phrase_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNSearchQueryInput2githubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐSearchQueryInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_text_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNExpandableSearchQueryInput2githubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐExpandableSearchQueryInput)
 	if err != nil {
 		return nil, err
 	}
@@ -2985,7 +3057,7 @@ func (ec *executionContext) _Query_counterService(ctx context.Context, field gra
 			return ec.resolvers.Query().CounterService(ctx, fc.Args["name"].(string))
 		},
 		nil,
-		ec.marshalNEukleidesTopFive2ᚕᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐEukleidesTopFiveᚄ,
+		ec.marshalNEukleidesTopFive2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐEukleidesTopFive,
 		true,
 		true,
 	)
@@ -3025,24 +3097,24 @@ func (ec *executionContext) fieldContext_Query_counterService(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_CounterSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_counterSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
 		ec.OperationContext,
 		field,
-		ec.fieldContext_Query_CounterSession,
+		ec.fieldContext_Query_counterSession,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
 			return ec.resolvers.Query().CounterSession(ctx, fc.Args["sessionId"].(string))
 		},
 		nil,
-		ec.marshalNEukleidesTopFive2ᚕᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐEukleidesTopFiveᚄ,
+		ec.marshalNEukleidesTopFiveResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐEukleidesTopFiveResponse,
 		true,
 		true,
 	)
 }
 
-func (ec *executionContext) fieldContext_Query_CounterSession(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_counterSession(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -3050,16 +3122,10 @@ func (ec *executionContext) fieldContext_Query_CounterSession(ctx context.Contex
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "serviceName":
-				return ec.fieldContext_EukleidesTopFive_serviceName(ctx, field)
-			case "word":
-				return ec.fieldContext_EukleidesTopFive_word(ctx, field)
-			case "lastUsed":
-				return ec.fieldContext_EukleidesTopFive_lastUsed(ctx, field)
-			case "count":
-				return ec.fieldContext_EukleidesTopFive_count(ctx, field)
+			case "topFive":
+				return ec.fieldContext_EukleidesTopFiveResponse_topFive(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type EukleidesTopFive", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type EukleidesTopFiveResponse", field.Name)
 		},
 	}
 	defer func() {
@@ -3069,7 +3135,58 @@ func (ec *executionContext) fieldContext_Query_CounterSession(ctx context.Contex
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_CounterSession_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_counterSession_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_text(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_text,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.resolvers.Query().Text(ctx, fc.Args["input"].(model.ExpandableSearchQueryInput))
+		},
+		nil,
+		ec.marshalNExtendedResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐExtendedResponse,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_text(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "results":
+				return ec.fieldContext_ExtendedResponse_results(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_ExtendedResponse_pageInfo(ctx, field)
+			case "similarWords":
+				return ec.fieldContext_ExtendedResponse_similarWords(ctx, field)
+			case "foundInText":
+				return ec.fieldContext_ExtendedResponse_foundInText(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ExtendedResponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_text_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -3168,6 +3285,100 @@ func (ec *executionContext) fieldContext_Query_exact(ctx context.Context, field 
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_exact_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_phrase(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_phrase,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.resolvers.Query().Phrase(ctx, fc.Args["input"].(model.SearchQueryInput))
+		},
+		nil,
+		ec.marshalNSearchResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐSearchResponse,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_phrase(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "results":
+				return ec.fieldContext_SearchResponse_results(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_SearchResponse_pageInfo(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SearchResponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_phrase_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_partial(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_Query_partial,
+		func(ctx context.Context) (any, error) {
+			fc := graphql.GetFieldContext(ctx)
+			return ec.resolvers.Query().Partial(ctx, fc.Args["input"].(model.SearchQueryInput))
+		},
+		nil,
+		ec.marshalNSearchResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐSearchResponse,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_Query_partial(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "results":
+				return ec.fieldContext_SearchResponse_results(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_SearchResponse_pageInfo(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SearchResponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_partial_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -6113,7 +6324,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "CounterSession":
+		case "counterSession":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -6122,7 +6333,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_CounterSession(ctx, field)
+				res = ec._Query_counterSession(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "text":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_text(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -6167,6 +6400,50 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_exact(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "phrase":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_phrase(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "partial":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_partial(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -6767,7 +7044,7 @@ func (ec *executionContext) marshalNAggregatedHealthResponse2githubᚗcomᚋodys
 func (ec *executionContext) marshalNAggregatedHealthResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐAggregatedHealthResponse(ctx context.Context, sel ast.SelectionSet, v *model.AggregatedHealthResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
@@ -6784,7 +7061,7 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	res := graphql.MarshalBoolean(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 	}
 	return res
@@ -6837,11 +7114,15 @@ func (ec *executionContext) marshalNDefinition2ᚕᚖgithubᚗcomᚋodysseiaᚑg
 func (ec *executionContext) marshalNDefinition2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐDefinition(ctx context.Context, sel ast.SelectionSet, v *model.Definition) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
 	return ec._Definition(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNEukleidesTopFive2githubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐEukleidesTopFive(ctx context.Context, sel ast.SelectionSet, v model.EukleidesTopFive) graphql.Marshaler {
+	return ec._EukleidesTopFive(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNEukleidesTopFive2ᚕᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐEukleidesTopFiveᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.EukleidesTopFive) graphql.Marshaler {
@@ -6891,7 +7172,7 @@ func (ec *executionContext) marshalNEukleidesTopFive2ᚕᚖgithubᚗcomᚋodysse
 func (ec *executionContext) marshalNEukleidesTopFive2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐEukleidesTopFive(ctx context.Context, sel ast.SelectionSet, v *model.EukleidesTopFive) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
@@ -6905,7 +7186,7 @@ func (ec *executionContext) marshalNEukleidesTopFiveResponse2githubᚗcomᚋodys
 func (ec *executionContext) marshalNEukleidesTopFiveResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐEukleidesTopFiveResponse(ctx context.Context, sel ast.SelectionSet, v *model.EukleidesTopFiveResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
@@ -6924,7 +7205,7 @@ func (ec *executionContext) marshalNExtendedResponse2githubᚗcomᚋodysseiaᚑg
 func (ec *executionContext) marshalNExtendedResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐExtendedResponse(ctx context.Context, sel ast.SelectionSet, v *model.ExtendedResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
@@ -6941,7 +7222,7 @@ func (ec *executionContext) marshalNInt2int32(ctx context.Context, sel ast.Selec
 	res := graphql.MarshalInt32(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 	}
 	return res
@@ -6994,7 +7275,7 @@ func (ec *executionContext) marshalNLemma2ᚕᚖgithubᚗcomᚋodysseiaᚑgreek�
 func (ec *executionContext) marshalNLemma2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐLemma(ctx context.Context, sel ast.SelectionSet, v *model.Lemma) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
@@ -7048,7 +7329,7 @@ func (ec *executionContext) marshalNLocalizedGloss2ᚕᚖgithubᚗcomᚋodysseia
 func (ec *executionContext) marshalNLocalizedGloss2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐLocalizedGloss(ctx context.Context, sel ast.SelectionSet, v *model.LocalizedGloss) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
@@ -7102,7 +7383,7 @@ func (ec *executionContext) marshalNMeaning2ᚕᚖgithubᚗcomᚋodysseiaᚑgree
 func (ec *executionContext) marshalNMeaning2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐMeaning(ctx context.Context, sel ast.SelectionSet, v *model.Meaning) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
@@ -7156,7 +7437,7 @@ func (ec *executionContext) marshalNModernConnection2ᚕᚖgithubᚗcomᚋodysse
 func (ec *executionContext) marshalNModernConnection2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐModernConnection(ctx context.Context, sel ast.SelectionSet, v *model.ModernConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
@@ -7166,7 +7447,7 @@ func (ec *executionContext) marshalNModernConnection2ᚖgithubᚗcomᚋodysseia�
 func (ec *executionContext) marshalNPageInfo2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *model.PageInfo) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
@@ -7185,7 +7466,7 @@ func (ec *executionContext) marshalNSearchResponse2githubᚗcomᚋodysseiaᚑgre
 func (ec *executionContext) marshalNSearchResponse2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐSearchResponse(ctx context.Context, sel ast.SelectionSet, v *model.SearchResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
@@ -7239,7 +7520,7 @@ func (ec *executionContext) marshalNServiceHealth2ᚕᚖgithubᚗcomᚋodysseia�
 func (ec *executionContext) marshalNServiceHealth2ᚖgithubᚗcomᚋodysseiaᚑgreekᚋmakedoniaᚋalexandrosᚋgraphᚋmodelᚐServiceHealth(ctx context.Context, sel ast.SelectionSet, v *model.ServiceHealth) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
@@ -7256,7 +7537,7 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	res := graphql.MarshalString(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 	}
 	return res
@@ -7350,7 +7631,7 @@ func (ec *executionContext) marshalN__DirectiveLocation2string(ctx context.Conte
 	res := graphql.MarshalString(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 	}
 	return res
@@ -7522,7 +7803,7 @@ func (ec *executionContext) marshalN__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgen�
 func (ec *executionContext) marshalN__Type2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx context.Context, sel ast.SelectionSet, v *introspection.Type) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
@@ -7539,7 +7820,7 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	res := graphql.MarshalString(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+			graphql.AddErrorf(ctx, "the requested element is null which the schema does not allow")
 		}
 	}
 	return res
