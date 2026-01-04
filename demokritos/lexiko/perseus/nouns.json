@@ -163,5 +163,253 @@
       { "term": "sophist/sophistry", "note": "from σοφιστής; related but with later negative sense" },
       { "term": "sophisticated", "note": "via Latin from Greek σοφός/σοφιστικός" }
     ]
+  },
+  {
+    "greek": "ποταμός",
+    "english": "river",
+    "dutch": "rivier",
+    "linkedWord": "",
+    "partOfSpeech": "noun",
+    "article": "ὁ",
+    "gender": "masc",
+    "noun": {
+      "declension": "second",
+      "genitive": "-οῦ"
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "river; stream"
+          },
+          {
+            "language": "nl",
+            "definition": "rivier; stroom"
+          }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "a flow or current (metaphorical: of time, speech, events)"
+          }
+        ]
+      },
+      {
+        "grade": 1,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "a river as a divine or personified being (river-god, esp. in myth/poetry)"
+          }
+        ]
+      }
+    ],
+    "modernConnections": [
+      {
+        "term": "hippopotamus",
+        "note": "from ἵππος ‘horse’ + ποταμός ‘river’ → ‘river horse’"
+      },
+      {
+        "term": "Mesopotamia",
+        "note": "Μεσοποταμία ‘(land) between rivers’ (μέσος + ποταμός)"
+      },
+      {
+        "term": "potamology",
+        "note": "scientific study of rivers (ποταμός + -λογία)"
+      }
+    ]
+  },
+  {
+    "greek": "πόλεμος",
+    "english": "war",
+    "dutch": "oorlog",
+    "linkedWord": "",
+    "partOfSpeech": "noun",
+    "article": "ὁ",
+    "gender": "masc",
+    "noun": {
+      "declension": "second",
+      "genitive": "-ου"
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "war; armed conflict"
+          },
+          {
+            "language": "nl",
+            "definition": "oorlog"
+          }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "hostility; struggle; conflict (literal or figurative)"
+          }
+        ]
+      }
+    ],
+    "modernConnections": [
+      {
+        "term": "polemic",
+        "note": "from πολεμικός ‘warlike; hostile’ ← πόλεμος"
+      }
+    ]
+  },
+  {
+    "greek": "στρατιά",
+    "english": "army",
+    "dutch": "leger",
+    "linkedWord": "στρατός",
+    "partOfSpeech": "noun",
+    "article": "ἡ",
+    "gender": "fem",
+    "noun": {
+      "declension": "first",
+      "genitive": "-ᾶς"
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "army"
+          },
+          {
+            "language": "nl",
+            "definition": "leger"
+          }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "host; company; band"
+          }
+        ]
+      },
+      {
+        "grade": 1,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "military expedition or campaign"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "greek": "στρατιώτης",
+    "english": "soldier",
+    "dutch": "soldaat",
+    "linkedWord": "στρατός",
+    "partOfSpeech": "noun",
+    "article": "ὁ",
+    "gender": "masc",
+    "noun": {
+      "declension": "second",
+      "genitive": "-ου"
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "soldier"
+          },
+          {
+            "language": "nl",
+            "definition": "soldaat"
+          }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "one serving in an army; fighting man"
+          }
+        ]
+      }
+    ],
+    "modernConnections": [
+      {
+        "term": "strategy",
+        "note": "indirectly related via στρατός ‘army’"
+      }
+    ]
+  },
+  {
+    "greek": "θεός",
+    "english": "god",
+    "dutch": "god",
+    "linkedWord": "",
+    "partOfSpeech": "noun",
+    "article": "ὁ",
+    "gender": "masc",
+    "noun": {
+      "declension": "second",
+      "genitive": "-οῦ"
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "god; deity"
+          },
+          {
+            "language": "nl",
+            "definition": "god; godheid"
+          }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "a divine being; one of the gods (polytheistic usage)"
+          }
+        ]
+      },
+      {
+        "grade": 1,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "the one God (monotheistic or philosophical usage)"
+          }
+        ]
+      }
+    ],
+    "modernConnections": [
+      {
+        "term": "theology",
+        "note": "θεός + λόγος ‘study of god(s)’"
+      },
+      {
+        "term": "theism",
+        "note": "belief in a god or gods"
+      }
+    ]
   }
 ]

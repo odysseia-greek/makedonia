@@ -61,8 +61,6 @@ func (p *PhraseServiceImpl) Search(ctx context.Context, request *koinos.SearchQu
 		"size": request.NumberOfResults,
 	}
 
-	logging.Debug(fmt.Sprintf("%v", query))
-
 	elasticResponse, err := p.Elastic.Query().Match(p.Index, query)
 	if err != nil {
 		return nil, fmt.Errorf("error querying elastic: %w", err)

@@ -213,5 +213,222 @@
         "note": "from δέον, the participle of δεῖ, meaning ‘that which is necessary or fitting’"
       }
     ]
+  },
+  {
+    "greek": "φέρω",
+    "english": "carry",
+    "dutch": "dragen; brengen",
+    "linkedWord": "",
+    "partOfSpeech": "verb",
+    "verb": {
+      "principalParts": [
+        "φέρω",
+        "οἴσω",
+        "ἤνεγκα",
+        "ἐνήνοχα",
+        "ἐνήνεγμαι",
+        "ἠνέχθην"
+      ]
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "to carry; to bring; to bear" },
+          { "language": "nl", "definition": "dragen; brengen; meedragen" }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "to produce or yield; to bear (fruit)" },
+          { "language": "en", "definition": "to endure; to tolerate (bear with)" }
+        ]
+      },
+      {
+        "grade": 1,
+        "meanings": [
+          { "language": "en", "definition": "to bear/bring in a figurative sense: bring news, bring blame, bring support" }
+        ]
+      }
+    ],
+    "modernConnections": [
+      { "term": "pheromone", "note": "from φέρω ‘to carry’ + -hormone (carrier substance)" },
+      { "term": "-phore / -phor", "note": "‘carrier’ (e.g., Christopher, phosphor, metaphorical formations)" },
+      { "term": "metaphor", "note": "from μεταφέρω ‘carry across’ (meta- + φέρω)" }
+    ]
+  },
+  {
+    "greek": "λύω",
+    "english": "loosen, destroy",
+    "dutch": "losmaken; ontbinden; vernietigen",
+    "linkedWord": "",
+    "partOfSpeech": "verb",
+    "verb": {
+      "principalParts": [
+        "λύω",
+        "λύσω",
+        "ἔλυσα",
+        "λέλυκα",
+        "λέλυμαι",
+        "ἐλύθην"
+      ]
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "to loosen; to untie; to set free" },
+          { "language": "nl", "definition": "losmaken; losbinden; bevrijden" }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "to dissolve, break up; to destroy" },
+          { "language": "en", "definition": "to solve (a problem), explain (later/extended usage)" }
+        ]
+      },
+      {
+        "grade": 1,
+        "meanings": [
+          { "language": "en", "definition": "abstract sense: to release from obligations; to undo a law/decision; to dissolve an alliance" }
+        ]
+      }
+    ],
+    "modernConnections": [
+      { "term": "analysis", "note": "ἀνά- + λύω ‘to loosen up’ → ‘to break down’" },
+      { "term": "lysis", "note": "λύσις ‘a loosening; dissolution’ (biology/chemistry)" },
+      { "term": "catalyst", "note": "κατά- + λύω → catalyst/catalysis" }
+    ]
+  },
+  {
+    "greek": "φιλέω",
+    "english": "love",
+    "dutch": "houden van; liefhebben",
+    "linkedWord": "φίλος",
+    "partOfSpeech": "verb",
+    "verb": {
+      "principalParts": [
+        "φιλέω",
+        "φιλήσω",
+        "ἐφίλησα",
+        "πεφίληκα",
+        "πεφίλημαι",
+        "ἐφιλήθην"
+      ]
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "to love; to like; to be fond of" },
+          { "language": "nl", "definition": "liefhebben; leuk vinden; genegen zijn" }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "to treat with affection; to cherish; to welcome gladly" },
+          { "language": "en", "definition": "to be accustomed to; to be inclined to (often with infinitive)" }
+        ]
+      },
+      {
+        "grade": 1,
+        "meanings": [
+          { "language": "en", "definition": "in compound ideas: loving/liking as a preference (e.g., φιλο- ‘fond of’)" }
+        ]
+      }
+    ],
+    "modernConnections": [
+      { "term": "philosophy", "note": "φιλο- + σοφία ‘love of wisdom’" },
+      { "term": "philology", "note": "φιλο- + λόγος: love of learning/words" },
+      { "term": "bibliophile", "note": "book-lover (φιλο- ‘loving’)" }
+    ]
+  },
+  {
+    "greek": "εἰμί",
+    "english": "to be",
+    "dutch": "zijn",
+    "linkedWord": "",
+    "partOfSpeech": "verb",
+    "verb": {
+      "principalParts": [
+        "εἰμί",
+        "ἔσομαι"
+      ],
+      "notes": [
+        "highly irregular; no aorist/perfect system in common paradigms (often supplied by γίγνομαι for ‘become’)"
+      ]
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "to be; to exist" },
+          { "language": "nl", "definition": "zijn; bestaan" }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "to be (in a place/state), to be available or possible (context-dependent)" }
+        ]
+      },
+      {
+        "grade": 1,
+        "meanings": [
+          { "language": "en", "definition": "philosophical usage: being/existence (τὸ εἶναι)" }
+        ]
+      }
+    ],
+    "modernConnections": [
+      { "term": "ontology", "note": "ὄν (being) from εἰμί → study of being" },
+      { "term": "ousia", "note": "οὐσία ‘being/essence’ (formed from εἰμί)" }
+    ]
+  },
+  {
+    "greek": "ἔχω",
+    "english": "have, hold",
+    "dutch": "hebben; vasthouden",
+    "linkedWord": "",
+    "partOfSpeech": "verb",
+    "verb": {
+      "principalParts": [
+        "ἔχω",
+        "ἕξω",
+        "ἔσχον",
+        "ἔσχηκα"
+      ],
+      "notes": [
+        "middle/passive and full perfect passive are uncommon; often treated as a partial principal-parts set in learners’ lists"
+      ]
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "to have; to hold; to keep" },
+          { "language": "nl", "definition": "hebben; houden; vasthouden" }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "to possess (a quality), to be in a certain condition (ἔχειν + adverb/adjective)" },
+          { "language": "en", "definition": "to restrain, control; to occupy (a place)" }
+        ]
+      },
+      {
+        "grade": 1,
+        "meanings": [
+          { "language": "en", "definition": "idiomatic: ἔχει = ‘it is (so), it is possible / it stands thus’ (context-driven)" }
+        ]
+      }
+    ],
+    "modernConnections": [
+      { "term": "hectic", "note": "via ἕξις ‘habit; state; condition’ (from ἔχω ‘to have’)" },
+      { "term": "hexis", "note": "philosophical term ἕξις: a stable ‘having’/disposition (Aristotle)" }
+    ]
   }
 ]

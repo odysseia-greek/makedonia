@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"github.com/odysseia-greek/agora/aristoteles/models"
@@ -13,6 +14,7 @@ import (
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 	"github.com/odysseia-greek/makedonia/filippos/hetairoi"
 	v1 "github.com/odysseia-greek/makedonia/hefaistion/gen/go/v1"
+	"google.golang.org/grpc/peer"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -35,6 +37,7 @@ func (e *ExactServiceImpl) Health(ctx context.Context, request *emptypb.Empty) (
 
 func (e *ExactServiceImpl) Search(ctx context.Context, request *koinos.SearchQuery) (*v1.SearchResponse, error) {
 	baseWord, strippedWord := extractBaseWord(request.Word)
+	go e.recordRequest(ctx)
 
 	var language string
 	switch request.Language {
@@ -119,8 +122,6 @@ func (e *ExactServiceImpl) queryElastic(ctx context.Context, word, language stri
 		}
 	}
 
-	logging.Debug(fmt.Sprintf("%v", query))
-
 	elasticResponse, err := e.Elastic.Query().Match(e.Index, query)
 	if err != nil {
 		return nil, 0, fmt.Errorf("error querying elastic: %w", err)
@@ -164,4 +165,40 @@ func extractBaseWord(queryWord string) (string, string) {
 	}
 
 	return queryWord, transform.RemoveAccents(strings.ToLower(queryWord))
+}
+
+func (e *ExactServiceImpl) recordRequest(ctx context.Context) {
+	e.totalRequests.Add(1)
+
+	if p, ok := peer.FromContext(ctx); ok {
+		ip := p.Addr.String()
+		val, _ := e.ipMap.LoadOrStore(ip, new(uint64))
+		atomic.AddUint64(val.(*uint64), 1)
+	}
+}
+
+func (e *ExactServiceImpl) StartReporting(ctx context.Context) {
+	ticker := time.NewTicker(1 * time.Minute)
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				total := e.totalRequests.Load()
+				if total == 0 {
+					continue
+				}
+
+				stats := fmt.Sprintf("Service Stats (Last Minute) - Total Requests: %d\nIP Breakdown:", total)
+				e.ipMap.Range(func(key, value any) bool {
+					count := atomic.LoadUint64(value.(*uint64))
+					stats += fmt.Sprintf("\n  - %s: %d", key.(string), count)
+					return true
+				})
+				logging.Info(stats)
+			case <-ctx.Done():
+				ticker.Stop()
+				return
+			}
+		}
+	}()
 }

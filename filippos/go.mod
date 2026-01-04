@@ -1,6 +1,6 @@
 module github.com/odysseia-greek/makedonia/filippos
 
-go 1.24.0
+go 1.25.4
 
 require (
 	github.com/odysseia-greek/agora/plato v0.2.10

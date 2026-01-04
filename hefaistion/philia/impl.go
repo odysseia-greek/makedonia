@@ -3,6 +3,8 @@ package philia
 import (
 	"context"
 	"fmt"
+	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/odysseia-greek/agora/archytas"
@@ -35,6 +37,9 @@ type ExactServiceImpl struct {
 	Streamer   pbar.TraceService_ChorusClient
 	Archytas   archytas.Client
 	v1.UnimplementedHefastionServiceServer
+
+	totalRequests atomic.Uint64
+	ipMap         sync.Map
 }
 
 type ExactServiceClient struct {

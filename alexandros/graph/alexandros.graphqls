@@ -1,28 +1,6 @@
 # -------------------------
 # Health (Gateway + Service)
 # -------------------------
-
-type AggregatedHealthResponse {
-    healthy: Boolean!
-    time: String
-    version: String
-    services: [ServiceHealth!]!
-}
-
-type ServiceHealth {
-    name: String!
-    healthy: Boolean!
-    version: String
-    databaseInfo: DatabaseInfo
-}
-
-type DatabaseInfo {
-    healthy: Boolean!
-    clusterName: String
-    serverName: String
-    serverVersion: String
-}
-
 # Mirrors koinos.v1.HealthResponse (AntigonosService/Health)
 type HealthResponse {
     healthy: Boolean!
@@ -111,12 +89,6 @@ type Lemma {
     modernConnections: [ModernConnection!]!
 }
 
-# Optional: Provided in proto, not yet attached to Lemma
-type Reference {
-    work: String!
-    locus: String!
-}
-
 # Mirrors antigonos.v1.SearchResponse
 type SearchResponse {
     results: [Lemma!]!
@@ -164,10 +136,7 @@ type ExtendedResponse {
 # Root Query
 # -------------------------
 
-type Query {
-    # Your existing gateway aggregate
-    health: AggregatedHealthResponse!
-
+extend type Query {
     # Passthrough to EukleidesService/RetrieveTopFive (global)
     counterTopFive: EukleidesTopFiveResponse!
     counterService(name: String!): EukleidesTopFive!

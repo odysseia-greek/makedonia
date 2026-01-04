@@ -142,7 +142,7 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 
 	partialClientAddress := config.StringFromEnv("PERDIKKAS_SERVICE", "perdikkas:50060")
 	partialClient, err := NewGenericGrpcClient[*epimeleia.PartialClient](
-		partialClientAddress,
+		exactClientAddress,
 		epimeleia.NewPerdikkasClient,
 	)
 	if err != nil {

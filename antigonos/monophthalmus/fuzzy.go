@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/agora/plato/transform"
 	v1 "github.com/odysseia-greek/makedonia/antigonos/gen/go/v1"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
@@ -90,8 +89,6 @@ func (f *FuzzyServiceImpl) Search(ctx context.Context, request *koinos.SearchQue
 			"size": request.NumberOfResults,
 		}
 	}
-
-	logging.Debug(fmt.Sprintf("%v", query))
 
 	elasticResponse, err := f.Elastic.Query().Match(f.Index, query)
 	if err != nil {

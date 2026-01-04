@@ -25,6 +25,7 @@ func (e *ExtendedServiceImpl) Health(ctx context.Context, request *emptypb.Empty
 		Version:        e.Version,
 	}, nil
 }
+
 func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSearch) (*v1.ExtendedSearchResponse, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	var requestId string

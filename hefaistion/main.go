@@ -57,6 +57,8 @@ func main() {
 
 	v1.RegisterHefastionServiceServer(server, config)
 
+	config.StartReporting(ctx)
+
 	logging.Info(fmt.Sprintf("Server listening on %s", port))
 	if err := server.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %v", err)
