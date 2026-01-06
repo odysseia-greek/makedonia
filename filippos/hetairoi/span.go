@@ -8,7 +8,8 @@ import (
 
 	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/agora/plato/service"
-	pb "github.com/odysseia-greek/attike/aristophanes/proto"
+	"github.com/odysseia-greek/attike/aristophanes/comedy"
+	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -49,15 +50,15 @@ func DatabaseSpan(query map[string]interface{}, hits, timeTook int64, ctx contex
 
 	parsedQuery, _ := json.Marshal(query)
 
-	dataBaseSpan := &pb.ParabasisRequest{
+	dataBaseSpan := &arv1.ObserveRequest{
 		TraceId:      traceID,
 		ParentSpanId: spanID,
 		SpanId:       spanID,
-		RequestType: &pb.ParabasisRequest_DatabaseSpan{DatabaseSpan: &pb.DatabaseSpanRequest{
-			Action:   "search",
-			Query:    string(parsedQuery),
-			Hits:     hits,
-			TimeTook: timeTook,
+		Kind: &arv1.ObserveRequest_DbSpan{DbSpan: &arv1.ObserveDbSpan{
+			Action: "search",
+			Query:  string(parsedQuery),
+			Hits:   hits,
+			TookMs: timeTook,
 		}},
 	}
 
@@ -74,11 +75,11 @@ func CacheSpan(response string, sessionId string, ctx context.Context) {
 		return
 	}
 
-	span := &pb.ParabasisRequest{
+	span := &arv1.ObserveRequest{
 		TraceId:      traceID,
 		ParentSpanId: spanID,
 		SpanId:       spanID,
-		RequestType: &pb.ParabasisRequest_Span{Span: &pb.SpanRequest{
+		Kind: &arv1.ObserveRequest_Action{Action: &arv1.ObserveAction{
 			Action: fmt.Sprintf("taken from cache with key: %s", sessionId),
 			Status: response,
 		}},
@@ -90,7 +91,7 @@ func CacheSpan(response string, sessionId string, ctx context.Context) {
 	}
 }
 
-func ServiceToServiceSpan(span *pb.ParabasisRequest, ctx context.Context) {
+func ServiceToServiceSpan(span *arv1.ObserveRequest, ctx context.Context) {
 	traceID, spanID, traceCall := extractRequestIds(ctx)
 
 	if !traceCall {
@@ -98,6 +99,7 @@ func ServiceToServiceSpan(span *pb.ParabasisRequest, ctx context.Context) {
 	}
 
 	span.TraceId = traceID
+	span.SpanId = comedy.GenerateSpanID()
 	span.ParentSpanId = spanID
 
 	err := streamer.Send(span)
