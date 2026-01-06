@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/agora/plato/transform"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 	"github.com/odysseia-greek/makedonia/filippos/hetairoi"

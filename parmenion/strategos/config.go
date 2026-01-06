@@ -14,7 +14,7 @@ import (
 	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/agora/plato/service"
 	aristophanes "github.com/odysseia-greek/attike/aristophanes/comedy"
-	pbar "github.com/odysseia-greek/attike/aristophanes/proto"
+	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 	"github.com/odysseia-greek/delphi/aristides/diplomat"
 	pb "github.com/odysseia-greek/delphi/aristides/proto"
 	"github.com/odysseia-greek/makedonia/filippos/hetairoi"

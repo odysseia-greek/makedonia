@@ -10,7 +10,7 @@ require (
 	github.com/odysseia-greek/makedonia/antigonos v0.0.2
 	github.com/odysseia-greek/makedonia/eukleides v0.0.3
 	github.com/odysseia-greek/makedonia/filippos v0.0.4
-	github.com/odysseia-greek/makedonia/hefaistion v0.0.1-rho2
+	github.com/odysseia-greek/makedonia/hefaistion v0.0.2
 	github.com/odysseia-greek/makedonia/parmenion v0.0.1-rho1
 	github.com/odysseia-greek/makedonia/perdikkas v0.0.1-rho1
 	github.com/odysseia-greek/makedonia/ptolemaios v0.0.1-rho1

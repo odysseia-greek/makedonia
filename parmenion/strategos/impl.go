@@ -8,7 +8,7 @@ import (
 	"github.com/odysseia-greek/agora/archytas"
 	"github.com/odysseia-greek/agora/aristoteles"
 	"github.com/odysseia-greek/agora/plato/randomizer"
-	pbar "github.com/odysseia-greek/attike/aristophanes/proto"
+	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 	v1 "github.com/odysseia-greek/makedonia/parmenion/gen/go/v1"
 	"google.golang.org/grpc"

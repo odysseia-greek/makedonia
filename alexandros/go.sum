@@ -265,6 +265,7 @@ github.com/odysseia-greek/makedonia/filippos v0.0.3-rho2/go.mod h1:nXrabzcp20Zfi
 github.com/odysseia-greek/makedonia/filippos v0.0.4/go.mod h1:0huu3BgVHP2BibeCmH9wiBXgAh0cVRA7Hq7KJm63ufY=
 github.com/odysseia-greek/makedonia/hefaistion v0.0.1-rho2 h1:qzKiaGF2w5GFSg/kWK1qJGZtl6ryK2cs42o7uObhUiA=
 github.com/odysseia-greek/makedonia/hefaistion v0.0.1-rho2/go.mod h1:6VSqVz7ClurbRu3pz+zThQBaCmtjk1oAwPOsNCv0ADY=
+github.com/odysseia-greek/makedonia/hefaistion v0.0.2/go.mod h1:eIXZ6Zh9NNbZkrSfMEmT7vWS8BdgPvbXGJiAgT6CI3A=
 github.com/odysseia-greek/makedonia/parmenion v0.0.1-rho1 h1:5oRbOnHaAng30cJjkCzB/bT4wO3qT0Ej33etRxLzq+Q=
 github.com/odysseia-greek/makedonia/parmenion v0.0.1-rho1/go.mod h1:uwRyW1fdwIkk5stPeZfFWrY43sFgsxD6W//mueJPjDo=
 github.com/odysseia-greek/makedonia/perdikkas v0.0.1-rho1 h1:Az13d1ULp0p3GxsSnP8yiUBiNF/HoWmOCRt03xbpoo4=
