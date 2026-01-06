@@ -34,7 +34,7 @@ type ExactServiceImpl struct {
 	Version    string
 	Randomizer randomizer.Random
 	Client     service.OdysseiaClient
-	Streamer   pbar.TraceService_ChorusClient
+	Streamer   arv1.TraceService_ChorusClient
 	Archytas   archytas.Client
 	v1.UnimplementedHefastionServiceServer
 

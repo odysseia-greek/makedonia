@@ -30,7 +30,7 @@ type PartialServiceImpl struct {
 	Index      string
 	Version    string
 	Randomizer randomizer.Random
-	Streamer   pbar.TraceService_ChorusClient
+	Streamer   arv1.TraceService_ChorusClient
 	Archytas   archytas.Client
 	v1.UnimplementedPerdikkasServiceServer
 }

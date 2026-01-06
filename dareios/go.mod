@@ -3,7 +3,7 @@ module github.com/odysseia-greek/makedonia/dareios
 go 1.25.4
 
 require (
-	github.com/odysseia-greek/agora/plato v0.2.10
+	github.com/odysseia-greek/agora/plato v0.2.12
 	github.com/onsi/ginkgo/v2 v2.27.3
 	github.com/onsi/gomega v1.38.3
 )

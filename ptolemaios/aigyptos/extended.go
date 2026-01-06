@@ -9,7 +9,7 @@ import (
 	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/agora/plato/models"
 	"github.com/odysseia-greek/agora/plato/service"
-	pb "github.com/odysseia-greek/attike/aristophanes/proto"
+	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 	"github.com/odysseia-greek/makedonia/filippos/hetairoi"
 	v1 "github.com/odysseia-greek/makedonia/ptolemaios/gen/go/v1"
@@ -51,8 +51,8 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 		return analyseResult, nil
 	}
 
-	herodotosSpan := &pb.ParabasisRequest{
-		RequestType: &pb.ParabasisRequest_Span{Span: &pb.SpanRequest{
+	herodotosSpan := &arv1.ObserveRequest{
+		Kind: &arv1.ObserveRequest_Action{Action: &arv1.ObserveAction{
 			Action: "analyseText",
 			Status: fmt.Sprintf("querying Herodotos for word: %s", request.Word),
 		}},
@@ -77,11 +77,11 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 		if err != nil {
 			logging.Error(fmt.Sprintf("error while decoding: %s", err.Error()))
 		}
-
-		herodotosSpan = &pb.ParabasisRequest{
-			RequestType: &pb.ParabasisRequest_Span{Span: &pb.SpanRequest{
+		
+		herodotosSpan := &arv1.ObserveRequest{
+			Kind: &arv1.ObserveRequest_Action{Action: &arv1.ObserveAction{
 				Action: "analyseText",
-				Took:   fmt.Sprintf("%v", endTime),
+				TookMs: endTime.Milliseconds(),
 				Status: fmt.Sprintf("querying Herodotos returned: %d", foundInText.StatusCode),
 			}},
 		}

@@ -1,15 +1,15 @@
 module github.com/odysseia-greek/makedonia/alexandros
 
-go 1.25.4
+go 1.25.5
 
 require (
 	github.com/99designs/gqlgen v0.17.85
 	github.com/gorilla/mux v1.8.1
-	github.com/odysseia-greek/agora/plato v0.2.10
-	github.com/odysseia-greek/attike/aristophanes v0.6.3
+	github.com/odysseia-greek/agora/plato v0.2.12
+	github.com/odysseia-greek/attike/aristophanes v0.7.0-rho2
 	github.com/odysseia-greek/makedonia/antigonos v0.0.1-rho1
 	github.com/odysseia-greek/makedonia/eukleides v0.0.1
-	github.com/odysseia-greek/makedonia/filippos v0.0.3-rho2
+	github.com/odysseia-greek/makedonia/filippos v0.0.4
 	github.com/odysseia-greek/makedonia/hefaistion v0.0.1-rho2
 	github.com/odysseia-greek/makedonia/parmenion v0.0.1-rho1
 	github.com/odysseia-greek/makedonia/perdikkas v0.0.1-rho1

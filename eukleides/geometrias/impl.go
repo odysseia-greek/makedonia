@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	pbar "github.com/odysseia-greek/attike/aristophanes/proto"
+	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 	pb "github.com/odysseia-greek/makedonia/eukleides/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -26,7 +26,7 @@ const (
 type CounterServiceImpl struct {
 	Version  string
 	store    *Store
-	Streamer pbar.TraceService_ChorusClient
+	Streamer arv1.TraceService_ChorusClient
 	pb.UnimplementedEukleidesServer
 }
 type CounterServiceClient struct {
