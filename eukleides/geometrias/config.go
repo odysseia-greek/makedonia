@@ -7,10 +7,7 @@ import (
 	"github.com/odysseia-greek/agora/plato/config"
 	"github.com/odysseia-greek/agora/plato/logging"
 	aristophanes "github.com/odysseia-greek/attike/aristophanes/comedy"
-	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 )
-
-var streamer arv1.TraceService_ChorusClient
 
 func CreateNewConfig(ctx context.Context) (*CounterServiceImpl, error) {
 	tracer, err := aristophanes.NewClientTracer(aristophanes.DefaultAddress)
@@ -20,7 +17,7 @@ func CreateNewConfig(ctx context.Context) (*CounterServiceImpl, error) {
 		os.Exit(1)
 	}
 
-	streamer, err = tracer.Chorus(ctx)
+	streamer, err := tracer.Chorus(ctx)
 	if err != nil {
 		logging.Error(err.Error())
 	}

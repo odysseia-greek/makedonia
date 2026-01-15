@@ -1,6 +1,8 @@
 package gateway
 
 import (
+	"context"
+
 	"github.com/odysseia-greek/makedonia/alexandros/graph/model"
 	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
@@ -8,8 +10,8 @@ import (
 	perdikkasv1 "github.com/odysseia-greek/makedonia/perdikkas/gen/go/v1"
 )
 
-func (a *AlexandrosHandler) Partial(request *koinos.SearchQuery, requestID, sessionId string) (*model.SearchResponse, error) {
-	partialClientCtx, cancel := a.createRequestHeader(requestID, sessionId)
+func (a *AlexandrosHandler) Partial(ctx context.Context, request *koinos.SearchQuery) (*model.SearchResponse, error) {
+	outCtx, cancel, sessionId := a.outgoingCtx(ctx)
 	defer cancel()
 
 	eukleidesUpdate := pbe.CountCreationRequest{
@@ -25,7 +27,7 @@ func (a *AlexandrosHandler) Partial(request *koinos.SearchQuery, requestID, sess
 
 	err := a.PartialClient.CallWithReconnect(func(client *epimeleia.PartialClient) error {
 		var innerErr error
-		grpcResponse, innerErr = client.Search(partialClientCtx, request)
+		grpcResponse, innerErr = client.Search(outCtx, request)
 		return innerErr
 	})
 	if err != nil {

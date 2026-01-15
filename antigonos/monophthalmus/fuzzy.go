@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/odysseia-greek/agora/plato/transform"
+	"github.com/odysseia-greek/attike/aristophanes/comedy"
 	v1 "github.com/odysseia-greek/makedonia/antigonos/gen/go/v1"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 	"github.com/odysseia-greek/makedonia/filippos/hetairoi"
@@ -99,7 +100,7 @@ func (f *FuzzyServiceImpl) Search(ctx context.Context, request *koinos.SearchQue
 	if elasticResponse.Hits.Hits != nil {
 		hitsTotal = elasticResponse.Hits.Total.Value
 	}
-	go hetairoi.DatabaseSpan(query, hitsTotal, elasticResponse.Took, ctx)
+	go comedy.DatabaseSpan(query, hitsTotal, elasticResponse.Took, ctx, f.Streamer)
 
 	hits := elasticResponse.Hits.Hits
 

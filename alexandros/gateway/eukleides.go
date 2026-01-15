@@ -9,7 +9,6 @@ import (
 )
 
 func (a *AlexandrosHandler) pushToEukleides(update *pbe.CountCreationRequest) {
-
 	var collector pbe.CountCreationRequestSet
 	collector.Request = append(collector.Request, update)
 

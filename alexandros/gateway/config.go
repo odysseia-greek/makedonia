@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/odysseia-greek/agora/hesiodos"
 	"github.com/odysseia-greek/agora/plato/config"
 	"github.com/odysseia-greek/agora/plato/logging"
 	aristophanes "github.com/odysseia-greek/attike/aristophanes/comedy"
@@ -98,7 +99,7 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 	}
 
 	fuzzyClientAddress := config.StringFromEnv("ANTIGONOS_SERVICE", "antigonos:50060")
-	fuzzyClient, err := NewGenericGrpcClient[*monophthalmus.FuzzyClient](
+	fuzzyClient, err := hesiodos.NewGenericGrpcClient[*monophthalmus.FuzzyClient](
 		fuzzyClientAddress,
 		monophthalmus.NewAntigonosClient,
 	)
@@ -109,11 +110,11 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 
 	fuzzyClientHealthy := false
 	if fuzzyClient != nil {
-		fuzzyClientHealthy = fuzzyClient.client.WaitForHealthyState()
+		fuzzyClientHealthy = fuzzyClient.Client.WaitForHealthyState()
 	}
 
 	phraseClientAddress := config.StringFromEnv("PARMENION_SERVICE", "parmenion:50060")
-	phraseClient, err := NewGenericGrpcClient[*strategos.PhraseClient](
+	phraseClient, err := hesiodos.NewGenericGrpcClient[*strategos.PhraseClient](
 		phraseClientAddress,
 		strategos.NewParmenionClient,
 	)
@@ -123,11 +124,11 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 
 	phraseClientHealthy := false
 	if phraseClient != nil {
-		phraseClientHealthy = phraseClient.client.WaitForHealthyState()
+		phraseClientHealthy = phraseClient.Client.WaitForHealthyState()
 	}
 
 	exactClientAddress := config.StringFromEnv("HEFAISTION_SERVICE", "hefaistion:50060")
-	exactClient, err := NewGenericGrpcClient[*philia.ExactClient](
+	exactClient, err := hesiodos.NewGenericGrpcClient[*philia.ExactClient](
 		exactClientAddress,
 		philia.NewHefaistionClient,
 	)
@@ -137,11 +138,11 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 
 	exactClientHealthy := false
 	if exactClient != nil {
-		exactClientHealthy = exactClient.client.WaitForHealthyState()
+		exactClientHealthy = exactClient.Client.WaitForHealthyState()
 	}
 
 	partialClientAddress := config.StringFromEnv("PERDIKKAS_SERVICE", "perdikkas:50060")
-	partialClient, err := NewGenericGrpcClient[*epimeleia.PartialClient](
+	partialClient, err := hesiodos.NewGenericGrpcClient[*epimeleia.PartialClient](
 		partialClientAddress,
 		epimeleia.NewPerdikkasClient,
 	)
@@ -151,11 +152,11 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 
 	partialClientHealthy := false
 	if partialClient != nil {
-		partialClientHealthy = partialClient.client.WaitForHealthyState()
+		partialClientHealthy = partialClient.Client.WaitForHealthyState()
 	}
 
 	extendedClientAddress := config.StringFromEnv("PTOLEMAIOS_SERVICE", "ptolemaios:50060")
-	extendedClient, err := NewGenericGrpcClient[*aigyptos.ExtendedClient](
+	extendedClient, err := hesiodos.NewGenericGrpcClient[*aigyptos.ExtendedClient](
 		extendedClientAddress,
 		aigyptos.NewPtolemaiosClient,
 	)
@@ -165,7 +166,7 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 
 	extendedClientHealthy := false
 	if extendedClient != nil {
-		extendedClientHealthy = extendedClient.client.WaitForHealthyState()
+		extendedClientHealthy = extendedClient.Client.WaitForHealthyState()
 	}
 
 	elapsed := time.Since(start)

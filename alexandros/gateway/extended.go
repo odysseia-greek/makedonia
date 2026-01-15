@@ -1,14 +1,16 @@
 package gateway
 
 import (
+	"context"
+
 	"github.com/odysseia-greek/makedonia/alexandros/graph/model"
 	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
 	"github.com/odysseia-greek/makedonia/ptolemaios/aigyptos"
 	v1 "github.com/odysseia-greek/makedonia/ptolemaios/gen/go/v1"
 )
 
-func (a *AlexandrosHandler) Extended(request *v1.ExtendedSearch, requestID, sessionId string) (*model.AnalyzeTextResponse, error) {
-	extendedClientCtx, cancel := a.createRequestHeader(requestID, sessionId)
+func (a *AlexandrosHandler) Extended(ctx context.Context, request *v1.ExtendedSearch) (*model.AnalyzeTextResponse, error) {
+	outCtx, cancel, sessionId := a.outgoingCtx(ctx)
 	defer cancel()
 
 	eukleidesUpdate := pbe.CountCreationRequest{
@@ -24,7 +26,7 @@ func (a *AlexandrosHandler) Extended(request *v1.ExtendedSearch, requestID, sess
 
 	err := a.ExtendedClient.CallWithReconnect(func(client *aigyptos.ExtendedClient) error {
 		var innerErr error
-		grpcResponse, innerErr = client.ExtendedSearch(extendedClientCtx, request)
+		grpcResponse, innerErr = client.ExtendedSearch(outCtx, request)
 		return innerErr
 	})
 	if err != nil {

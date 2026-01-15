@@ -9,9 +9,9 @@ import (
 	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/agora/plato/models"
 	"github.com/odysseia-greek/agora/plato/service"
+	"github.com/odysseia-greek/attike/aristophanes/comedy"
 	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
-	"github.com/odysseia-greek/makedonia/filippos/hetairoi"
 	v1 "github.com/odysseia-greek/makedonia/ptolemaios/gen/go/v1"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -47,7 +47,7 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 
 		logging.Debug(fmt.Sprintf("found in cache: %s number of results: %d", request.Word, len(analyseResult.FoundInText.Texts)))
 
-		go hetairoi.CacheSpan(string(cacheItem), request.Word, ctx)
+		go comedy.CacheSpan(string(cacheItem), request.Word, ctx, e.Streamer)
 		return analyseResult, nil
 	}
 
@@ -58,7 +58,7 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 		}},
 	}
 
-	hetairoi.ServiceToServiceSpan(herodotosSpan, ctx)
+	comedy.ServiceToServiceSpan(herodotosSpan, ctx, e.Streamer)
 
 	startTime := time.Now()
 	r := models.AnalyzeTextRequest{Rootword: request.Word}
@@ -85,7 +85,7 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 				Status: fmt.Sprintf("querying Herodotos returned: %d", foundInText.StatusCode),
 			}},
 		}
-		hetairoi.ServiceToServiceSpan(herodotosSpan, ctx)
+		comedy.ServiceToServiceSpan(herodotosSpan, ctx, e.Streamer)
 
 		analyseResult.FoundInText = &v1.AnalyzeTextResponse{
 			Rootword:     source.Rootword,

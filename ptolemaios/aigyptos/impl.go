@@ -7,6 +7,7 @@ import (
 
 	"github.com/odysseia-greek/agora/archytas"
 	"github.com/odysseia-greek/agora/plato/service"
+	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 	v1 "github.com/odysseia-greek/makedonia/ptolemaios/gen/go/v1"
 	"google.golang.org/grpc"
@@ -27,6 +28,7 @@ type ExtendedServiceImpl struct {
 	Version  string
 	Client   service.OdysseiaClient
 	Archytas archytas.Client
+	Streamer arv1.TraceService_ChorusClient
 	v1.UnimplementedPtolemaiosServiceServer
 }
 

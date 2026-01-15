@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/odysseia-greek/agora/plato/transform"
+	"github.com/odysseia-greek/attike/aristophanes/comedy"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 	"github.com/odysseia-greek/makedonia/filippos/hetairoi"
 	v1 "github.com/odysseia-greek/makedonia/perdikkas/gen/go/v1"
@@ -75,7 +76,7 @@ func (p *PartialServiceImpl) Search(ctx context.Context, request *koinos.SearchQ
 	if elasticResponse.Hits.Hits != nil {
 		hitsTotal = elasticResponse.Hits.Total.Value
 	}
-	go hetairoi.DatabaseSpan(query, hitsTotal, elasticResponse.Took, ctx)
+	go comedy.DatabaseSpan(query, hitsTotal, elasticResponse.Took, ctx, p.Streamer)
 
 	hits := elasticResponse.Hits.Hits
 

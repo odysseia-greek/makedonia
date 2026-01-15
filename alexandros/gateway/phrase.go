@@ -1,6 +1,8 @@
 package gateway
 
 import (
+	"context"
+
 	"github.com/odysseia-greek/makedonia/alexandros/graph/model"
 	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
@@ -8,8 +10,8 @@ import (
 	"github.com/odysseia-greek/makedonia/parmenion/strategos"
 )
 
-func (a *AlexandrosHandler) Phrase(request *koinos.SearchQuery, requestID, sessionId string) (*model.SearchResponse, error) {
-	phraseClientCtx, cancel := a.createRequestHeader(requestID, sessionId)
+func (a *AlexandrosHandler) Phrase(ctx context.Context, request *koinos.SearchQuery) (*model.SearchResponse, error) {
+	outCtx, cancel, sessionId := a.outgoingCtx(ctx)
 	defer cancel()
 
 	eukleidesUpdate := pbe.CountCreationRequest{
@@ -25,7 +27,7 @@ func (a *AlexandrosHandler) Phrase(request *koinos.SearchQuery, requestID, sessi
 
 	err := a.PhraseClient.CallWithReconnect(func(client *strategos.PhraseClient) error {
 		var innerErr error
-		grpcResponse, innerErr = client.Search(phraseClientCtx, request)
+		grpcResponse, innerErr = client.Search(outCtx, request)
 		return innerErr
 	})
 	if err != nil {

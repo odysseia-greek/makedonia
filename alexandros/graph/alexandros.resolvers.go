@@ -8,7 +8,6 @@ package graph
 import (
 	"context"
 
-	"github.com/odysseia-greek/agora/plato/config"
 	"github.com/odysseia-greek/makedonia/alexandros/graph/model"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 	v1 "github.com/odysseia-greek/makedonia/ptolemaios/gen/go/v1"
@@ -16,9 +15,7 @@ import (
 
 // Health is the resolver for the health field.
 func (r *queryResolver) Health(ctx context.Context) (*model.AggregatedHealthResponse, error) {
-	requestID, _ := ctx.Value(config.HeaderKey).(string)
-	sessionId, _ := ctx.Value(config.SessionIdKey).(string)
-	return r.Handler.Health(requestID, sessionId)
+	return r.Handler.Health(ctx)
 }
 
 // CounterTopFive is the resolver for the counterTopFive field.
@@ -38,10 +35,7 @@ func (r *queryResolver) CounterSession(ctx context.Context, sessionID string) (*
 
 // Text is the resolver for the text field.
 func (r *queryResolver) Text(ctx context.Context, input model.ExpandableSearchQueryInput) (*model.ExtendedResponse, error) {
-	requestID, _ := ctx.Value(config.HeaderKey).(string)
-	sessionId, _ := ctx.Value(config.SessionIdKey).(string)
-
-	textResponse, _ := r.Handler.Extended(&v1.ExtendedSearch{Word: input.Word}, requestID, sessionId)
+	textResponse, _ := r.Handler.Extended(ctx, &v1.ExtendedSearch{Word: input.Word})
 
 	response := &model.ExtendedResponse{
 		FoundInText: textResponse,
@@ -52,9 +46,6 @@ func (r *queryResolver) Text(ctx context.Context, input model.ExpandableSearchQu
 
 // Fuzzy is the resolver for the fuzzy field.
 func (r *queryResolver) Fuzzy(ctx context.Context, input model.SearchQueryInput) (*model.SearchResponse, error) {
-	requestID, _ := ctx.Value(config.HeaderKey).(string)
-	sessionId, _ := ctx.Value(config.SessionIdKey).(string)
-
 	language := parseLanguage(input.Language)
 
 	request := &koinos.SearchQuery{
@@ -62,14 +53,11 @@ func (r *queryResolver) Fuzzy(ctx context.Context, input model.SearchQueryInput)
 		Language:        language,
 		NumberOfResults: *input.Size,
 	}
-	return r.Handler.Fuzzy(request, requestID, sessionId)
+	return r.Handler.Fuzzy(ctx, request)
 }
 
 // Exact is the resolver for the exact field.
 func (r *queryResolver) Exact(ctx context.Context, input model.ExpandableSearchQueryInput) (*model.ExtendedResponse, error) {
-	requestID, _ := ctx.Value(config.HeaderKey).(string)
-	sessionId, _ := ctx.Value(config.SessionIdKey).(string)
-
 	language := parseLanguage(input.Language)
 
 	request := &koinos.SearchQuery{
@@ -77,7 +65,7 @@ func (r *queryResolver) Exact(ctx context.Context, input model.ExpandableSearchQ
 		Language:        language,
 		NumberOfResults: *input.Size,
 	}
-	exactResponse, err := r.Handler.Exact(request, requestID, sessionId)
+	exactResponse, err := r.Handler.Exact(ctx, request)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +73,7 @@ func (r *queryResolver) Exact(ctx context.Context, input model.ExpandableSearchQ
 	var meros []*model.Hit
 	var textResponse *model.AnalyzeTextResponse
 	if input.Expand {
-		fuzzyResponses, _ := r.Handler.Fuzzy(request, requestID, sessionId)
+		fuzzyResponses, _ := r.Handler.Fuzzy(ctx, request)
 
 		for _, fuzzy := range fuzzyResponses.Results {
 			// Skip the exact match
@@ -108,7 +96,7 @@ func (r *queryResolver) Exact(ctx context.Context, input model.ExpandableSearchQ
 			meros = append(meros, &hit)
 		}
 
-		textResponse, _ = r.Handler.Extended(&v1.ExtendedSearch{Word: request.Word}, requestID, sessionId)
+		textResponse, _ = r.Handler.Extended(ctx, &v1.ExtendedSearch{Word: request.Word})
 	}
 
 	response := &model.ExtendedResponse{
@@ -123,9 +111,6 @@ func (r *queryResolver) Exact(ctx context.Context, input model.ExpandableSearchQ
 
 // Phrase is the resolver for the phrase field.
 func (r *queryResolver) Phrase(ctx context.Context, input model.SearchQueryInput) (*model.SearchResponse, error) {
-	requestID, _ := ctx.Value(config.HeaderKey).(string)
-	sessionId, _ := ctx.Value(config.SessionIdKey).(string)
-
 	language := parseLanguage(input.Language)
 
 	request := &koinos.SearchQuery{
@@ -133,14 +118,11 @@ func (r *queryResolver) Phrase(ctx context.Context, input model.SearchQueryInput
 		Language:        language,
 		NumberOfResults: *input.Size,
 	}
-	return r.Handler.Phrase(request, requestID, sessionId)
+	return r.Handler.Phrase(ctx, request)
 }
 
 // Partial is the resolver for the partial field.
 func (r *queryResolver) Partial(ctx context.Context, input model.SearchQueryInput) (*model.SearchResponse, error) {
-	requestID, _ := ctx.Value(config.HeaderKey).(string)
-	sessionId, _ := ctx.Value(config.SessionIdKey).(string)
-
 	language := parseLanguage(input.Language)
 
 	request := &koinos.SearchQuery{
@@ -148,7 +130,7 @@ func (r *queryResolver) Partial(ctx context.Context, input model.SearchQueryInpu
 		Language:        language,
 		NumberOfResults: *input.Size,
 	}
-	return r.Handler.Partial(request, requestID, sessionId)
+	return r.Handler.Partial(ctx, request)
 }
 
 // Query returns QueryResolver implementation.

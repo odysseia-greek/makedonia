@@ -2,12 +2,10 @@ package gateway
 
 import (
 	"context"
-	"fmt"
-	"sync"
 	"time"
 
+	"github.com/odysseia-greek/agora/hesiodos"
 	"github.com/odysseia-greek/agora/plato/config"
-	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/agora/plato/randomizer"
 	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 	"github.com/odysseia-greek/makedonia/antigonos/monophthalmus"
@@ -17,9 +15,7 @@ import (
 	"github.com/odysseia-greek/makedonia/parmenion/strategos"
 	"github.com/odysseia-greek/makedonia/perdikkas/epimeleia"
 	"github.com/odysseia-greek/makedonia/ptolemaios/aigyptos"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/status"
 )
 
 type AlexandrosHandler struct {
@@ -27,89 +23,31 @@ type AlexandrosHandler struct {
 	CounterStreamer pbe.Eukleides_CreateNewEntryClient
 	Counter         *geometrias.CounterClient
 	Randomizer      randomizer.Random
-	FuzzyClient     *GenericGrpcClient[*monophthalmus.FuzzyClient]
-	ExactClient     *GenericGrpcClient[*philia.ExactClient]
-	ExtendedClient  *GenericGrpcClient[*aigyptos.ExtendedClient]
-	PhraseClient    *GenericGrpcClient[*strategos.PhraseClient]
-	PartialClient   *GenericGrpcClient[*epimeleia.PartialClient]
-}
-type GenericGrpcClient[T any] struct {
-	client  T
-	address string
-	dialFn  func(string) (T, error)
-	mu      sync.Mutex
+	FuzzyClient     *hesiodos.GenericGrpcClient[*monophthalmus.FuzzyClient]
+	ExactClient     *hesiodos.GenericGrpcClient[*philia.ExactClient]
+	ExtendedClient  *hesiodos.GenericGrpcClient[*aigyptos.ExtendedClient]
+	PhraseClient    *hesiodos.GenericGrpcClient[*strategos.PhraseClient]
+	PartialClient   *hesiodos.GenericGrpcClient[*epimeleia.PartialClient]
 }
 
-func (a *AlexandrosHandler) createRequestHeader(requestID, sessionId string) (context.Context, context.CancelFunc) {
-	requestCtx, ctxCancel := context.WithTimeout(context.Background(), 30*time.Second)
-	md := metadata.New(map[string]string{config.HeaderKey: requestID,
-		config.SessionIdKey: sessionId})
-	requestCtx = metadata.NewOutgoingContext(requestCtx, md)
+func (a *AlexandrosHandler) outgoingCtx(parent context.Context) (context.Context, context.CancelFunc, string) {
+	ctx, cancel := context.WithTimeout(parent, 30*time.Second)
 
-	return requestCtx, ctxCancel
-}
+	reqID, _ := parent.Value(config.HeaderKey).(string)
+	sessionID, _ := parent.Value(config.SessionIdKey).(string)
 
-func NewGenericGrpcClient[T any](address string, dialFn func(string) (T, error)) (*GenericGrpcClient[T], error) {
-	client, err := dialFn(address)
-	if err != nil {
-		return nil, err
+	kvs := make([]string, 0, 4)
+
+	if reqID != "" {
+		kvs = append(kvs, config.HeaderKey, reqID)
 	}
-	return &GenericGrpcClient[T]{
-		client:  client,
-		address: address,
-		dialFn:  dialFn,
-	}, nil
-}
-
-func (g *GenericGrpcClient[T]) Reconnect() error {
-	g.mu.Lock()
-	defer g.mu.Unlock()
-
-	client, err := g.dialFn(g.address)
-	if err != nil {
-		return err
-	}
-	g.client = client
-	return nil
-}
-
-func (g *GenericGrpcClient[T]) CallWithReconnect(call func(client T) error) error {
-	g.mu.Lock()
-	client := g.client
-	g.mu.Unlock()
-
-	err := call(client)
-	if err == nil {
-		return nil
+	if sessionID != "" {
+		kvs = append(kvs, config.SessionIdKey, sessionID)
 	}
 
-	if !isConnectionError(err) {
-		return err
+	if len(kvs) > 0 {
+		ctx = metadata.AppendToOutgoingContext(ctx, kvs...)
 	}
 
-	// Log reconnecting event
-	logging.Debug(fmt.Sprintf("connection error detected, reconnecting to %s", g.address))
-
-	reconnectErr := g.Reconnect()
-	if reconnectErr != nil {
-		return reconnectErr
-	}
-
-	// Retry once
-	g.mu.Lock()
-	client = g.client
-	g.mu.Unlock()
-
-	return call(client)
-}
-
-func isConnectionError(err error) bool {
-	if err == nil {
-		return false
-	}
-	st, ok := status.FromError(err)
-	if !ok {
-		return false
-	}
-	return st.Code() == codes.Unavailable || st.Code() == codes.DeadlineExceeded
+	return ctx, cancel, sessionID
 }

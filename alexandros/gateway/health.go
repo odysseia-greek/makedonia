@@ -15,7 +15,7 @@ import (
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 )
 
-func (a *AlexandrosHandler) Health(requestID, sessionId string) (*model.AggregatedHealthResponse, error) {
+func (a *AlexandrosHandler) Health(ctx context.Context) (*model.AggregatedHealthResponse, error) {
 	var services []*model.ServiceHealth
 	allHealthy := true
 
@@ -112,8 +112,9 @@ func (a *AlexandrosHandler) Health(requestID, sessionId string) (*model.Aggregat
 	}
 
 	for _, check := range checks {
-		healthCtx, cancel := a.createRequestHeader(requestID, sessionId)
-		healthy, dbHealthy, version := check.client(healthCtx)
+		outCtx, cancel, _ := a.outgoingCtx(ctx)
+		defer cancel()
+		healthy, dbHealthy, version := check.client(outCtx)
 		cancel()
 
 		serviceHealth := &model.ServiceHealth{

@@ -7,12 +7,12 @@ import (
 	"net"
 	"os"
 
+	"github.com/odysseia-greek/agora/plato/config"
 	"github.com/odysseia-greek/agora/plato/logging"
-	"github.com/odysseia-greek/makedonia/filippos/hetairoi"
+	"github.com/odysseia-greek/attike/aristophanes/comedy"
 	"github.com/odysseia-greek/makedonia/perdikkas/epimeleia"
 	v1 "github.com/odysseia-greek/makedonia/perdikkas/gen/go/v1"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 const standardPort = ":50060"
@@ -40,7 +40,7 @@ func main() {
 	logging.System("starting up and getting env variables")
 
 	ctx := context.Background()
-	config, err := epimeleia.CreateNewConfig(ctx)
+	cfg, err := epimeleia.CreateNewConfig(ctx)
 	if err != nil {
 		logging.Error(err.Error())
 		log.Fatal("death has found me")
@@ -53,10 +53,18 @@ func main() {
 
 	var server *grpc.Server
 
-	server = grpc.NewServer(grpc.UnaryInterceptor(hetairoi.Interceptor))
-	reflection.Register(server)
+	server = grpc.NewServer(
+		grpc.UnaryInterceptor(
+			comedy.UnaryServerInterceptor(
+				cfg.Streamer,
+				comedy.WithHeaderKey(config.HeaderKey),
+				comedy.WithContextKeyName(config.DefaultTracingName),
+				comedy.WithCloseHop(),
+			),
+		),
+	)
 
-	v1.RegisterPerdikkasServiceServer(server, config)
+	v1.RegisterPerdikkasServiceServer(server, cfg)
 
 	logging.Info(fmt.Sprintf("Server listening on %s", port))
 	if err := server.Serve(listener); err != nil {

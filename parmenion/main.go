@@ -7,8 +7,9 @@ import (
 	"net"
 	"os"
 
+	"github.com/odysseia-greek/agora/plato/config"
 	"github.com/odysseia-greek/agora/plato/logging"
-	"github.com/odysseia-greek/makedonia/filippos/hetairoi"
+	"github.com/odysseia-greek/attike/aristophanes/comedy"
 	v1 "github.com/odysseia-greek/makedonia/parmenion/gen/go/v1"
 	"github.com/odysseia-greek/makedonia/parmenion/strategos"
 	"google.golang.org/grpc"
@@ -39,7 +40,7 @@ func main() {
 	logging.System("starting up and getting env variables")
 
 	ctx := context.Background()
-	config, err := strategos.CreateNewConfig(ctx)
+	cfg, err := strategos.CreateNewConfig(ctx)
 	if err != nil {
 		logging.Error(err.Error())
 		log.Fatal("death has found me")
@@ -52,10 +53,20 @@ func main() {
 
 	var server *grpc.Server
 
-	server = grpc.NewServer(grpc.UnaryInterceptor(hetairoi.Interceptor))
+	server = grpc.NewServer(
+		grpc.UnaryInterceptor(
+			comedy.UnaryServerInterceptor(
+				cfg.Streamer,
+				comedy.WithHeaderKey(config.HeaderKey),
+				comedy.WithContextKeyName(config.DefaultTracingName),
+				comedy.WithCloseHop(),
+			),
+		),
+	)
+
 	reflection.Register(server)
 
-	v1.RegisterParmenionServiceServer(server, config)
+	v1.RegisterParmenionServiceServer(server, cfg)
 
 	logging.Info(fmt.Sprintf("Server listening on %s", port))
 	if err := server.Serve(listener); err != nil {

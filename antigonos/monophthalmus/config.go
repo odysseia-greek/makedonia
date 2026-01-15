@@ -17,14 +17,20 @@ import (
 	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 	"github.com/odysseia-greek/delphi/aristides/diplomat"
 	pb "github.com/odysseia-greek/delphi/aristides/proto"
-	"github.com/odysseia-greek/makedonia/filippos/hetairoi"
 	"google.golang.org/grpc/metadata"
 )
 
 func CreateNewConfig(ctx context.Context) (*FuzzyServiceImpl, error) {
 	tls := config.BoolFromEnv(config.EnvTlSKey)
 
-	streamer := hetairoi.SetStreamer(ctx)
+	tracer, err := aristophanes.NewClientTracer(aristophanes.DefaultAddress)
+	healthy := tracer.WaitForHealthyState()
+	if !healthy {
+		logging.Error("tracing service not ready - restarting seems the only option")
+		os.Exit(1)
+	}
+
+	streamer, err := tracer.Chorus(ctx)
 
 	var cfg models.Config
 	ambassador, err := diplomat.NewClientAmbassador(diplomat.DEFAULTADDRESS)
@@ -32,7 +38,7 @@ func CreateNewConfig(ctx context.Context) (*FuzzyServiceImpl, error) {
 		return nil, err
 	}
 
-	healthy := ambassador.WaitForHealthyState()
+	healthy = ambassador.WaitForHealthyState()
 	if !healthy {
 		logging.Info("ambassador service not ready - restarting seems the only option")
 		os.Exit(1)
@@ -139,5 +145,6 @@ func CreateNewConfig(ctx context.Context) (*FuzzyServiceImpl, error) {
 		Randomizer: randomizer,
 		Archytas:   cache,
 		Version:    version,
+		Streamer:   streamer,
 	}, nil
 }

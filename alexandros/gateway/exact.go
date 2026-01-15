@@ -1,6 +1,8 @@
 package gateway
 
 import (
+	"context"
+
 	"github.com/odysseia-greek/makedonia/alexandros/graph/model"
 	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
@@ -8,8 +10,8 @@ import (
 	"github.com/odysseia-greek/makedonia/hefaistion/philia"
 )
 
-func (a *AlexandrosHandler) Exact(request *koinos.SearchQuery, requestID, sessionId string) (*model.SearchResponse, error) {
-	exactClientCtx, cancel := a.createRequestHeader(requestID, sessionId)
+func (a *AlexandrosHandler) Exact(ctx context.Context, request *koinos.SearchQuery) (*model.SearchResponse, error) {
+	outCtx, cancel, sessionId := a.outgoingCtx(ctx)
 	defer cancel()
 
 	eukleidesUpdate := pbe.CountCreationRequest{
@@ -25,7 +27,7 @@ func (a *AlexandrosHandler) Exact(request *koinos.SearchQuery, requestID, sessio
 
 	err := a.ExactClient.CallWithReconnect(func(client *philia.ExactClient) error {
 		var innerErr error
-		grpcResponse, innerErr = client.Search(exactClientCtx, request)
+		grpcResponse, innerErr = client.Search(outCtx, request)
 		return innerErr
 	})
 	if err != nil {
