@@ -9,7 +9,7 @@ import (
 	"github.com/odysseia-greek/agora/plato/config"
 	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/agora/plato/randomizer"
-	pbar "github.com/odysseia-greek/attike/aristophanes/proto"
+	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 	"github.com/odysseia-greek/makedonia/antigonos/monophthalmus"
 	"github.com/odysseia-greek/makedonia/eukleides/geometrias"
 	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
@@ -23,7 +23,7 @@ import (
 )
 
 type AlexandrosHandler struct {
-	Streamer        pbar.TraceService_ChorusClient
+	Streamer        arv1.TraceService_ChorusClient
 	CounterStreamer pbe.Eukleides_CreateNewEntryClient
 	Counter         *geometrias.CounterClient
 	Randomizer      randomizer.Random

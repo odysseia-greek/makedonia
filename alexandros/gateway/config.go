@@ -8,7 +8,7 @@ import (
 	"github.com/odysseia-greek/agora/plato/config"
 	"github.com/odysseia-greek/agora/plato/logging"
 	aristophanes "github.com/odysseia-greek/attike/aristophanes/comedy"
-	pb "github.com/odysseia-greek/attike/aristophanes/proto"
+	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 	"github.com/odysseia-greek/makedonia/antigonos/monophthalmus"
 	"github.com/odysseia-greek/makedonia/eukleides/geometrias"
 	pbe "github.com/odysseia-greek/makedonia/eukleides/proto"
@@ -26,7 +26,7 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 	}
 
 	var tracer *aristophanes.ClientTracer
-	var streamer pb.TraceService_ChorusClient
+	var streamer arv1.TraceService_ChorusClient
 	var eukleides *geometrias.CounterClient
 	var eukleidesStreamer pbe.Eukleides_CreateNewEntryClient
 
@@ -142,7 +142,7 @@ func CreateNewConfig(ctx context.Context) (*AlexandrosHandler, error) {
 
 	partialClientAddress := config.StringFromEnv("PERDIKKAS_SERVICE", "perdikkas:50060")
 	partialClient, err := NewGenericGrpcClient[*epimeleia.PartialClient](
-		exactClientAddress,
+		partialClientAddress,
 		epimeleia.NewPerdikkasClient,
 	)
 	if err != nil {

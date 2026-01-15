@@ -5,7 +5,7 @@ go 1.25.5
 require (
 	github.com/odysseia-greek/agora/archytas v0.1.2
 	github.com/odysseia-greek/agora/plato v0.2.12
-	github.com/odysseia-greek/attike/aristophanes v0.7.0-rho2
+	github.com/odysseia-greek/attike/aristophanes v0.7.0-rho8
 	github.com/odysseia-greek/makedonia/filippos v0.0.4
 	google.golang.org/grpc v1.78.0
 	google.golang.org/protobuf v1.36.11

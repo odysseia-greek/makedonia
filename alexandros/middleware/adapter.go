@@ -10,10 +10,9 @@ import (
 	"strings"
 
 	"github.com/odysseia-greek/agora/plato/config"
-	"github.com/odysseia-greek/attike/aristophanes/comedy"
-	pb "github.com/odysseia-greek/attike/aristophanes/proto"
-
 	"github.com/odysseia-greek/agora/plato/logging"
+	"github.com/odysseia-greek/attike/aristophanes/comedy"
+	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
 )
 
 type Adapter func(http.Handler) http.Handler
@@ -40,7 +39,7 @@ func Adapt(h http.Handler, adapters ...Adapter) http.Handler {
 //
 // Returns:
 // An Adapter that wraps an http.Handler and performs the described middleware actions.
-func LogRequestDetails(tracer pb.TraceService_ChorusClient) Adapter {
+func LogRequestDetails(tracer arv1.TraceService_ChorusClient) Adapter {
 	return func(f http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			requestId := r.Header.Get(config.HeaderKey)
@@ -77,22 +76,18 @@ func LogRequestDetails(tracer pb.TraceService_ChorusClient) Adapter {
 
 			spanID := comedy.GenerateSpanID()
 
-			payload := &pb.TraceRequestWithBody{
-				Method:    r.Method,
-				Url:       r.URL.RequestURI(),
-				Host:      r.Host,
+			payload := &arv1.ObserveGraphQL{
 				Operation: operationName,
 				RootQuery: query,
 			}
 
-			parabasis := &pb.ParabasisRequest{
+			parabasis := &arv1.ObserveRequest{
 				TraceId:      trace.TraceId,
 				ParentSpanId: trace.SpanId,
 				SpanId:       spanID,
-				RequestType: &pb.ParabasisRequest_TraceBody{
-					TraceBody: payload,
-				},
+				Kind:         &arv1.ObserveRequest_Graphql{Graphql: payload},
 			}
+
 			if err := tracer.Send(parabasis); err != nil {
 				logging.Error(fmt.Sprintf("failed to send trace data: %v", err))
 			}
@@ -118,10 +113,10 @@ func LogRequestDetails(tracer pb.TraceService_ChorusClient) Adapter {
 	}
 }
 
-func traceFromString(requestId string) *pb.TraceBare {
+func traceFromString(requestId string) *arv1.TraceBare {
 	splitID := strings.Split(requestId, "+")
 
-	trace := &pb.TraceBare{}
+	trace := &arv1.TraceBare{}
 
 	if len(splitID) >= 3 {
 		trace.Save = splitID[2] == "1"

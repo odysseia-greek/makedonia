@@ -1,7 +1,7 @@
 PROTO_DIRS := antigonos eukleides hefaistion parmenion perdikkas ptolemaios filippos
 
 .PHONY: all
-all: generate docs proto antigonos
+all: generate docs antigonos
 
 .PHONY: generate
 generate:
@@ -25,15 +25,33 @@ docs:
 	done
 	cd ./alexandros/docs && spectaql -c  spectaql.yaml
 
-.PHONY: proto
-proto:
-	buf generate --template filippos/buf.gen.yaml filippos
-	buf generate --template antigonos/buf.gen.yaml antigonos
+.PHONY: tidy tidy-go
+tidy: tidy-go
 
-.PHONY: antigonos-dev
-antigonos-dev:
-	docker build -f antigonos/Dockerfile.dev -t ghcr.io/odysseia-greek/antigonos:dev .
-	docker push ghcr.io/odysseia-greek/antigonos:dev
+tidy-go:
+	@echo "==> Running 'go mod tidy' in all modules..."
+	@mods=$$(find . -name go.mod -print0 | xargs -0 -n1 dirname | sort -u); \
+	if [[ -z "$$mods" ]]; then \
+		echo "No go.mod files found."; \
+		exit 0; \
+	fi; \
+	for d in $$mods; do \
+		echo "==> go mod tidy in $$d"; \
+		( cd "$$d" && go mod tidy && go fmt ./... ); \
+	done
 
-.PHONY: dev
-dev: antigonos-dev
+# Convenience: list all module dirs found
+.PHONY: mods
+mods:
+	@find . -name go.mod -print0 | xargs -0 -n1 dirname | sort -u
+
+
+.PHONY: images-dev images-prod
+
+images-dev:
+	OWNER="$(OWNER)" ROOT="$(ROOT)" GROUP=dev \
+		./bump-images.sh
+
+images-prod:
+	OWNER="$(OWNER)" ROOT="$(ROOT)" GROUP=prod \
+		./bump-images.sh

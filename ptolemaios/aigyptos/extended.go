@@ -77,7 +77,7 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 		if err != nil {
 			logging.Error(fmt.Sprintf("error while decoding: %s", err.Error()))
 		}
-		
+
 		herodotosSpan := &arv1.ObserveRequest{
 			Kind: &arv1.ObserveRequest_Action{Action: &arv1.ObserveAction{
 				Action: "analyseText",
