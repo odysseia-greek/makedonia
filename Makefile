@@ -1,5 +1,8 @@
 PROTO_DIRS := antigonos eukleides hefaistion parmenion perdikkas ptolemaios filippos
 
+SPECTAQL_DIR    := ./alexandros/docs
+SPECTAQL_CFG    := spectaql.yaml
+
 .PHONY: all
 all: generate docs antigonos
 
@@ -9,21 +12,6 @@ generate:
 		echo "Generating Protobuf files in $$dir..."; \
 		buf generate --template $$dir/buf.gen.yaml $$dir; \
 	done
-
-.PHONY: docs
-docs:
-	@for dir in $(PROTO_DIRS); do \
-		echo "Generating docs in $$dir..."; \
-		docker run --rm \
-			-v $$PWD/$$dir/docs:/out \
-			-v $$PWD/$$dir/proto:/protos \
-			localproto:latest --doc_opt=html,docs.html; \
-		docker run --rm \
-			-v $$PWD/$$dir/docs:/out \
-			-v $$PWD/$$dir/proto:/protos \
-			localproto:latest --doc_opt=markdown,docs.md; \
-	done
-	cd ./alexandros/docs && spectaql -c  spectaql.yaml
 
 .PHONY: tidy tidy-go
 tidy: tidy-go
@@ -45,6 +33,29 @@ tidy-go:
 mods:
 	@find . -name go.mod -print0 | xargs -0 -n1 dirname | sort -u
 
+.PHONY: tools
+tools: $(PROTOC_GEN_DOC)
+
+.PHONY: docs
+docs: docs-grpc spectaql
+
+$(PROTOC_GEN_DOC):
+	@mkdir -p $(TOOLS_DIR)
+	@echo "Installing protoc-gen-doc..."
+	@GOBIN=$(TOOLS_DIR) go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
+
+
+.PHONY: docs-grpc
+docs-grpc: tools
+	@for dir in $(PROTO_DIRS); do \
+		echo "Generating gRPC docs in $$dir..."; \
+		PATH=$(TOOLS_DIR):$$PATH buf generate --template $$dir/buf.gen.docs.yaml $$dir; \
+	done
+
+.PHONY: spectaql
+spectaql:
+	@echo "==> Generating SpectaQL docs in $(SPECTAQL_DIR)..."
+	@cd "$(SPECTAQL_DIR)" && spectaql -c "$(SPECTAQL_CFG)"
 
 .PHONY: images-dev images-prod
 

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/odysseia-greek/agora/plato/config"
 	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/agora/plato/models"
 	"github.com/odysseia-greek/agora/plato/service"
@@ -27,14 +28,7 @@ func (e *ExtendedServiceImpl) Health(ctx context.Context, request *emptypb.Empty
 }
 
 func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSearch) (*v1.ExtendedSearchResponse, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	var requestId string
-	if ok {
-		headerValue := md.Get(service.HeaderKey)
-		if len(headerValue) > 0 {
-			requestId = headerValue[0]
-		}
-	}
+	requestId := CurrentRequestID(ctx, config.DefaultTracingName, service.HeaderKey)
 
 	analyseResult := &v1.ExtendedSearchResponse{}
 
@@ -130,4 +124,18 @@ func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSe
 	logging.Debug(fmt.Sprintf("found in herodotos: %s number of results: %d", request.Word, len(analyseResult.FoundInText.Texts)))
 
 	return analyseResult, nil
+}
+
+func CurrentRequestID(ctx context.Context, ctxKey any, headerKey string) string {
+	if v := ctx.Value(ctxKey); v != nil {
+		if s, ok := v.(string); ok && s != "" {
+			return s
+		}
+	}
+	if md, ok := metadata.FromIncomingContext(ctx); ok {
+		if vals := md.Get(headerKey); len(vals) > 0 {
+			return vals[0]
+		}
+	}
+	return ""
 }

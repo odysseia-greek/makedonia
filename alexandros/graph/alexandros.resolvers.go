@@ -7,7 +7,9 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/odysseia-greek/agora/plato/logging"
 	"github.com/odysseia-greek/makedonia/alexandros/graph/model"
 	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
 	v1 "github.com/odysseia-greek/makedonia/ptolemaios/gen/go/v1"
@@ -73,13 +75,21 @@ func (r *queryResolver) Exact(ctx context.Context, input model.ExpandableSearchQ
 	var meros []*model.Hit
 	var textResponse *model.AnalyzeTextResponse
 	if input.Expand {
-		fuzzyResponses, _ := r.Handler.Fuzzy(ctx, request)
+
+		antigonosRequest := &koinos.SearchQuery{
+			Word:            input.Word,
+			Language:        language,
+			NumberOfResults: 20,
+		}
+		fuzzyResponses, _ := r.Handler.Fuzzy(ctx, antigonosRequest)
 
 		for _, fuzzy := range fuzzyResponses.Results {
 			// Skip the exact match
 			if fuzzy.Headword == input.Word {
 				continue
 			}
+
+			logging.Debug(fuzzy.Headword)
 
 			hit := model.Hit{
 				English:    nil,
@@ -93,7 +103,15 @@ func (r *queryResolver) Exact(ctx context.Context, input model.ExpandableSearchQ
 					hit.English = &gloss.Gloss
 				}
 			}
+
 			meros = append(meros, &hit)
+			if len(meros) >= 5 {
+				break
+			}
+		}
+
+		if len(meros) == 0 {
+			logging.Warn(fmt.Sprintf("no meros found for word: %s", input.Word))
 		}
 
 		textResponse, _ = r.Handler.Extended(ctx, &v1.ExtendedSearch{Word: request.Word})

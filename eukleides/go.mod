@@ -3,8 +3,8 @@ module github.com/odysseia-greek/makedonia/eukleides
 go 1.25.5
 
 require (
-	github.com/odysseia-greek/agora/plato v0.2.12
-	github.com/odysseia-greek/attike/aristophanes v0.7.0-rho8
+	github.com/odysseia-greek/agora/plato v0.2.16
+	github.com/odysseia-greek/attike/aristophanes v0.7.2
 	google.golang.org/grpc v1.78.0
 	google.golang.org/protobuf v1.36.11
 )

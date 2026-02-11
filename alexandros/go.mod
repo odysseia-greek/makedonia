@@ -6,15 +6,15 @@ require (
 	github.com/99designs/gqlgen v0.17.86
 	github.com/gorilla/mux v1.8.1
 	github.com/odysseia-greek/agora/hesiodos v0.1.1
-	github.com/odysseia-greek/agora/plato v0.2.12
-	github.com/odysseia-greek/attike/aristophanes v0.7.0-rho8
-	github.com/odysseia-greek/makedonia/antigonos v0.0.2
-	github.com/odysseia-greek/makedonia/eukleides v0.0.3
+	github.com/odysseia-greek/agora/plato v0.2.16
+	github.com/odysseia-greek/attike/aristophanes v0.7.2
+	github.com/odysseia-greek/makedonia/antigonos v0.0.3
+	github.com/odysseia-greek/makedonia/eukleides v0.0.4
 	github.com/odysseia-greek/makedonia/filippos v0.0.5-rho1
-	github.com/odysseia-greek/makedonia/hefaistion v0.0.2
-	github.com/odysseia-greek/makedonia/parmenion v0.0.2
-	github.com/odysseia-greek/makedonia/perdikkas v0.0.3
-	github.com/odysseia-greek/makedonia/ptolemaios v0.0.2
+	github.com/odysseia-greek/makedonia/hefaistion v0.0.3
+	github.com/odysseia-greek/makedonia/parmenion v0.0.3
+	github.com/odysseia-greek/makedonia/perdikkas v0.0.4
+	github.com/odysseia-greek/makedonia/ptolemaios v0.0.3
 	github.com/vektah/gqlparser/v2 v2.5.31
 	google.golang.org/grpc v1.78.0
 	google.golang.org/protobuf v1.36.11
