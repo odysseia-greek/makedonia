@@ -1,0 +1,13 @@
+# makedonia/buf.yaml
+version: v2
+modules:
+  - path: filippos/proto
+  - path: antigonos/proto
+  - path: hefaistion/proto
+  - path: perdikkas/proto
+  - path: parmenion/proto
+  - path: ptolemaios/proto
+lint:
+  use: [DEFAULT]
+breaking:
+  use: [FILE]

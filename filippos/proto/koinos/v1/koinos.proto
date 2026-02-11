@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package koinos.v1;
+option go_package = "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1;koinosv1";
+
+message PageInfo {
+  int32 page = 1;
+  int32 size = 2;
+  int32 total = 3;
+}
+
+message Reference {
+  string work = 1;   // e.g., Herodotos
+  string locus = 2;  // e.g., 1.1.3
+}

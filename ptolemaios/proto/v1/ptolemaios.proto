@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package ptolemaios.v1;
+option go_package = "github.com/odysseia-greek/makedonia/ptolemaios/gen/go/v1;ptolemaiosv1";
+
+import "google/protobuf/empty.proto";
+import "koinos/v1/health.proto";
+
+service PtolemaiosService {
+  rpc Health(google.protobuf.Empty) returns (koinos.v1.HealthResponse);
+  rpc Search(ExtendedSearch) returns (ExtendedSearchResponse);
+}
+
+message ExtendedSearch {
+  string word = 1;        // e.g., "Ἀθηναῖος"
+}
+
+message ExtendedSearchResponse {
+  AnalyzeTextResponse found_in_text = 1;
+}
+
+message AnalyzeTextResponse {
+  string rootword = 1;
+  string part_of_speech = 2;
+  repeated Conjugations conjugations = 3;
+  repeated AnalyzeResult texts = 4;
+}
+
+message Conjugations {
+  string word = 1;
+  string rule = 2;
+}
+
+message AnalyzeResult {
+  string reference_link = 1;
+  string author = 2;
+  string book = 3;
+  string reference = 4;
+  Rhema text = 5;
+}
+
+message Rhema {
+  string greek = 1;
+  repeated string translations = 2;
+  string section = 3;
+}

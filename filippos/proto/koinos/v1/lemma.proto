@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package koinos.v1;
+option go_package = "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1;koinosv1";
+
+// Top-level “quick glosses” like your english/dutch fields.
+message LocalizedGloss {
+  string language = 1; // "en", "nl", etc.
+  string gloss    = 2; // e.g., "word"
+}
+
+// Fine-grained meaning entries (grade buckets)
+message Meaning {
+  string language  = 1;                  // "en", "nl"
+  string definition = 2;                 // text
+  repeated string notes = 3;             // optional notes
+  string example = 4;                    // optional example
+}
+
+message Definition {
+  int32 grade = 1;                       // 3, 2, 1
+  repeated Meaning meanings = 2;
+}
+
+message NounInfo {
+  string declension = 1;                 // "second"
+  string genitive   = 2;                 // "-ου"
+}
+
+message VerbInfo {
+  repeated string principal_parts = 1;
+}
+
+message ModernConnection {
+  string term = 1;                       // "logic"
+  string note = 2;                       // "via Latin logica..."
+}
+
+message Lemma {
+  // Optional stable ID if you have one in storage; can be empty.
+  string id = 1;
+
+  // Core headword data
+  string headword       = 2;             // "λόγος"
+  string normalized     = 3;             // "logos"
+  string linked_word    = 4;             // "" or some cross-link
+
+  // POS & nominal metadata (you can add verb/adjective structs later)
+  string part_of_speech = 5;             // "noun"
+  string article        = 6;             // "ὁ"
+  string gender         = 7;             // "masc"
+  NounInfo noun         = 8;             // optional
+  VerbInfo verb         = 9;
+
+  // Human-friendly glosses (your “english” / “dutch”)
+  repeated LocalizedGloss quick_glosses = 10;
+
+  // Structured definitions by grade levels
+  repeated Definition definitions = 11;
+
+  // Etymology / modern connections
+  repeated ModernConnection modern_connections = 12;
+}

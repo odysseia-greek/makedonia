@@ -1,0 +1,261 @@
+[
+  {
+    "greek":"καί",
+    "english":"and",
+    "dutch":"en",
+    "linkedWord":"",
+    "partOfSpeech":"conjunction",
+    "definitions":[
+      {
+        "grade":3,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"and"
+          },
+          {
+            "language":"nl",
+            "definition":"en"
+          }
+        ]
+      },
+      {
+        "grade":2,
+        "meanings":[
+          {
+            "language":"en",
+            "definition":"also; even"
+          },
+          {
+            "language":"nl",
+            "definition":"ook; zelfs"
+          }
+        ]
+      }
+    ],
+    "modernConnections":[
+      {
+        "term":"kairos",
+        "note":"shares the root 'kai-' but different meaning ('right time')"
+      }
+    ]
+  },
+  {
+    "greek": "δέ",
+    "english": "but; and; however",
+    "dutch": "maar; en; echter",
+    "linkedWord": "μέν",
+    "partOfSpeech": "conjunction",
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "but; however" },
+          { "language": "nl", "definition": "maar; echter" }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "and (mild contrast or continuation)" },
+          { "language": "nl", "definition": "en (lichte tegenstelling)" }
+        ]
+      }
+    ],
+    "modernConnections": []
+  },
+  {
+    "greek": "μέν",
+    "english": "on the one hand",
+    "dutch": "enerzijds",
+    "linkedWord": "δέ",
+    "partOfSpeech": "conjunction",
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "on the one hand (paired with δέ)" },
+          { "language": "nl", "definition": "enerzijds (vaak met δέ)" }
+        ]
+      }
+    ],
+    "modernConnections": []
+  },
+  {
+    "greek": "ἀλλά",
+    "english": "but; rather",
+    "dutch": "maar; integendeel",
+    "linkedWord": "",
+    "partOfSpeech": "conjunction",
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "but; on the contrary" },
+          { "language": "nl", "definition": "maar; integendeel" }
+        ]
+      }
+    ],
+    "modernConnections": []
+  },
+  {
+    "greek": "γάρ",
+    "english": "for; because",
+    "dutch": "want; immers",
+    "linkedWord": "",
+    "partOfSpeech": "conjunction",
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "for; because (explains previous statement)" },
+          { "language": "nl", "definition": "want; immers (verklarend)" }
+        ]
+      }
+    ],
+    "modernConnections": []
+  },
+  {
+    "greek": "οὖν",
+    "english": "therefore; then",
+    "dutch": "dus; dan",
+    "linkedWord": "",
+    "partOfSpeech": "conjunction",
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "therefore; accordingly" },
+          { "language": "nl", "definition": "dus; bijgevolg" }
+        ]
+      }
+    ],
+    "modernConnections": []
+  },
+  {
+    "greek": "ὅτι",
+    "english": "that; because",
+    "dutch": "dat; omdat",
+    "linkedWord": "",
+    "partOfSpeech": "conjunction",
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "that (introducing indirect statement)" },
+          { "language": "nl", "definition": "dat (in indirecte rede)" }
+        ]
+      },
+      {
+        "grade": 2,
+        "meanings": [
+          { "language": "en", "definition": "because" },
+          { "language": "nl", "definition": "omdat" }
+        ]
+      }
+    ],
+    "modernConnections": []
+  },
+  {
+    "greek": "ἐάν",
+    "english": "if (with subjunctive)",
+    "dutch": "als (met conjunctief)",
+    "linkedWord": "",
+    "partOfSpeech": "conjunction",
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "if; whenever (future more vivid condition)" },
+          { "language": "nl", "definition": "als; wanneer (toekomstige voorwaarde)" }
+        ]
+      }
+    ],
+    "modernConnections": []
+  },
+  {
+    "greek": "ἵνα",
+    "english": "in order that; so that",
+    "dutch": "opdat; zodat",
+    "linkedWord": "",
+    "partOfSpeech": "conjunction",
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "in order that (purpose clause with subjunctive)" },
+          { "language": "nl", "definition": "opdat (doelzin met conjunctief)" }
+        ]
+      }
+    ],
+    "modernConnections": []
+  },
+  {
+    "greek": "εἴτε",
+    "english": "whether",
+    "dutch": "of",
+    "linkedWord": "εἴτε",
+    "partOfSpeech": "conjunction",
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "whether (often repeated: whether...or)" },
+          { "language": "nl", "definition": "of (vaak herhaald: of...of)" }
+        ]
+      }
+    ],
+    "modernConnections": []
+  },
+  {
+    "greek": "οὔτε",
+    "english": "neither; nor",
+    "dutch": "noch",
+    "linkedWord": "οὔτε",
+    "partOfSpeech": "conjunction",
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "neither; nor (correlative)" },
+          { "language": "nl", "definition": "noch (correlatief)" }
+        ]
+      }
+    ],
+    "modernConnections": []
+  },
+  {
+    "greek": "ἐπεί",
+    "english": "when; since",
+    "dutch": "toen; aangezien",
+    "linkedWord": "",
+    "partOfSpeech": "conjunction",
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "when (past); since; after" },
+          { "language": "nl", "definition": "toen; nadat; aangezien" }
+        ]
+      }
+    ],
+    "modernConnections": []
+  },
+  {
+    "greek": "διό",
+    "english": "therefore; for which reason",
+    "dutch": "daarom; om welke reden",
+    "linkedWord": "",
+    "partOfSpeech": "conjunction",
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          { "language": "en", "definition": "therefore; for this reason" },
+          { "language": "nl", "definition": "daarom; om deze reden" }
+        ]
+      }
+    ],
+    "modernConnections": []
+  }
+]

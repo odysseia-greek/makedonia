@@ -1,0 +1,156 @@
+# -------------------------
+# Health (Gateway + Service)
+# -------------------------
+# Mirrors koinos.v1.HealthResponse (AntigonosService/Health)
+type HealthResponse {
+    healthy: Boolean!
+    time: String
+    version: String
+}
+
+# -------------------------
+# Search (AntigonosService)
+# -------------------------
+
+# Mirrors koinos.v1.Language
+enum Language {
+    LANGUAGE_UNSPECIFIED
+    LANG_GREEK
+    LANG_ENGLISH
+    LANG_DUTCH
+}
+
+# Mirrors koinos.v1.SearchQuery
+input SearchQueryInput {
+    word: String!
+    language: Language = LANG_GREEK
+    # Optional client-side paging hints (GraphQL-side; your resolver can map to koinos.v1.PageInfo params)
+    page: Int = 1
+    size: Int = 10
+}
+
+# Mirrors koinos.v1.PageInfo
+type PageInfo {
+    page: Int!
+    size: Int!
+    total: Int!
+}
+
+# Mirrors koinos.v1.LocalizedGloss
+type LocalizedGloss {
+    language: String!
+    gloss: String!
+}
+
+# Mirrors koinos.v1.Meaning
+type Meaning {
+    language: String!
+    definition: String!
+    notes: [String!]!
+    example: String
+}
+
+# Mirrors koinos.v1.Definition
+type Definition {
+    grade: Int!
+    meanings: [Meaning!]!
+}
+
+# Mirrors koinos.v1.NounInfo
+type NounInfo {
+    declension: String
+    genitive: String
+}
+
+# Mirrors koinos.v1.VerbInfo
+type VerbInfo {
+    principalParts: [String!]!
+}
+
+# Mirrors koinos.v1.ModernConnection
+type ModernConnection {
+    term: String!
+    note: String
+}
+
+# Mirrors koinos.v1.Lemma
+type Lemma {
+    id: String
+    headword: String!
+    normalized: String
+    linkedWord: String
+    partOfSpeech: String
+    article: String
+    gender: String
+    noun: NounInfo
+    verb: VerbInfo
+    quickGlosses: [LocalizedGloss!]!
+    definitions: [Definition!]!
+    modernConnections: [ModernConnection!]!
+}
+
+# Mirrors antigonos.v1.SearchResponse
+type SearchResponse {
+    results: [Lemma!]!
+    pageInfo: PageInfo!
+}
+
+# -------------------------
+# Usage (EukleidesService)
+# -------------------------
+
+# Mirrors makedonia_eukleides.TopFive
+type EukleidesTopFive {
+    serviceName: String!  # proto: service_name
+    word: String!         # proto: word
+    lastUsed: String      # proto: last_used (ISO8601 or arbitrary string)
+    count: Int!           # proto: int64
+}
+
+# Mirrors makedonia_eukleides.TopFiveResponse
+type EukleidesTopFiveResponse {
+    topFive: [EukleidesTopFive!]!
+}
+
+# -------------------------
+# Search (HefaistionService)
+# -------------------------
+
+input ExpandableSearchQueryInput {
+    word: String!
+    language: Language = LANG_GREEK
+    expand: Boolean!
+    # Optional client-side paging hints (GraphQL-side; your resolver can map to koinos.v1.PageInfo params)
+    page: Int = 1
+    size: Int = 10
+}
+
+type ExtendedResponse {
+    results: [Lemma!]!
+    pageInfo: PageInfo!
+    similarWords: [Hit]
+    foundInText: AnalyzeTextResponse
+}
+
+# -------------------------
+# Root Query
+# -------------------------
+
+extend type Query {
+    # Passthrough to EukleidesService/RetrieveTopFive (global)
+    counterTopFive: EukleidesTopFiveResponse!
+    counterService(name: String!): EukleidesTopFive!
+    counterSession(sessionId: String!): EukleidesTopFiveResponse!
+
+    # Passthrough to Ptolemaios/Search (koinos.v1.SearchQuery → ptolemaios.v1.SearchResponse)
+    text(input: ExpandableSearchQueryInput!): ExtendedResponse!
+
+    # Passthrough to AntigonosService/Search (koinos.v1.SearchQuery → antigonos.v1.SearchResponse)
+    fuzzy(input: SearchQueryInput!): SearchResponse!
+    # Passthrough to Hefaistion/Search (koinos.v1.SearchQuery → hefaistion.v1.SearchResponse)
+    exact(input: ExpandableSearchQueryInput!): ExtendedResponse!
+    # Passthrough to Parmenion/Service/Search (koinos.v1.SearchQuery → parmenion.v1.SearchResponse)
+    phrase(input: SearchQueryInput!): SearchResponse!
+    # Passthrough to Perdikkas/Service/Search (koinos.v1.SearchQuery → perkdikkas.v1.SearchResponse)
+    partial(input: SearchQueryInput!): SearchResponse!
+}

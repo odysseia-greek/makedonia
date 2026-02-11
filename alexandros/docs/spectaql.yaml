@@ -1,0 +1,37 @@
+spectaql:
+  faviconFile: ./docs/favicon.png
+  displayAllServers: true
+
+introspection:
+  removeTrailingPeriodFromDescriptions: false
+  url: http://byzantium.odysseia-greek:4900/alexandros/graphql
+  queryNameStrategy: capitalizeFirst
+  fieldExpansionDepth: 3
+
+info:
+  title: Alexandros
+  description: Alexandros is the gateway for all dictionary modes
+  termsOfService: there are no TOS at this moment, use at your own risk we take no responsibility
+  contact:
+    name: odysseia-greek
+    url: https://github.com/odysseia-greek
+    email: joerivrijaldenhoven@odysseia.io
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  x-introItems:
+    - title: Quote
+      description: Οὐ κλέπτω τὴν νίκην- I will not steal my victory
+    - title: Links
+      description:
+        https://github.com/odysseia-greek/makedonia/alexandros
+        https://github.com/anvilco/spectaql
+
+
+servers:
+  - url: http://byzantium.odysseia-greek:4900/alexandros/graphql
+    description: k3d
+    production: false
+  - url: https://odysseia-greek.com/alexandros/graphql
+    description: Production
+    production: true

@@ -1,0 +1,42 @@
+[
+  {
+    "greek": "ναυτικός",
+    "english": "naval",
+    "dutch": "maritiem; zee-",
+    "linkedWord": "ναῦς",
+    "partOfSpeech": "adjective",
+    "adjective": {
+      "type": "first_second",
+      "forms": {
+        "masc": "-ός",
+        "fem": "-ή",
+        "neut": "-όν"
+      }
+    },
+    "definitions": [
+      {
+        "grade": 3,
+        "meanings": [
+          {
+            "language": "en",
+            "definition": "naval; maritime"
+          },
+          {
+            "language": "nl",
+            "definition": "maritiem; zee-"
+          }
+        ]
+      }
+    ],
+    "modernConnections": [
+      {
+        "term": "naval",
+        "note": "via Latin navalis, from ναῦς ‘ship’"
+      },
+      {
+        "term": "nautical",
+        "note": "from ναυτικός ‘of ships’"
+      }
+    ]
+  }
+]

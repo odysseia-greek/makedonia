@@ -1,0 +1,141 @@
+package aigyptos
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"time"
+
+	"github.com/odysseia-greek/agora/plato/config"
+	"github.com/odysseia-greek/agora/plato/logging"
+	"github.com/odysseia-greek/agora/plato/models"
+	"github.com/odysseia-greek/agora/plato/service"
+	"github.com/odysseia-greek/attike/aristophanes/comedy"
+	arv1 "github.com/odysseia-greek/attike/aristophanes/gen/go/v1"
+	koinos "github.com/odysseia-greek/makedonia/filippos/gen/go/koinos/v1"
+	v1 "github.com/odysseia-greek/makedonia/ptolemaios/gen/go/v1"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/types/known/emptypb"
+)
+
+func (e *ExtendedServiceImpl) Health(ctx context.Context, request *emptypb.Empty) (*koinos.HealthResponse, error) {
+	return &koinos.HealthResponse{
+		Healthy:        true,
+		Time:           time.Now().String(),
+		DatabaseHealth: nil,
+		Version:        e.Version,
+	}, nil
+}
+
+func (e *ExtendedServiceImpl) Search(ctx context.Context, request *v1.ExtendedSearch) (*v1.ExtendedSearchResponse, error) {
+	requestId := CurrentRequestID(ctx, config.DefaultTracingName, service.HeaderKey)
+
+	analyseResult := &v1.ExtendedSearchResponse{}
+
+	cacheItem, _ := e.Archytas.Read(request.Word)
+	if cacheItem != nil {
+		err := json.Unmarshal(cacheItem, &analyseResult)
+		if err != nil {
+			return nil, err
+		}
+
+		logging.Debug(fmt.Sprintf("found in cache: %s number of results: %d", request.Word, len(analyseResult.FoundInText.Texts)))
+
+		go comedy.CacheSpan(string(cacheItem), request.Word, ctx, e.Streamer)
+		return analyseResult, nil
+	}
+
+	herodotosSpan := &arv1.ObserveRequest{
+		Kind: &arv1.ObserveRequest_Action{Action: &arv1.ObserveAction{
+			Action: "analyseText",
+			Status: fmt.Sprintf("querying Herodotos for word: %s", request.Word),
+		}},
+	}
+
+	comedy.ServiceToServiceSpan(herodotosSpan, ctx, e.Streamer)
+
+	startTime := time.Now()
+	r := models.AnalyzeTextRequest{Rootword: request.Word}
+	jsonBody, err := json.Marshal(r)
+	if err != nil {
+		return nil, err
+	}
+
+	foundInText, err := e.Client.Herodotos().Analyze(jsonBody, requestId)
+	endTime := time.Since(startTime)
+
+	if foundInText != nil {
+		var source models.AnalyzeTextResponse
+		defer foundInText.Body.Close()
+		err = json.NewDecoder(foundInText.Body).Decode(&source)
+		if err != nil {
+			logging.Error(fmt.Sprintf("error while decoding: %s", err.Error()))
+		}
+
+		herodotosSpan := &arv1.ObserveRequest{
+			Kind: &arv1.ObserveRequest_Action{Action: &arv1.ObserveAction{
+				Action: "analyseText",
+				TookMs: endTime.Milliseconds(),
+				Status: fmt.Sprintf("querying Herodotos returned: %d", foundInText.StatusCode),
+			}},
+		}
+		comedy.ServiceToServiceSpan(herodotosSpan, ctx, e.Streamer)
+
+		analyseResult.FoundInText = &v1.AnalyzeTextResponse{
+			Rootword:     source.Rootword,
+			PartOfSpeech: source.PartOfSpeech,
+			Conjugations: []*v1.Conjugations{},
+			Texts:        []*v1.AnalyzeResult{},
+		}
+
+		for _, text := range source.Results {
+			parsedText := &v1.AnalyzeResult{
+				ReferenceLink: text.ReferenceLink,
+				Author:        text.Author,
+				Book:          text.Book,
+				Reference:     text.Reference,
+				Text: &v1.Rhema{
+					Greek:        text.Text.Greek,
+					Translations: text.Text.Translations,
+					Section:      text.Text.Section,
+				},
+			}
+			analyseResult.FoundInText.Texts = append(analyseResult.FoundInText.Texts, parsedText)
+		}
+
+		for _, conjugation := range source.Conjugations {
+			parsedConjugation := &v1.Conjugations{
+				Word: conjugation.Word,
+				Rule: conjugation.Rule,
+			}
+
+			analyseResult.FoundInText.Conjugations = append(analyseResult.FoundInText.Conjugations, parsedConjugation)
+		}
+	}
+
+	analyseResultJson, _ := json.Marshal(analyseResult)
+
+	standardDuration := time.Minute * 10
+	err = e.Archytas.SetWithTTL(request.Word, string(analyseResultJson), standardDuration)
+	if err != nil {
+		logging.Error(err.Error())
+	}
+
+	logging.Debug(fmt.Sprintf("found in herodotos: %s number of results: %d", request.Word, len(analyseResult.FoundInText.Texts)))
+
+	return analyseResult, nil
+}
+
+func CurrentRequestID(ctx context.Context, ctxKey any, headerKey string) string {
+	if v := ctx.Value(ctxKey); v != nil {
+		if s, ok := v.(string); ok && s != "" {
+			return s
+		}
+	}
+	if md, ok := metadata.FromIncomingContext(ctx); ok {
+		if vals := md.Get(headerKey); len(vals) > 0 {
+			return vals[0]
+		}
+	}
+	return ""
+}
