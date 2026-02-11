@@ -6,7 +6,7 @@ require (
 	github.com/odysseia-greek/agora/archytas v0.1.2
 	github.com/odysseia-greek/agora/plato v0.2.16
 	github.com/odysseia-greek/attike/aristophanes v0.7.2
-	github.com/odysseia-greek/makedonia/filippos v0.0.5-rho1
+	github.com/odysseia-greek/makedonia/filippos v0.0.5
 	google.golang.org/grpc v1.78.0
 	google.golang.org/protobuf v1.36.11
 )
